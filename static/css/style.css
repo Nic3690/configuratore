@@ -9,6 +9,14 @@ body {
 	font-weight: 600;
   }
   
+  /* Nascondi tutte le pagine tranne la prima */
+  .step-section {
+    display: none;
+  }
+  #step1-tipologia {
+    display: block;
+  }
+
   /* Breadcrumb personalizzato */
   #configuratore-breadcrumb {
 	margin-top: 15px;
@@ -45,6 +53,7 @@ body {
 	position: absolute;
 	cursor: pointer;
 	transition: all 0.3s ease;
+	z-index: 10;
   }
   
   .hotspot-dot {

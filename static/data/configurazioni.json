@@ -1,0 +1,206 @@
+{
+  "categoriePrincipali": [
+    {
+      "id": "nanoprofili",
+      "nome": "Nanoprofili",
+      "immagine": "/static/img/categorie/nanoprofili.jpg",
+      "sottofamiglie": ["nanoprofili"]
+    },
+    {
+      "id": "incasso",
+      "nome": "Incasso",
+      "immagine": "/static/img/categorie/incasso.jpg",
+      "sottofamiglie": ["incasso", "wallwasher", "battiscopa", "scalini"]
+    },
+    {
+      "id": "sospensione",
+      "nome": "Sospensione",
+      "immagine": "/static/img/categorie/sospensione.jpg",
+      "sottofamiglie": ["kit_sospensione"]
+    },
+    {
+      "id": "plafone",
+      "nome": "Plafone",
+      "immagine": "/static/img/categorie/plafone.jpg",
+      "sottofamiglie": ["superficie", "gancio_fissaggio_soffitto_parete"]
+    },
+    {
+      "id": "parete",
+      "nome": "Parete",
+      "immagine": "/static/img/categorie/parete.jpg",
+      "sottofamiglie": ["gancio_fissaggio_parete_soffitto"]
+    },
+    {
+      "id": "particolari",
+      "nome": "Particolari",
+      "immagine": "/static/img/categorie/particolari.jpg",
+      "sottofamiglie": ["nanoprofili"]
+    }
+  ],
+  
+  "profili": [
+    {
+      "id": "profilo_1",
+      "nome": "Profilo Modello A",
+      "categoria": "nanoprofili",
+      "immagine": "/static/img/profili/profilo_a.jpg",
+      "descrizione": "Profilo in alluminio di piccole dimensioni, ideale per illuminazione d'accento",
+      "tipologie": ["taglio_misura", "profilo_intero"],
+      "stripLedCompatibili": ["STRIP_24V_SMD_IP20", "STRIP_24V_SMD_IP66"],
+      "finitureDisponibili": ["ALLUMINIO_ANODIZZATO", "BIANCO", "NERO"],
+      "lunghezzaMassima": 3000
+    },
+    {
+      "id": "profilo_2",
+      "nome": "Profilo Modello B",
+      "categoria": "incasso",
+      "immagine": "/static/img/profili/profilo_b.jpg",
+      "descrizione": "Profilo da incasso per controsoffitti e cartongesso",
+      "tipologie": ["taglio_misura", "profilo_intero"],
+      "stripLedCompatibili": ["STRIP_24V_SMD_IP20", "STRIP_24V_COB_IP20", "STRIP_24V_RGB_SMD_IP20"],
+      "finitureDisponibili": ["ALLUMINIO_ANODIZZATO", "BIANCO", "NERO", "ALLUMINIO"],
+      "lunghezzaMassima": 2500
+    },
+    {
+      "id": "profilo_3",
+      "nome": "Profilo Modello C",
+      "categoria": "sospensione",
+      "immagine": "/static/img/profili/profilo_c.jpg",
+      "descrizione": "Profilo per sospensione con kit di montaggio incluso",
+      "tipologie": ["taglio_misura", "profilo_intero"],
+      "stripLedCompatibili": ["STRIP_24V_SMD_IP20", "STRIP_24V_COB_IP20", "STRIP_48V_SMD_IP20"],
+      "finitureDisponibili": ["ALLUMINIO_ANODIZZATO", "BIANCO", "NERO"],
+      "lunghezzaMassima": 2000
+    }
+  ],
+  
+  "stripLed": {
+    "STRIP_24V_SMD_IP20": {
+      "nome": "STRIP 24V SMD (IP20)",
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K"],
+      "potenzeDisponibili": ["6W/m", "12W/m", "18W/m", "22W/m"]
+    },
+    "STRIP_24V_SMD_IP66": {
+      "nome": "STRIP 24V SMD (IP66)",
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K"],
+      "potenzeDisponibili": ["6W/m", "12W/m", "18W/m"]
+    },
+    "STRIP_24V_COB_IP20": {
+      "nome": "STRIP 24V COB (IP20)",
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K", "CCT"],
+      "potenzeDisponibili": ["12W/m", "18W/m"]
+    },
+    "STRIP_24V_COB_IP66": {
+      "nome": "STRIP 24V COB (IP66)",
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K", "CCT"],
+      "potenzeDisponibili": ["12W/m", "18W/m"]
+    },
+    "STRIP_48V_SMD_IP20": {
+      "nome": "STRIP 48V SMD (IP20)",
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K"],
+      "potenzeDisponibili": ["14W/m"]
+    },
+    "STRIP_24V_RGB_SMD_IP20": {
+      "nome": "STRIP 24V RGB SMD (IP20)",
+      "temperaturaColoreDisponibili": ["RGB"],
+      "potenzeDisponibili": ["12W/m"]
+    }
+  },
+  
+  "dettagliPotenze": {
+    "6W/m": {
+      "codice": "RB26420WW",
+      "specifiche": "24V DC · 6W/m · 64 LED/m · 768lm/m · CRI80"
+    },
+    "12W/m": {
+      "codice": "RB12820WW",
+      "specifiche": "24V DC · 12W/m · 128 LED/m · 1480lm/m· CRI80"
+    },
+    "12W/m CRI90": {
+      "codice": "RB12820WWCRI90",
+      "specifiche": "24V DC · 12W/m · 128 LED/m · 1440lm/m· CRI90"
+    },
+    "18W/m": {
+      "codice": "RB219220WW",
+      "specifiche": "24V DC · 18W/m · 192 LED/m · 2304lm/m· CRI80"
+    },
+    "18W/m CRI90": {
+      "codice": "RB219220WWCRI90",
+      "specifiche": "24V DC · 18W/m · 192 LED/m · 2246lm/m· CRI90"
+    },
+    "22W/m": {
+      "codice": "RB224020WW",
+      "specifiche": "24V DC · 22W/m · 240 LED/m · 2746lm/m· CRI80"
+    },
+    "14W/m": {
+      "codice": "RB27265ZWW",
+      "specifiche": "24V DC · 14,4W/m · 72 LED/m · 1460lm/m· CRI80"
+    }
+  },
+  
+  "alimentazione": {
+    "tipi": ["ON/OFF", "DIMMERABILE_TRIAC"],
+    "alimentatori": {
+      "ON/OFF": ["SERIE_AT24", "SERIE_ATN24", "SERIE_ATS", "SERIE_ATUS", "SERIE_ATSIP44"],
+      "DIMMERABILE_TRIAC": ["SERIE_ATD24"]
+    }
+  },
+  
+  "dettagliAlimentatori": {
+    "SERIE_AT24": {
+      "nome": "SERIE AT24",
+      "descrizione": "Carcassa in lamiera forata di acciaio zincato, per assicurare una corretta ventilazione.",
+      "potenze": [30, 60, 100, 150, 200, 320]
+    },
+    "SERIE_ATN24": {
+      "nome": "SERIE ATN24",
+      "descrizione": "Scatola in allumino anodizzato, con profili laterali in alluminio estruso per garantire il raffreddamento.",
+      "potenze": [30, 60, 100, 150, 200]
+    },
+    "SERIE_ATS": {
+      "nome": "SERIE ATS",
+      "descrizione": "Alimentatore in tensione costante 24V, forma slim, per interni (IP20). Carcassa in policarbonato bianco.",
+      "potenze": [30, 60, 100]
+    },
+    "SERIE_ATUS": {
+      "nome": "SERIE ATUS",
+      "descrizione": "Alimentatore in tensione costante 24V, forma ultra slim, per interni (IP20). Carcassa in policarbonato bianco.",
+      "potenze": [30, 60, 100]
+    },
+    "SERIE_ATSIP44": {
+      "nome": "SERIE ATSIP44",
+      "descrizione": "Alimentatore in tensione costante 24V, forma stretta, per installazione in interno (IP44). Scatola e coperchi per i contatti elettrici in policarbonato.",
+      "potenze": [60, 100, 150]
+    },
+    "SERIE_ATD24": {
+      "nome": "SERIE ATD24",
+      "descrizione": "Alimentatore dimmerabile TRIAC, in tensione costante 24V DC, per installazione in interno (IP20).",
+      "potenze": [60, 100, 150, 200]
+    }
+  },
+  
+  "dimmerazione": {
+    "opzioni": ["NESSUN_DIMMER", "TOUCH_SU_PROFILO", "CON_TELECOMANDO", "CENTRALINA_TUYA", "DIMMER_A_PULSANTE_SEMPLICE"],
+    "spaziNonIlluminati": {
+      "TOUCH_SU_PROFILO": 50
+    }
+  },
+  
+  "opzioniCavo": {
+    "alimentazione": ["ALIMENTAZIONE_UNICA", "ALIMENTAZIONE_DOPPIA"],
+    "lunghezzaIngresso": 1800,
+    "lunghezzaUscita": 1800,
+    "usciteCavo": ["DRITTA", "LATERALE_DX", "RETRO", "LATERALE_SX"]
+  },
+  
+  "formeDiTaglio": [
+    "DRITTO_SEMPLICE",
+    "FORMA_A_L_DX",
+    "FORMA_A_L_SX",
+    "FORMA_A_C",
+    "FORMA_A",
+    "RETTANGOLO_QUADRATO"
+  ],
+  
+  "spazioProduzione": 5
+}
