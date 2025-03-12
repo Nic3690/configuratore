@@ -1,22 +1,38 @@
 /* Stili generali */
 body {
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-family: 'Helvetica Neue', Tahoma, Geneva, Verdana, sans-serif;
 	background-color: #f8f9fa;
 	color: #333;
+	padding-bottom: 50px;
+  }
+
+  .py-3, .mb-4 {
+	padding-bottom: 0px !important;
+  }
+
+  .profilo-card-row {
+	width: 20%;
   }
   
   h1, h2, h3, h4 {
 	font-weight: 600;
   }
+
+  button:active, button:focus {
+	background-color: #e83f34 !important;
+	border-color: #e83f34 !important;
+	color: #333 !important;
+  }
   
   /* Nascondi tutte le pagine tranne la prima */
   .step-section {
-    display: none;
+	display: none;
   }
+  
   #step1-tipologia {
-    display: block;
+	display: block;
   }
-
+  
   /* Breadcrumb personalizzato */
   #configuratore-breadcrumb {
 	margin-top: 15px;
@@ -25,7 +41,71 @@ body {
   #configuratore-breadcrumb .breadcrumb {
 	padding: 10px 15px;
 	background-color: #e9ecef;
-	border-radius: 6px;
+	border-radius: 0;
+  }
+  
+  /* Progress bar personalizzata */
+  .step-progress {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 40px;
+	position: relative;
+  }
+  
+  .step-progress::before {
+	content: '';
+	position: absolute;
+	top: 20px;
+	left: 0;
+	width: 100%;
+	height: 3px;
+	background-color: #e9ecef;
+	z-index: 1;
+  }
+  
+  .step-item {
+	position: relative;
+	margin: 0 30px;
+	text-align: center;
+	z-index: 2;
+  }
+  
+  .step-number {
+	width: 40px !important;
+	height: 40px !important;
+	border-radius: 50%;
+	background-color: #fff;
+	border: 2px solid #ddd;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 10px;
+	font-weight: bold;
+	font-size: 18px !important;
+	transition: all 0.3s ease;
+  }
+  
+  .step-item.active .step-number {
+	background-color: #fff;
+	border-color: #e83f34;
+	color: #333;
+	box-shadow: 0 0 0 3px rgba(232, 63, 52, 0.3);
+  }
+  
+  .step-item.completed .step-number {
+	background-color: #e83f34;
+	border-color: #e83f34;
+	color: white;
+  }
+  
+  .step-title {
+	font-size: 14px;
+	color: #6c757d;
+  }
+  
+  .step-item.active .step-title {
+	color: #333;
+	font-weight: bold;
   }
   
   /* Hotspot e mappa interattiva */
@@ -37,7 +117,7 @@ body {
   
   .hotspot-container img {
 	width: 100%;
-	border-radius: 10px;
+	border-radius: 0;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
   
@@ -52,18 +132,17 @@ body {
   .hotspot {
 	position: absolute;
 	cursor: pointer;
-	transition: all 0.3s ease;
 	z-index: 10;
   }
   
   .hotspot-dot {
 	display: block;
-	width: 20px;
-	height: 20px;
-	background-color: rgba(255, 0, 0, 0.8);
+	width: 24px;
+	height: 24px;
+	background-color: rgba(232, 63, 52, 0.8);
 	border: 2px solid white;
 	border-radius: 50%;
-	box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.3);
+	box-shadow: 0 0 0 4px rgba(232, 63, 52, 0.3);
 	transition: all 0.3s ease;
   }
   
@@ -75,37 +154,80 @@ body {
 	background-color: rgba(0, 0, 0, 0.8);
 	color: white;
 	padding: 5px 10px;
-	border-radius: 4px;
+	border-radius: 0;
 	font-size: 14px;
 	opacity: 0;
 	white-space: nowrap;
 	pointer-events: none;
 	transition: opacity 0.3s ease;
+	z-index: 20;
   }
   
   .hotspot:hover .hotspot-dot {
 	transform: scale(1.3);
-	box-shadow: 0 0 0 6px rgba(255, 0, 0, 0.4);
+	box-shadow: 0 0 0 6px rgba(232, 63, 52, 0.4);
   }
   
   .hotspot:hover .hotspot-label {
 	opacity: 1;
   }
   
-  /* Card per i modelli */
+  /* Stile per le card dei profili e tipologie */
+  .profilo-card, .tipologia-card, .option-card {
+	transition: all 0.3s ease;
+	cursor: pointer;
+	border-radius: 10px !important;
+	overflow: hidden;
+	background-color: transparent;
+	border: 2px solid #ddd;
+	height: 100%;
+  }
+  
+  .profilo-card:hover, .tipologia-card:hover, .option-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+	border-color: #ccc;
+  }
+  
+  .profilo-card.selected, .tipologia-card.selected, .option-card.selected {
+	border-color: #e83f34;
+	box-shadow: 0 5px 15px rgba(232, 63, 52, 0.3);
+  }
+  
+  .profilo-card img, .tipologia-card img {
+	height: 180px;
+	object-fit: cover;
+  }
+  
+  .profilo-card .card-body, .tipologia-card .card-body, .option-card .card-body {
+	padding: 15px;
+  }
+  
+  .profilo-card .card-title, .tipologia-card .card-title, .option-card .card-title {
+	font-weight: 600;
+	margin-bottom: 5px;
+	font-size: 16px;
+  }
+  
   .card-modello {
 	cursor: pointer;
 	transition: all 0.2s ease;
 	margin-bottom: 20px;
-	border: none;
+	border: 2px solid #ddd;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	border-radius: 8px;
+	border-radius: 10px !important;
 	overflow: hidden;
+	background-color: transparent;
   }
   
   .card-modello:hover {
 	transform: translateY(-5px);
 	box-shadow: 0 12px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-modello.selected {
+	border-color: #e83f34;
+	box-shadow: 0 5px 15px rgba(232, 63, 52, 0.3);
   }
   
   .card-modello .card-img-top {
@@ -127,11 +249,31 @@ body {
 	font-size: 0.9rem;
   }
   
+  /* Badge per le selezioni attuali */
+  .selection-badges {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	margin-bottom: 20px;
+  }
+  
+  .selection-badge {
+	padding: 6px 12px;
+	border-radius: 0;
+	font-size: 14px;
+	font-weight: 500;
+	background-color: #ddd !important;
+	border: 1px solid #e9ecef;
+	border-radius: 25px;
+	color: #333;
+  }
+  
   /* Form di configurazione */
   #form-configurazione {
 	background-color: white;
 	padding: 25px;
-	border-radius: 10px;
+	border-radius: 0;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
   
@@ -147,37 +289,41 @@ body {
   
   #form-configurazione select,
   #form-configurazione input {
-	border-radius: 5px;
+	border-radius: 0;
 	border: 1px solid #ced4da;
 	padding: 10px;
   }
   
-  /* Pulsanti */
+  /* Stile per i pulsanti */
   .btn {
 	padding: 10px 20px;
 	border-radius: 5px;
 	font-weight: 500;
-	transition: all 0.2s;
+	transition: all 0.3s ease;
   }
   
   .btn-primary {
-	background-color: #007bff;
-	border-color: #007bff;
+	background-color: #333;
+	border-color: #333;
+	color: #fff;
   }
   
   .btn-primary:hover {
-	background-color: #0069d9;
-	border-color: #0062cc;
+	background-color: transparent;
+	border-color: #e83f34;
+	color: #333;
   }
   
   .btn-secondary {
-	background-color: #6c757d;
-	border-color: #6c757d;
+	background-color: transparent;
+	border-color: #ccc;
+	color: #333;
+	border-radius: 5px;
   }
   
   .btn-secondary:hover {
-	background-color: #5a6268;
-	border-color: #545b62;
+	background-color: #f8f9fa;
+	border-color: #bbb;
   }
   
   .btn-success {
@@ -189,42 +335,406 @@ body {
 	background-color: #218838;
 	border-color: #1e7e34;
   }
+
+  #btn-continua-step2, #btn-continua-step3, #btn-continua-step4, #btn-continua-step5,
+  #btn-continua-step6, #btn-continua-step7 {
+	background-color: #e83f34;
+	border-color: #e83f34;
+	color: #333;
+	border-radius: 5px;
+  }
+
+  #btn-torna-step2, #btn-torna-step3, #btn-torna-step4, #btn-torna-step5,
+  #btn-torna-step6, #btn-torna-step7 {
+	background-color: transparent;
+	border-color: #333;
+	color: #333;
+	border-radius: 5px;
+  }
+
+  #btn-torna-step2:hover, #btn-torna-step3:hover, #btn-torna-step4:hover, #btn-torna-step5:hover,
+  #btn-torna-step6:hover, #btn-torna-step7:hover {
+	background-color: transparent;
+	border-color: #e83f34;
+	color: #333;
+  }
+
+  .btn-torna-indietro {
+	background-color: transparent;
+	border-color: #333;
+	color: #333;
+	border-radius: 5px;
+  }
+
+  .btn-torna-indietro:hover {
+	background-color: transparent;
+	border-color: #e83f34;
+	color: #333;
+  }
+  
+  /* Stile per il pulsante seleziona nelle card */
+  .btn-seleziona-profilo, .btn-seleziona-tipologia, .btn-seleziona-strip,
+  .btn-seleziona-temperatura, .btn-seleziona-potenza, .btn-seleziona-alimentazione,
+  .btn-seleziona-alimentatore, .btn-seleziona-dimmer, .btn-seleziona-alimentazione-cavo,
+  .btn-seleziona-uscita-cavo, .btn-seleziona-forma, .btn-seleziona-finitura, .btn-seleziona-proposta {
+	background-color: transparent;
+	border: 1px solid #333;
+	color: #333;
+	border-radius: 5px;
+  }
+  
+  .btn-seleziona-profilo:hover, .btn-seleziona-tipologia:hover, .btn-seleziona-strip:hover,
+  .btn-seleziona-temperatura:hover, .btn-seleziona-potenza:hover, .btn-seleziona-alimentazione:hover,
+  .btn-seleziona-alimentatore:hover, .btn-seleziona-dimmer:hover, .btn-seleziona-alimentazione-cavo:hover,
+  .btn-seleziona-uscita-cavo:hover, .btn-seleziona-forma:hover, .btn-seleziona-finitura:hover, .btn-seleziona-proposta:hover {
+	background-color: transparent;
+	border-color: #e83f34;
+	color: #333;
+  }
+  
+  .option-card.selected .btn-primary {
+	background-color: #e83f34;
+	border-color: #e83f34;
+	color: #333;
+  }
+  
+  /* Finiture */
+  .finitura-preview {
+	width: 100%;
+	height: 40px;
+	border-radius: 0;
+	border: 1px solid #ddd;
+  }
+  
+  .alluminio-anodizzato {
+	background: linear-gradient(135deg, #e1e1e1 0%, #b3b3b3 50%, #e1e1e1 100%);
+  }
+  
+  .bianco {
+	background-color: #ffffff;
+  }
+  
+  .nero {
+	background-color: #000000;
+  }
+  
+  .alluminio {
+	background: linear-gradient(135deg, #f5f5f5 0%, #c4c4c4 50%, #f5f5f5 100%);
+  }
+  
+  /* Temperatura colore preview */
+  .temperatura-color-preview {
+	width: 100%;
+	height: 30px;
+	border-radius: 0;
+	border: 1px solid #ddd;
+  }
+  
+  /* Form controls */
+  .form-control {
+	border-radius: 0;
+	padding: 10px 15px;
+	border: 1px solid #ddd;
+  }
+  
+  .form-control:focus {
+	border-color: #e83f34;
+	box-shadow: 0 0 0 0.2rem rgba(232, 63, 52, 0.25);
+  }
+  
+  /* Form labels */
+  .form-label {
+	font-weight: 500;
+	margin-bottom: 8px;
+  }
   
   /* Risultato configurazione */
   #risultato-configurazione {
-	font-size: 1rem;
+	background-color: #fff;
+	border-radius: 0;
+	padding: 25px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   }
   
-  #risultato-configurazione table {
+  .config-table {
 	width: 100%;
+	margin-bottom: 20px;
   }
   
-  #risultato-configurazione table td {
-	padding: 8px 12px;
+  .config-table td {
+	padding: 12px;
+	border-bottom: 1px solid #f0f0f0;
   }
   
-  #risultato-configurazione table td:first-child {
+  .config-table td:first-child {
 	font-weight: 600;
 	width: 40%;
   }
   
-  #codice-prodotto {
-	font-weight: bold;
+  .config-table tr:last-child td {
+	border-bottom: none;
+  }
+  
+  .codice-prodotto {
 	text-align: center;
-	font-size: 1.2rem;
+	font-weight: bold;
+	font-size: 18px;
+	margin: 20px 0;
+	padding: 10px;
+	background-color: #f8f9fa;
+	border-radius: 0;
+  }
+  
+  /* Riepilogo */
+  .card-header.bg-primary {
+	background-color: #e83f34 !important;
+	color: #333 !important;
+  }
+  
+  /* Progress bar personalizzata */
+  .progress-bar-container {
+	width: 90%;
+	max-width: 900px;
+	margin: 0 auto 40px;
+  }
+  
+  .progress-bar-wrapper {
+	display: flex;
+	justify-content: space-between;
+	position: relative;
+	margin-bottom: 60px;
+  }
+  
+  .progress-bar-wrapper::before {
+	content: '';
+	position: absolute;
+	top: 30px;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	background-color: #e9ecef;
+	z-index: 1;
+  }
+  
+  .progress-step {
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+  }
+  
+  .step-number {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	background-color: white;
+	border: 4px solid #e9ecef;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+	font-size: 24px;
+	margin-bottom: 10px;
+	transition: all 0.3s ease;
+  }
+  
+  .step-label {
+	font-size: 14px;
+	color: #6c757d;
+	font-weight: 500;
+	text-align: center;
+  }
+  
+  .progress-step.active .step-number {
+	background-color: #333;
+	border-color: #333;
+	color: white;
+  }
+  
+  .progress-step.active .step-label {
+	color: #333;
+	font-weight: 600;
+  }
+  
+  .progress-step.completed .step-number {
+	background-color: #e83f34;
+	border-color: #e83f34;
+	color: #333;
+  }
+  
+  /* Stili per profili */
+  .profili-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	gap: 20px;
+  }
+  
+  .profilo-card {
+	transition: all 0.3s ease;
+	cursor: pointer;
+	border-radius: 0;
+	overflow: hidden;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	height: 100%;
+	border: 2px solid #ddd;
+	background-color: transparent;
+  }
+  
+  .profilo-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profilo-card.selected {
+	border: 2px solid #e83f34;
+	transform: translateY(-5px);
+  }
+  
+  .profilo-card img {
+	height: 180px;
+	object-fit: cover;
+  }
+  
+  /* Stili per pulsanti opzione */
+  .option-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+  }
+  
+  .option-btn {
+	min-width: 120px;
+	padding: 10px 15px;
+	border-radius: 0;
+	text-align: center;
+	transition: all 0.2s ease;
+	margin-bottom: 10px;
+	background-color: transparent;
+	border: 1px solid #333;
+	color: #333;
+  }
+  
+  .option-btn.active {
+	background-color: #e83f34;
+	color: #333;
+	border-color: #e83f34;
+  }
+  
+  .option-btn small {
+	display: block;
+	font-size: 12px;
+	line-height: 1.4;
+  }
+  
+  /* Card per la configurazione */
+  .config-card {
+	background-color: white;
+	border-radius: 0;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+	padding: 25px;
+	margin-bottom: 30px;
+  }
+  
+  .config-card-section {
+	padding-bottom: 20px;
+	border-bottom: 1px solid #f0f0f0;
+	margin-bottom: 20px;
+  }
+  
+  .config-card-section:last-child {
+	border-bottom: none;
+	padding-bottom: 0;
+	margin-bottom: 0;
+  }
+  
+  .config-card h3 {
+	margin-bottom: 15px;
+	font-size: 20px;
+	color: #343a40;
+  }
+  
+  /* Stili per il riepilogo */
+  .riepilogo-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 30px;
+	padding-bottom: 20px;
+	border-bottom: 2px solid #f0f0f0;
+  }
+  
+  .codice-prodotto {
+	background-color: #f8f9fa;
+	padding: 10px 15px;
+	border-radius: 0;
+	font-weight: bold;
+  }
+  
+  .riepilogo-section {
+	margin-bottom: 30px;
+  }
+  
+  .riepilogo-section h4 {
+	margin-bottom: 15px;
+	color: #343a40;
+	font-size: 18px;
+  }
+  
+  .riepilogo-actions {
+	margin-top: 40px;
+	padding-top: 20px;
+	border-top: 2px solid #f0f0f0;
+  }
+  
+  /* Avvisi e alert */
+  .alert {
+	border-radius: 0;
+  }
+  
+  .alert-info {
+	background-color: #f8f9fa;
+	border-color: #e9ecef;
+	color: #333;
+  }
+  
+  .alert-warning {
+	background-color: #fff3cd;
+	border-color: #ffeeba;
+	color: #856404;
   }
   
   /* Animazioni tra step */
   .step-section {
 	transition: opacity 0.5s ease;
+	animation: fadeIn 0.5s ease;
   }
   
   .step-section.fade-out {
 	opacity: 0;
   }
   
+  @keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+  }
+  
   /* Responsive */
   @media (max-width: 768px) {
+	.step-item {
+	  margin: 0 15px;
+	}
+	
+	.step-number {
+	  width: 40px;
+	  height: 40px;
+	  font-size: 16px;
+	}
+	
+	.step-title {
+	  font-size: 12px;
+	}
+	
 	.hotspot-dot {
 	  width: 16px;
 	  height: 16px;
@@ -241,6 +751,6 @@ body {
 	
 	.btn {
 	  padding: 8px 16px;
-	  font-size: 0.9rem;
+	  font-size: 14px;
 	}
   }

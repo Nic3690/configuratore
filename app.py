@@ -377,8 +377,6 @@ def finalizza_configurazione():
         'codiceProdotto': codice_prodotto
     })
 
-# Aggiungi queste rotte al tuo file app.py
-
 # Restituisce le finiture disponibili per un profilo
 @app.route('/get_finiture/<profilo_id>')
 def get_finiture(profilo_id):

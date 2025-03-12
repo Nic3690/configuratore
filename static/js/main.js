@@ -87,12 +87,8 @@ $(document).ready(function() {
   $(".step-section").hide();
   $("#step1-tipologia").show();
   
-  // Debug dei punti cliccabili
-  console.log("Hotspot trovati: " + $('.hotspot').length);
-  
   // Gestione click sugli hotspot (punti cliccabili)
   $('.hotspot').on('click', function() {
-    console.log("Hotspot cliccato:", $(this).data('categoria'));
     const categoria = $(this).data('categoria');
     
     if (!categoria) {
@@ -376,7 +372,7 @@ function caricaProfili(categoria) {
       // Mostra i profili
       data.forEach(function(profilo) {
         let profiloCard = $(`
-          <div class="col-md-4 col-sm-6 mb-4">
+          <div class="col-md-4 col-sm-6 mb-4 profilo-card-row">
             <div class="card profilo-card" data-id="${profilo.id}" data-nome="${profilo.nome}">
               <img src="${profilo.immagine || '/static/img/placeholder.jpg'}" class="card-img-top" alt="${profilo.nome}" onerror="this.src='/static/img/placeholder.jpg'">
               <div class="card-body">
