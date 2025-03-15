@@ -303,9 +303,10 @@ body {
   }
   
   .btn-primary {
-	background-color: #333;
-	border-color: #333;
-	color: #fff;
+	background-color: transparent;
+	border: 1px solid #333;
+	border-radius: 5px;
+	color: #333;
   }
   
   .btn-primary:hover {
@@ -337,7 +338,7 @@ body {
   }
 
   #btn-continua-step2, #btn-continua-step3, #btn-continua-step4, #btn-continua-step5,
-  #btn-continua-step6, #btn-continua-step7 {
+  #btn-continua-step6, #btn-continua-step7, #btn-continua-strip, #btn-continua-parametri {
 	background-color: #e83f34;
 	border-color: #e83f34;
 	color: #333;
@@ -367,26 +368,6 @@ body {
   }
 
   .btn-torna-indietro:hover {
-	background-color: transparent;
-	border-color: #e83f34;
-	color: #333;
-  }
-  
-  /* Stile per il pulsante seleziona nelle card */
-  .btn-seleziona-profilo, .btn-seleziona-tipologia, .btn-seleziona-strip,
-  .btn-seleziona-temperatura, .btn-seleziona-potenza, .btn-seleziona-alimentazione,
-  .btn-seleziona-alimentatore, .btn-seleziona-dimmer, .btn-seleziona-alimentazione-cavo,
-  .btn-seleziona-uscita-cavo, .btn-seleziona-forma, .btn-seleziona-finitura, .btn-seleziona-proposta {
-	background-color: transparent;
-	border: 1px solid #333;
-	color: #333;
-	border-radius: 5px;
-  }
-  
-  .btn-seleziona-profilo:hover, .btn-seleziona-tipologia:hover, .btn-seleziona-strip:hover,
-  .btn-seleziona-temperatura:hover, .btn-seleziona-potenza:hover, .btn-seleziona-alimentazione:hover,
-  .btn-seleziona-alimentatore:hover, .btn-seleziona-dimmer:hover, .btn-seleziona-alimentazione-cavo:hover,
-  .btn-seleziona-uscita-cavo:hover, .btn-seleziona-forma:hover, .btn-seleziona-finitura:hover, .btn-seleziona-proposta:hover {
 	background-color: transparent;
 	border-color: #e83f34;
 	color: #333;

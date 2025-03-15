@@ -40,70 +40,24 @@
   
   "profili": [
     {
-      "id": "profilo_1",
-      "nome": "Profilo Modello A",
-      "categoria": "nanoprofili",
-      "immagine": "/static/img/profili/profilo_a.jpg",
-      "descrizione": "Profilo in alluminio di piccole dimensioni, ideale per illuminazione d'accento",
+      "id": "PRF007_200SET",
+      "nome": "PRF007_200SET",
+      "categoria": "plafone",
+      "immagine": "/static/img/prf007_200set.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
-      "stripLedCompatibili": ["STRIP_24V_SMD_IP20", "STRIP_24V_SMD_IP66"],
-      "finitureDisponibili": ["ALLUMINIO_ANODIZZATO", "BIANCO", "NERO"],
+      "stripLedCompatibili": ["RB27265Z", "STRIP_24V_SMD_IP66"],
+      "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000
-    },
-    {
-      "id": "profilo_2",
-      "nome": "Profilo Modello B",
-      "categoria": "incasso",
-      "immagine": "/static/img/profili/profilo_b.jpg",
-      "descrizione": "Profilo da incasso per controsoffitti e cartongesso",
-      "tipologie": ["taglio_misura", "profilo_intero"],
-      "stripLedCompatibili": ["STRIP_24V_SMD_IP20", "STRIP_24V_COB_IP20", "STRIP_24V_RGB_SMD_IP20"],
-      "finitureDisponibili": ["ALLUMINIO_ANODIZZATO", "BIANCO", "NERO", "ALLUMINIO"],
-      "lunghezzaMassima": 2500
-    },
-    {
-      "id": "profilo_3",
-      "nome": "Profilo Modello C",
-      "categoria": "sospensione",
-      "immagine": "/static/img/profili/profilo_c.jpg",
-      "descrizione": "Profilo per sospensione con kit di montaggio incluso",
-      "tipologie": ["taglio_misura", "profilo_intero"],
-      "stripLedCompatibili": ["STRIP_24V_SMD_IP20", "STRIP_24V_COB_IP20", "STRIP_48V_SMD_IP20"],
-      "finitureDisponibili": ["ALLUMINIO_ANODIZZATO", "BIANCO", "NERO"],
-      "lunghezzaMassima": 2000
     }
   ],
   
   "stripLed": {
-    "STRIP_24V_SMD_IP20": {
-      "nome": "STRIP 24V SMD (IP20)",
+    "RB27265Z": {
+      "nome": "RB27265Z",
+      "voltaggio": ["24V", "48V"],
+      "ip": ["IP65"],
       "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K"],
       "potenzeDisponibili": ["6W/m", "12W/m", "18W/m", "22W/m"]
-    },
-    "STRIP_24V_SMD_IP66": {
-      "nome": "STRIP 24V SMD (IP66)",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K"],
-      "potenzeDisponibili": ["6W/m", "12W/m", "18W/m"]
-    },
-    "STRIP_24V_COB_IP20": {
-      "nome": "STRIP 24V COB (IP20)",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K", "CCT"],
-      "potenzeDisponibili": ["12W/m", "18W/m"]
-    },
-    "STRIP_24V_COB_IP66": {
-      "nome": "STRIP 24V COB (IP66)",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K", "CCT"],
-      "potenzeDisponibili": ["12W/m", "18W/m"]
-    },
-    "STRIP_48V_SMD_IP20": {
-      "nome": "STRIP 48V SMD (IP20)",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K"],
-      "potenzeDisponibili": ["14W/m"]
-    },
-    "STRIP_24V_RGB_SMD_IP20": {
-      "nome": "STRIP 24V RGB SMD (IP20)",
-      "temperaturaColoreDisponibili": ["RGB"],
-      "potenzeDisponibili": ["12W/m"]
     }
   },
   

@@ -16,7 +16,6 @@
       </div>
     </header>
     
-    <!-- Progress bar -->
     <div class="step-progress mb-4">
       <div class="step-item active" id="progress-step1">
         <div class="step-number">1</div>
@@ -28,7 +27,7 @@
       </div>
       <div class="step-item" id="progress-step3">
         <div class="step-number">3</div>
-        <div class="step-title">Temperatura/Potenza</div>
+        <div class="step-title">Potenza</div>
       </div>
       <div class="step-item" id="progress-step4">
         <div class="step-number">4</div>
@@ -48,7 +47,6 @@
       </div>
     </div>
     
-    <!-- Step 1: Selezione Tipologia/Famiglia -->
     <div class="step-section" id="step1-tipologia">
       <div class="row">
         <div class="col-12">
@@ -95,7 +93,6 @@
       </div>
     </div>
     
-    <!-- Step 2: Selezione Modello, Tipologia e StripLED -->
     <div class="step-section" id="step2-modello">
       <div class="row">
         <div class="col-12">
@@ -104,24 +101,12 @@
         </div>
       </div>
       
-      <!-- Container per i profili -->
       <div id="profili-container" class="container">
-        <!-- I profili verranno caricati dinamicamente qui -->
       </div>
       
-      <!-- Container per la tipologia -->
       <div id="tipologia-container" class="container mt-4" style="display: none;">
         <h3 class="text-center mb-3">Seleziona la tipologia</h3>
         <div class="row justify-content-center" id="tipologie-options">
-          <!-- Le tipologie verranno caricate dinamicamente qui -->
-        </div>
-      </div>
-      
-      <!-- Container per la strip LED -->
-      <div id="strip-led-container" class="container mt-4" style="display: none;">
-        <h3 class="text-center mb-3">Seleziona la Strip LED</h3>
-        <div class="row" id="strip-led-options">
-          <!-- Le strip LED verranno caricate dinamicamente qui -->
         </div>
       </div>
       
@@ -133,7 +118,88 @@
       </div>
     </div>
     
-    <!-- Step 3: Temperatura e Potenza -->
+    <div class="step-section" id="step2-parametri">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="text-center mb-3">Scegli i parametri della strip LED</h2>
+          
+          <div class="selection-badges">
+            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step2-parametri">Profilo</span></span>
+            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step2-parametri">Tipologia</span></span>
+          </div>
+          
+          <p class="text-center mb-4 text-muted">
+            <small>Seleziona voltaggio, grado di protezione IP e temperatura colore per la tua strip LED</small>
+          </p>
+        </div>
+      </div>
+      
+      <div class="container mb-4">
+        <h3 class="mb-3">Voltaggio</h3>
+        <div class="row" id="voltaggio-options">
+          <div class="text-center">
+            <div class="spinner-border" role="status"></div>
+            <p>Caricamento opzioni voltaggio...</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="container mb-4">
+        <h3 class="mb-3">Grado di protezione IP</h3>
+        <div class="row" id="ip-options">
+        </div>
+      </div>
+      
+      <div class="container mb-4">
+        <h3 class="mb-3">Temperatura colore</h3>
+        <div class="row" id="temperatura-iniziale-options">
+        </div>
+      </div>
+      
+      <div class="row mt-4">
+        <div class="col-12 text-center">
+          <button class="btn btn-secondary" id="btn-torna-step2-parametri">Indietro</button>
+          <button class="btn btn-primary ms-2" id="btn-continua-parametri" disabled>Continua</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="step-section" id="step2-strip">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="text-center mb-3">Seleziona la strip LED</h2>
+          
+          <div class="selection-badges">
+            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step2-strip">Profilo</span></span>
+            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step2-strip">Tipologia</span></span>
+            <span class="badge bg-info selection-badge">Voltaggio: <span id="voltaggio-nome-step2-strip">Voltaggio</span></span>
+            <span class="badge bg-warning selection-badge">IP: <span id="ip-nome-step2-strip">IP</span></span>
+            <span class="badge bg-secondary selection-badge">Temperatura: <span id="temperatura-nome-step2-strip">Temperatura</span></span>
+          </div>
+          
+          <p class="text-center mb-4 text-muted">
+            <small>Seleziona la strip LED in base ai parametri scelti</small>
+          </p>
+        </div>
+      </div>
+      
+      <div class="container mb-5">
+        <div class="row" id="strip-led-filtrate-options">
+          <div class="col-12 text-center">
+            <div class="spinner-border" role="status"></div>
+            <p class="mt-3">Caricamento opzioni strip LED...</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row mt-4">
+        <div class="col-12 text-center">
+          <button class="btn btn-secondary" id="btn-torna-parametri-strip">Indietro</button>
+          <button class="btn btn-primary ms-2" id="btn-continua-strip" disabled>Continua</button>
+        </div>
+      </div>
+    </div>
+    
     <div class="step-section" id="step3-temperatura-potenza">
       <div class="row">
         <div class="col-12">
@@ -146,28 +212,14 @@
           </div>
           
           <p class="text-center mb-4 text-muted">
-            <small>Seleziona la temperatura colore e la potenza desiderata per la tua strip LED</small>
+            <small>Seleziona la potenza desiderata per la tua strip LED</small>
           </p>
         </div>
       </div>
       
-      <!-- Container per temperatura colore -->
-      <div class="container mb-5">
-        <h3 class="mb-3">Temperatura colore</h3>
-        <div class="row" id="temperatura-container">
-          <!-- Le opzioni di temperatura verranno caricate dinamicamente qui -->
-          <div class="col-12 text-center">
-            <div class="spinner-border" role="status"></div>
-            <p class="mt-3">Caricamento opzioni temperatura...</p>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Container per potenza -->
       <div class="container">
         <h3 class="mb-3">Potenza strip LED</h3>
         <div class="row" id="potenza-container">
-          <!-- Le opzioni di potenza verranno caricate dinamicamente qui -->
         </div>
       </div>
       
@@ -179,7 +231,6 @@
       </div>
     </div>
 
-    <!-- Step 4: Alimentazione -->
     <div class="step-section" id="step4-alimentazione">
       <div class="row">
         <div class="col-12">
@@ -189,7 +240,6 @@
             <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step4">Profilo</span></span>
             <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step4">Tipologia</span></span>
             <span class="badge bg-info selection-badge">Strip LED: <span id="strip-nome-step4">Strip LED</span></span>
-            <span class="badge bg-warning selection-badge" id="badge-temperatura-step4">Temperatura: <span id="temperatura-nome-step4">Temperatura</span></span>
             <span class="badge bg-secondary selection-badge" id="badge-potenza-step4">Potenza: <span id="potenza-nome-step4">Potenza</span></span>
           </div>
           
@@ -199,11 +249,9 @@
         </div>
       </div>
       
-      <!-- Container per il tipo di alimentazione -->
       <div class="container mb-5">
         <h3 class="mb-3">Alimentazione</h3>
         <div class="row" id="alimentazione-container">
-          <!-- Le opzioni di alimentazione verranno caricate dinamicamente qui -->
           <div class="col-md-6 mb-3">
             <div class="card option-card alimentazione-card" data-alimentazione="ON/OFF">
               <div class="card-body text-center">
@@ -226,11 +274,9 @@
         </div>
       </div>
       
-      <!-- Container per il tipo di alimentatore -->
       <div class="container" id="alimentatore-section" style="display: none;">
         <h3 class="mb-3">Tipologia Alimentatore</h3>
         <div class="row" id="alimentatore-container">
-          <!-- Le opzioni di alimentatore verranno caricate dinamicamente qui -->
         </div>
       </div>
       
@@ -242,7 +288,6 @@
       </div>
     </div>
 
-    <!-- Step 5: Controllo - Dimmer e Cavi -->
     <div class="step-section" id="step5-controllo">
       <div class="row">
         <div class="col-12">
@@ -261,11 +306,9 @@
         </div>
       </div>
       
-      <!-- Container per i dimmer -->
       <div class="container mb-5">
         <h3 class="mb-3">Dimmer</h3>
         <div class="row" id="dimmer-container">
-          <!-- Le opzioni di dimmer verranno popolate qui -->
           <div class="col-md-4 mb-3">
             <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
               <div class="card-body text-center">
@@ -318,17 +361,14 @@
           </div>
         </div>
         
-        <!-- Avviso per spazio non illuminato -->
         <div id="dimmer-warning" class="alert alert-warning" style="display: none;">
           <strong>Attenzione:</strong> Il dimmer touch comporta uno spazio non illuminato di <span id="dimmer-space">50</span>mm.
         </div>
       </div>
       
-      <!-- Container per alimentazione cavo -->
       <div class="container mb-5">
         <h3 class="mb-3">Alimentazione Cavo</h3>
         <div class="row" id="alimentazione-cavo-container">
-          <!-- Le opzioni di alimentazione cavo verranno popolate qui -->
           <div class="col-md-6 mb-3">
             <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
               <div class="card-body text-center">
@@ -351,7 +391,6 @@
         </div>
       </div>
       
-      <!-- Container per lunghezza cavo -->
       <div class="container mb-5">
         <h3 class="mb-3">Lunghezza Cavo</h3>
         <div class="form-group mb-3">
@@ -365,11 +404,9 @@
         </div>
       </div>
       
-      <!-- Container per uscita cavo -->
       <div class="container mb-5">
         <h3 class="mb-3">Uscita Cavo</h3>
         <div class="row" id="uscita-cavo-container">
-          <!-- Le opzioni di uscita cavo verranno popolate qui -->
           <div class="col-md-3 mb-3">
             <div class="card option-card uscita-cavo-card" data-uscita-cavo="DRITTA">
               <div class="card-body text-center">
@@ -420,7 +457,6 @@
       </div>
     </div>
 
-    <!-- Step 6: Personalizzazione (Forma, Finitura, Lunghezza) -->
     <div class="step-section" id="step6-personalizzazione">
       <div class="row">
         <div class="col-12">
@@ -437,11 +473,9 @@
         </div>
       </div>
       
-      <!-- Container per la forma di taglio -->
       <div class="container mb-5">
         <h3 class="mb-3">Forma di taglio</h3>
         <div class="row" id="forma-taglio-container">
-          <!-- Le opzioni di forma di taglio -->
           <div class="col-md-4 mb-3">
             <div class="card option-card forma-taglio-card selected" data-forma="DRITTO_SEMPLICE">
               <div class="card-body text-center">
@@ -504,11 +538,9 @@
         </div>
       </div>
       
-      <!-- Container per la finitura -->
       <div class="container mb-5">
         <h3 class="mb-3">Finitura</h3>
         <div class="row" id="finitura-container">
-          <!-- Le opzioni di finitura -->
           <div class="col-md-3 mb-3">
             <div class="card option-card finitura-card" data-finitura="ALLUMINIO_ANODIZZATO">
               <div class="card-body text-center">
@@ -572,12 +604,10 @@
         </style>
       </div>
       
-      <!-- Container per la lunghezza -->
       <div class="container mb-5">
         <h3 class="mb-3">Personalizzazione lunghezza</h3>
         
         <div id="istruzioni-misurazione" class="mb-4">
-          <!-- Le istruzioni verranno generate dinamicamente in base alla forma selezionata -->
         </div>
         
         <div class="form-group mb-4">
@@ -625,7 +655,6 @@
       </div>
     </div>
 
-    <!-- Step 7: Riepilogo -->
     <div class="step-section" id="step7-riepilogo">
       <div class="row">
         <div class="col-12">
@@ -637,7 +666,6 @@
       </div>
       
       <div id="riepilogo-container">
-        <!-- Il riepilogo verrà generato dinamicamente -->
       </div>
       
       <div class="row mt-4">
