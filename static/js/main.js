@@ -51,6 +51,7 @@ $(document).ready(function() {
   
   // Mappatura strip LED per visualizzazione
   mappaStripLedVisualizzazione = {
+    'senza_strip': 'Senza Strip LED',
     'STRIP_24V_SMD_IP20': 'STRIP 24V SMD (IP20)',
     'STRIP_24V_SMD_IP66': 'STRIP 24V SMD (IP66)',
     'STRIP_24V_COB_IP20': 'STRIP 24V COB (IP20)',
@@ -123,6 +124,12 @@ $(document).ready(function() {
       // Reset della selezione
       configurazione.categoriaSelezionata = null;
       configurazione.profiloSelezionato = null;
+      configurazione.tipologiaSelezionata = null;
+      configurazione.stripLedSelezionata = null;
+      
+      // Nascondi i container delle opzioni
+      $('#tipologia-container').hide();
+      $('#strip-led-container').hide();
       
       // Aggiorna la progress bar
       updateProgressBar(1);
@@ -133,18 +140,29 @@ $(document).ready(function() {
   $('#btn-continua-step2').on('click', function(e) {
     e.preventDefault();
     
-    if (configurazione.profiloSelezionato) {
-      vaiAllaSceltaTipologia();
+    if (configurazione.profiloSelezionato && configurazione.tipologiaSelezionata && configurazione.stripLedSelezionata) {
+      if (configurazione.stripLedSelezionata === 'senza_strip') {
+        // Se non c'è strip LED, vai direttamente all'alimentazione
+        vaiAllAlimentazione();
+      } else {
+        // Altrimenti vai alla configurazione di temperatura e potenza
+        vaiAllaTemperaturaEPotenza();
+      }
     } else {
-      alert("Seleziona un profilo prima di continuare");
+      let messaggi = [];
+      if (!configurazione.profiloSelezionato) messaggi.push("un profilo");
+      if (!configurazione.tipologiaSelezionata) messaggi.push("una tipologia");
+      if (!configurazione.stripLedSelezionata) messaggi.push("una strip LED");
+      
+      alert("Seleziona " + messaggi.join(", ") + " prima di continuare");
     }
   });
   
-  // Pulsante per tornare dalla tipologia al modello
+  // Pulsante per tornare dalla temperatura/potenza al modello
   $('#btn-torna-step2').on('click', function(e) {
     e.preventDefault();
     
-    $("#step3-tipologia").fadeOut(300, function() {
+    $("#step3-temperatura-potenza").fadeOut(300, function() {
       $("#step2-modello").fadeIn(300);
       
       // Aggiorna la progress bar
@@ -152,60 +170,8 @@ $(document).ready(function() {
     });
   });
   
-  // Pulsante per continuare alla selezione della strip LED
-  $('#btn-continua-step3').on('click', function(e) {
-    e.preventDefault();
-    
-    if (configurazione.tipologiaSelezionata) {
-      vaiAllaSceltaStripLed();
-    } else {
-      alert("Seleziona una tipologia prima di continuare");
-    }
-  });
-  
-  // Pulsante per tornare dalla strip LED alla tipologia
-  $('#btn-torna-step3').on('click', function(e) {
-    e.preventDefault();
-    
-    $("#step4-strip").fadeOut(300, function() {
-      $("#step3-tipologia").fadeIn(300);
-      
-      // Aggiorna la progress bar
-      updateProgressBar(3);
-    });
-  });
-  
-  // Pulsante per continuare alla fase successiva
-  $('#btn-continua-step4').on('click', function(e) {
-    e.preventDefault();
-    
-    if (configurazione.stripLedSelezionata) {
-      if (configurazione.stripLedSelezionata === 'senza_strip') {
-        // Se l'utente ha selezionato "Senza strip" vai direttamente all'alimentazione
-        vaiAllAlimentazione();
-      } else {
-        // Altrimenti vai alla configurazione della temperatura e potenza
-        vaiAllaTemperaturaEPotenza();
-      }
-    } else {
-      alert("Seleziona una strip LED prima di continuare");
-    }
-  });
-  
-  // Pulsante per tornare dalla temperatura e potenza alla strip LED
-  $('#btn-torna-step4').on('click', function(e) {
-    e.preventDefault();
-    
-    $("#step5-temperatura-potenza").fadeOut(300, function() {
-      $("#step4-strip").fadeIn(300);
-      
-      // Aggiorna la progress bar
-      updateProgressBar(4);
-    });
-  });
-  
   // Pulsante per continuare all'alimentazione
-  $('#btn-continua-step5').on('click', function(e) {
+  $('#btn-continua-step3').on('click', function(e) {
     e.preventDefault();
     
     if (configurazione.temperaturaColoreSelezionata && configurazione.potenzaSelezionata) {
@@ -216,26 +182,26 @@ $(document).ready(function() {
   });
   
   // Pulsante per tornare dall'alimentazione alla temperatura e potenza
-  $('#btn-torna-step5').on('click', function(e) {
+  $('#btn-torna-step3').on('click', function(e) {
     e.preventDefault();
     
-    $("#step6-alimentazione").fadeOut(300, function() {
-      // Se è stata selezionata una strip LED senza "senza_strip", vai allo step 5
+    $("#step4-alimentazione").fadeOut(300, function() {
+      // Se è stata selezionata una strip LED senza "senza_strip", vai allo step 3
       if (configurazione.stripLedSelezionata !== 'senza_strip') {
-        $("#step5-temperatura-potenza").fadeIn(300);
+        $("#step3-temperatura-potenza").fadeIn(300);
         // Aggiorna la progress bar
-        updateProgressBar(5);
+        updateProgressBar(3);
       } else {
-        // Altrimenti torna allo step 4
-        $("#step4-strip").fadeIn(300);
+        // Altrimenti torna allo step 2
+        $("#step2-modello").fadeIn(300);
         // Aggiorna la progress bar
-        updateProgressBar(4);
+        updateProgressBar(2);
       }
     });
   });
   
-  // Pulsante per continuare al controllo (step 7)
-  $('#btn-continua-step6').on('click', function(e) {
+  // Pulsante per continuare al controllo (step 5)
+  $('#btn-continua-step4').on('click', function(e) {
     e.preventDefault();
     
     // Verifica che sia stata selezionata un'alimentazione
@@ -255,19 +221,19 @@ $(document).ready(function() {
   });
   
   // Pulsante per tornare dal controllo all'alimentazione
-  $('#btn-torna-step6').on('click', function(e) {
+  $('#btn-torna-step4').on('click', function(e) {
     e.preventDefault();
     
-    $("#step7-controllo").fadeOut(300, function() {
-      $("#step6-alimentazione").fadeIn(300);
+    $("#step5-controllo").fadeOut(300, function() {
+      $("#step4-alimentazione").fadeIn(300);
       
       // Aggiorna la progress bar
-      updateProgressBar(6);
+      updateProgressBar(4);
     });
   });
   
-  // Pulsante per continuare alla personalizzazione (step 8)
-  $('#btn-continua-step7').on('click', function(e) {
+  // Pulsante per continuare alla personalizzazione (step 6)
+  $('#btn-continua-step5').on('click', function(e) {
     e.preventDefault();
     
     // Verifica che tutte le opzioni necessarie siano state selezionate
@@ -291,14 +257,14 @@ $(document).ready(function() {
   });
   
   // Pulsante per tornare alla pagina controllo
-  $('#btn-torna-step7').on('click', function(e) {
+  $('#btn-torna-step5').on('click', function(e) {
     e.preventDefault();
     
-    $("#step8-personalizzazione").fadeOut(300, function() {
-      $("#step7-controllo").fadeIn(300);
+    $("#step6-personalizzazione").fadeOut(300, function() {
+      $("#step5-controllo").fadeIn(300);
       
       // Aggiorna la progress bar
-      updateProgressBar(7);
+      updateProgressBar(5);
     });
   });
   
@@ -323,6 +289,18 @@ $(document).ready(function() {
     }
     
     finalizzaConfigurazione();
+  });
+  
+  // Pulsante per tornare alla pagina personalizzazione dal riepilogo
+  $('#btn-torna-step6').on('click', function(e) {
+    e.preventDefault();
+    
+    $("#step7-riepilogo").fadeOut(300, function() {
+      $("#step6-personalizzazione").fadeIn(300);
+      
+      // Aggiorna la progress bar
+      updateProgressBar(6);
+    });
   });
 });
 
@@ -396,8 +374,8 @@ function caricaProfili(categoria) {
         configurazione.profiloSelezionato = $(this).data('id');
         configurazione.nomeModello = $(this).data('nome');
         
-        // Abilita il pulsante "Continua"
-        $('#btn-continua-step2').prop('disabled', false);
+        // Carica le opzioni di tipologia e strip LED per questo profilo
+        caricaOpzioniProfilo(configurazione.profiloSelezionato);
       });
       
       // Aggiungi event listener specifico al pulsante "Seleziona"
@@ -412,10 +390,8 @@ function caricaProfili(categoria) {
         configurazione.profiloSelezionato = profiloCard.data('id');
         configurazione.nomeModello = profiloCard.data('nome');
         
-        console.log("Profilo selezionato e avanzamento:", configurazione.profiloSelezionato);
-        
-        // Avanza allo step successivo
-        vaiAllaSceltaTipologia();
+        // Carica le opzioni di tipologia e strip LED per questo profilo
+        caricaOpzioniProfilo(configurazione.profiloSelezionato);
       });
     },
     error: function(error) {
@@ -425,31 +401,20 @@ function caricaProfili(categoria) {
   });
 }
 
-// Funzione per passare alla scelta della tipologia (Step 3)
-function vaiAllaSceltaTipologia() {
-  console.log("Passaggio al terzo step");
+// Funzione per caricare le opzioni di tipologia e strip LED per un profilo
+function caricaOpzioniProfilo(profiloId) {
+  console.log("Caricamento opzioni per profilo:", profiloId);
   
-  // Prepara lo step 3
-  $('#profilo-nome-step3').text(configurazione.nomeModello);
+  // Svuota i container delle opzioni e mostra il loader
+  $('#tipologie-options').empty().html('<div class="text-center mt-3"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni...</p></div>');
+  $('#strip-led-options').empty();
   
-  // Aggiorna la progress bar
-  updateProgressBar(3);
+  // Disabilita il pulsante continua
+  $('#btn-continua-step2').prop('disabled', true);
   
-  // Cambia pagina
-  $("#step2-modello").fadeOut(300, function() {
-    $("#step3-tipologia").fadeIn(300);
-    
-    // Carica le opzioni di tipologia per il profilo selezionato
-    caricaOpzioniTipologia(configurazione.profiloSelezionato);
-  });
-}
-
-// Funzione per caricare le opzioni di tipologia
-function caricaOpzioniTipologia(profiloId) {
-  console.log("Caricamento opzioni tipologia per profilo:", profiloId);
-  
-  // Svuota il container delle opzioni
-  $('#tipologie-container').empty().html('<div class="text-center mt-3"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni...</p></div>');
+  // Reset delle selezioni
+  configurazione.tipologiaSelezionata = null;
+  configurazione.stripLedSelezionata = null;
   
   // Chiamata AJAX per caricare le opzioni
   $.ajax({
@@ -457,38 +422,63 @@ function caricaOpzioniTipologia(profiloId) {
     method: 'GET',
     success: function(data) {
       console.log("Opzioni profilo ricevute:", data);
-      $('#tipologie-container').empty();
       
+      // Svuota i container delle opzioni
+      $('#tipologie-options').empty();
+      $('#strip-led-options').empty();
+      
+      // Mostra i container delle opzioni
+      $('#tipologia-container').show();
+      $('#strip-led-container').show();
+      
+      // Se non ci sono tipologie o strip LED disponibili
       if (!data.tipologie || data.tipologie.length === 0) {
-        $('#tipologie-container').html('<div class="col-12 text-center"><p>Nessuna tipologia disponibile per questo profilo.</p></div>');
-        return;
-      }
-      
-      // Mostra le tipologie disponibili
-      data.tipologie.forEach(function(tipologia) {
-        $('#tipologie-container').append(`
-          <div class="col-md-6 mb-3">
-            <div class="card option-card tipologia-card" data-id="${tipologia}">
-              <div class="card-body text-center">
-                <h5 class="card-title">${mappaTipologieVisualizzazione[tipologia] || tipologia}</h5>
-                <button class="btn btn-sm btn-primary mt-2 btn-seleziona-tipologia">Seleziona</button>
+        $('#tipologie-options').html('<div class="col-12 text-center"><p>Nessuna tipologia disponibile per questo profilo.</p></div>');
+      } else {
+        // Mostra le tipologie disponibili
+        data.tipologie.forEach(function(tipologia) {
+          $('#tipologie-options').append(`
+            <div class="col-md-6 mb-3">
+              <div class="card option-card tipologia-card" data-id="${tipologia}">
+                <div class="card-body text-center">
+                  <h5 class="card-title">${mappaTipologieVisualizzazione[tipologia] || tipologia}</h5>
+                  <button class="btn btn-sm btn-primary mt-2 btn-seleziona-tipologia">Seleziona</button>
+                </div>
               </div>
             </div>
-          </div>
-        `);
-      });
+          `);
+        });
+      }
       
-      // Aggiungi event listener alle opzioni
+      if (!data.strip_led || data.strip_led.length === 0) {
+        $('#strip-led-options').html('<div class="col-12 text-center"><p>Nessuna strip LED disponibile per questo profilo.</p></div>');
+      } else {
+        // Mostra le strip LED disponibili
+        data.strip_led.forEach(function(strip) {
+          $('#strip-led-options').append(`
+            <div class="col-md-4 mb-3">
+              <div class="card option-card strip-led-card" data-id="${strip}">
+                <div class="card-body text-center">
+                  <h5 class="card-title">${mappaStripLedVisualizzazione[strip] || strip}</h5>
+                  <button class="btn btn-sm btn-primary mt-2 btn-seleziona-strip">Seleziona</button>
+                </div>
+              </div>
+            </div>
+          `);
+        });
+      }
+      
+      // Aggiungi event listener alle opzioni di tipologia
       $('.tipologia-card').on('click', function() {
         $('.tipologia-card').removeClass('selected');
         $(this).addClass('selected');
         configurazione.tipologiaSelezionata = $(this).data('id');
         
-        // Abilita il pulsante continua
-        $('#btn-continua-step3').prop('disabled', false);
+        // Verifica se tutte le selezioni necessarie sono state fatte
+        checkStep2Completion();
       });
       
-      // Event listener per il pulsante seleziona
+      // Event listener per il pulsante seleziona tipologia
       $('.btn-seleziona-tipologia').on('click', function(e) {
         e.stopPropagation();
         
@@ -499,97 +489,21 @@ function caricaOpzioniTipologia(profiloId) {
         
         configurazione.tipologiaSelezionata = tipologiaCard.data('id');
         
-        // Abilita il pulsante continua
-        $('#btn-continua-step3').prop('disabled', false);
-        
-        // Procedi automaticamente alla selezione della strip LED
-        vaiAllaSceltaStripLed();
-      });
-    },
-    error: function(error) {
-      console.error("Errore nel caricamento delle opzioni:", error);
-      $('#tipologie-container').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle opzioni. Riprova più tardi.</p></div>');
-    }
-  });
-}
-
-// Funzione per passare alla scelta della strip LED (Step 4)
-function vaiAllaSceltaStripLed() {
-  console.log("Passaggio al quarto step");
-  
-  // Prepara lo step 4
-  $('#profilo-nome-step4').text(configurazione.nomeModello);
-  $('#tipologia-nome-step4').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
-  
-  // Aggiorna la progress bar
-  updateProgressBar(4);
-  
-  // Cambia pagina
-  $("#step3-tipologia").fadeOut(300, function() {
-    $("#step4-strip").fadeIn(300);
-    
-    // Carica le opzioni di strip LED per il profilo selezionato
-    caricaOpzioniStripLed(configurazione.profiloSelezionato);
-  });
-}
-
-// Funzione per caricare le opzioni di strip LED
-function caricaOpzioniStripLed(profiloId) {
-  console.log("Caricamento opzioni strip LED per profilo:", profiloId);
-  
-  // Svuota il container delle opzioni
-  $('#strip-led-container').empty().html('<div class="text-center mt-3"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni strip LED...</p></div>');
-  
-  // Chiamata AJAX per caricare le opzioni
-  $.ajax({
-    url: `/get_opzioni_profilo/${profiloId}`,
-    method: 'GET',
-    success: function(data) {
-      console.log("Opzioni profilo ricevute:", data);
-      $('#strip-led-container').empty();
-      
-      if (!data.strip_led || data.strip_led.length === 0) {
-        $('#strip-led-container').html('<div class="col-12 text-center"><p>Nessuna strip LED disponibile per questo profilo.</p></div>');
-        return;
-      }
-      
-      // Aggiungi l'opzione "Senza strip LED"
-      $('#strip-led-container').append(`
-        <div class="col-md-4 mb-3">
-          <div class="card option-card strip-led-card" data-id="senza_strip">
-            <div class="card-body text-center">
-              <h5 class="card-title">Senza Strip LED</h5>
-              <button class="btn btn-sm btn-primary mt-2 btn-seleziona-strip">Seleziona</button>
-            </div>
-          </div>
-        </div>
-      `);
-      
-      // Mostra le strip LED disponibili
-      data.strip_led.forEach(function(strip) {
-        $('#strip-led-container').append(`
-          <div class="col-md-4 mb-3">
-            <div class="card option-card strip-led-card" data-id="${strip}">
-              <div class="card-body text-center">
-                <h5 class="card-title">${mappaStripLedVisualizzazione[strip] || strip}</h5>
-                <button class="btn btn-sm btn-primary mt-2 btn-seleziona-strip">Seleziona</button>
-              </div>
-            </div>
-          </div>
-        `);
+        // Verifica se tutte le selezioni necessarie sono state fatte
+        checkStep2Completion();
       });
       
-      // Aggiungi event listener alle opzioni
+      // Aggiungi event listener alle opzioni di strip LED
       $('.strip-led-card').on('click', function() {
         $('.strip-led-card').removeClass('selected');
         $(this).addClass('selected');
         configurazione.stripLedSelezionata = $(this).data('id');
         
-        // Abilita il pulsante continua
-        $('#btn-continua-step4').prop('disabled', false);
+        // Verifica se tutte le selezioni necessarie sono state fatte
+        checkStep2Completion();
       });
       
-      // Event listener per il pulsante seleziona
+      // Event listener per il pulsante seleziona strip LED
       $('.btn-seleziona-strip').on('click', function(e) {
         e.stopPropagation();
         
@@ -600,41 +514,42 @@ function caricaOpzioniStripLed(profiloId) {
         
         configurazione.stripLedSelezionata = stripCard.data('id');
         
-        // Abilita il pulsante continua
-        $('#btn-continua-step4').prop('disabled', false);
-        
-        // Procedi automaticamente alla fase successiva (temperatura e potenza)
-        if (configurazione.stripLedSelezionata === 'senza_strip') {
-          // Se l'utente ha selezionato "Senza strip" vai direttamente all'alimentazione
-          vaiAllAlimentazione();
-        } else {
-          // Altrimenti vai alla configurazione della temperatura e potenza
-          vaiAllaTemperaturaEPotenza();
-        }
+        // Verifica se tutte le selezioni necessarie sono state fatte
+        checkStep2Completion();
       });
     },
     error: function(error) {
-      console.error("Errore nel caricamento delle opzioni strip LED:", error);
-      $('#strip-led-container').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle opzioni. Riprova più tardi.</p></div>');
+      console.error("Errore nel caricamento delle opzioni:", error);
+      $('#tipologie-options').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle opzioni. Riprova più tardi.</p></div>');
+      $('#strip-led-options').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle opzioni. Riprova più tardi.</p></div>');
     }
   });
+}
+
+// Funzione per verificare se tutte le selezioni dello step 2 sono complete
+function checkStep2Completion() {
+  if (configurazione.profiloSelezionato && configurazione.tipologiaSelezionata && configurazione.stripLedSelezionata) {
+    $('#btn-continua-step2').prop('disabled', false);
+  } else {
+    $('#btn-continua-step2').prop('disabled', true);
+  }
 }
 
 // Funzione per passare alla temperatura e potenza
 function vaiAllaTemperaturaEPotenza() {
   console.log("Passaggio alla temperatura e potenza");
   
-  // Prepara lo step 5
-  $('#profilo-nome-step5').text(configurazione.nomeModello);
-  $('#tipologia-nome-step5').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
-  $('#strip-nome-step5').text(mappaStripLedVisualizzazione[configurazione.stripLedSelezionata] || configurazione.stripLedSelezionata);
+  // Prepara lo step 3
+  $('#profilo-nome-step3').text(configurazione.nomeModello);
+  $('#tipologia-nome-step3').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
+  $('#strip-nome-step3').text(mappaStripLedVisualizzazione[configurazione.stripLedSelezionata] || configurazione.stripLedSelezionata);
   
   // Aggiorna la progress bar
-  updateProgressBar(5);
+  updateProgressBar(3);
   
   // Cambia pagina
-  $("#step4-strip").fadeOut(300, function() {
-    $("#step5-temperatura-potenza").fadeIn(300);
+  $("#step2-modello").fadeOut(300, function() {
+    $("#step3-temperatura-potenza").fadeIn(300);
     
     // Carica le opzioni di temperatura per la strip LED selezionata
     caricaOpzioniTemperatura(configurazione.stripLedSelezionata);
@@ -652,7 +567,7 @@ function caricaOpzioniTemperatura(stripId) {
   $('#potenza-container').empty();
   
   // Disabilita il pulsante Continua
-  $('#btn-continua-step5').prop('disabled', true);
+  $('#btn-continua-step3').prop('disabled', true);
   
   // Reset delle opzioni selezionate
   configurazione.temperaturaColoreSelezionata = null;
@@ -743,7 +658,7 @@ function caricaOpzioniPotenza(stripId, temperatura) {
   $('#potenza-container').html('<div class="col-12 text-center"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni potenza...</p></div>');
   
   // Disabilita il pulsante Continua
-  $('#btn-continua-step5').prop('disabled', true);
+  $('#btn-continua-step3').prop('disabled', true);
   
   // Reset dell'opzione selezionata
   configurazione.potenzaSelezionata = null;
@@ -792,7 +707,7 @@ function caricaOpzioniPotenza(stripId, temperatura) {
         configurazione.codicePotenza = $(this).data('codice');
         
         // Abilita il pulsante continua
-        $('#btn-continua-step5').prop('disabled', false);
+        $('#btn-continua-step3').prop('disabled', false);
       });
       
       // Event listener per il pulsante seleziona
@@ -808,7 +723,7 @@ function caricaOpzioniPotenza(stripId, temperatura) {
         configurazione.codicePotenza = potenzaCard.data('codice');
         
         // Abilita il pulsante continua
-        $('#btn-continua-step5').prop('disabled', false);
+        $('#btn-continua-step3').prop('disabled', false);
       });
     },
     error: function(error) {
@@ -822,45 +737,54 @@ function caricaOpzioniPotenza(stripId, temperatura) {
 function vaiAllAlimentazione() {
   console.log("Passaggio all'alimentazione");
   
-  // Prepara lo step 6
-  $('#profilo-nome-step6').text(configurazione.nomeModello);
-  $('#tipologia-nome-step6').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
+  // Prepara lo step 4
+  $('#profilo-nome-step4').text(configurazione.nomeModello);
+  $('#tipologia-nome-step4').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
   
   // Se è stata selezionata una strip LED, mostra le informazioni
   if (configurazione.stripLedSelezionata !== 'senza_strip') {
-    $('#strip-nome-step6').text(mappaStripLedVisualizzazione[configurazione.stripLedSelezionata] || configurazione.stripLedSelezionata);
+    $('#strip-nome-step4').text(mappaStripLedVisualizzazione[configurazione.stripLedSelezionata] || configurazione.stripLedSelezionata);
     
     // Mostra i badge di temperatura e potenza solo se sono state selezionate
     if (configurazione.temperaturaColoreSelezionata) {
-      $('#temperatura-nome-step6').text(formatTemperatura(configurazione.temperaturaColoreSelezionata));
-      $('#badge-temperatura-step6').show();
+      $('#temperatura-nome-step4').text(formatTemperatura(configurazione.temperaturaColoreSelezionata));
+      $('#badge-temperatura-step4').show();
     } else {
-      $('#badge-temperatura-step6').hide();
+      $('#badge-temperatura-step4').hide();
     }
     
     if (configurazione.potenzaSelezionata) {
-      $('#potenza-nome-step6').text(configurazione.potenzaSelezionata);
-      $('#badge-potenza-step6').show();
+      $('#potenza-nome-step4').text(configurazione.potenzaSelezionata);
+      $('#badge-potenza-step4').show();
     } else {
-      $('#badge-potenza-step6').hide();
+      $('#badge-potenza-step4').hide();
     }
   } else {
     // Se non c'è strip LED, nascondi i badge relativi
-    $('#strip-nome-step6').text('Senza Strip LED');
-    $('#badge-temperatura-step6').hide();
-    $('#badge-potenza-step6').hide();
+    $('#strip-nome-step4').text('Senza Strip LED');
+    $('#badge-temperatura-step4').hide();
+    $('#badge-potenza-step4').hide();
   }
   
   // Aggiorna la progress bar
-  updateProgressBar(6);
+  updateProgressBar(4);
   
   // Cambia pagina
-  $("#step5-temperatura-potenza").fadeOut(300, function() {
-    $("#step6-alimentazione").fadeIn(300);
-    
-    // Prepara l'interfaccia e i listener per le opzioni di alimentazione
-    prepareAlimentazioneListeners();
-  });
+  if (configurazione.stripLedSelezionata !== 'senza_strip') {
+    $("#step3-temperatura-potenza").fadeOut(300, function() {
+      $("#step4-alimentazione").fadeIn(300);
+      
+      // Prepara l'interfaccia e i listener per le opzioni di alimentazione
+      prepareAlimentazioneListeners();
+    });
+  } else {
+    $("#step2-modello").fadeOut(300, function() {
+      $("#step4-alimentazione").fadeIn(300);
+      
+      // Prepara l'interfaccia e i listener per le opzioni di alimentazione
+      prepareAlimentazioneListeners();
+    });
+  }
 }
 
 // Funzione per preparare i listener degli elementi di alimentazione
@@ -873,7 +797,7 @@ function prepareAlimentazioneListeners() {
   $('#alimentatore-section').hide();
   
   // Disabilita il pulsante continua
-  $('#btn-continua-step6').prop('disabled', true);
+  $('#btn-continua-step4').prop('disabled', true);
   
   // Rimuovi la classe selected da tutte le opzioni
   $('.alimentazione-card').removeClass('selected');
@@ -892,7 +816,7 @@ function prepareAlimentazioneListeners() {
       configurazione.tipologiaAlimentatoreSelezionata = null;
       
       // Abilita il pulsante continua
-      $('#btn-continua-step6').prop('disabled', false);
+      $('#btn-continua-step4').prop('disabled', false);
     } else {
       // Carica le opzioni di alimentatore
       caricaOpzioniAlimentatore(alimentazione);
@@ -920,7 +844,7 @@ function prepareAlimentazioneListeners() {
       configurazione.tipologiaAlimentatoreSelezionata = null;
       
       // Abilita il pulsante continua
-      $('#btn-continua-step6').prop('disabled', false);
+      $('#btn-continua-step4').prop('disabled', false);
     } else {
       // Carica le opzioni di alimentatore
       caricaOpzioniAlimentatore(alimentazione);
@@ -939,7 +863,7 @@ function caricaOpzioniAlimentatore(tipoAlimentazione) {
   $('#alimentatore-container').html('<div class="col-12 text-center"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni alimentatore...</p></div>');
   
   // Disabilita il pulsante continua
-  $('#btn-continua-step6').prop('disabled', true);
+  $('#btn-continua-step4').prop('disabled', true);
   
   // Reset dell'opzione selezionata
   configurazione.tipologiaAlimentatoreSelezionata = null;
@@ -989,7 +913,7 @@ function caricaOpzioniAlimentatore(tipoAlimentazione) {
         configurazione.tipologiaAlimentatoreSelezionata = $(this).data('alimentatore');
         
         // Abilita il pulsante continua
-        $('#btn-continua-step6').prop('disabled', false);
+        $('#btn-continua-step4').prop('disabled', false);
       });
       
       // Event listener per il pulsante seleziona
@@ -1004,7 +928,7 @@ function caricaOpzioniAlimentatore(tipoAlimentazione) {
         configurazione.tipologiaAlimentatoreSelezionata = alimentatoreCard.data('alimentatore');
         
         // Abilita il pulsante continua
-        $('#btn-continua-step6').prop('disabled', false);
+        $('#btn-continua-step4').prop('disabled', false);
       });
     },
     error: function(error) {
@@ -1014,35 +938,35 @@ function caricaOpzioniAlimentatore(tipoAlimentazione) {
   });
 }
 
-// Funzione per passare al controllo (step 7 - dimmer e cavi)
+// Funzione per passare al controllo (step 5 - dimmer e cavi)
 function vaiAlControllo() {
   console.log("Passaggio al controllo (dimmer e cavi)");
   
-  // Prepara lo step 7
-  $('#profilo-nome-step7').text(configurazione.nomeModello);
-  $('#tipologia-nome-step7').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
+  // Prepara lo step 5
+  $('#profilo-nome-step5').text(configurazione.nomeModello);
+  $('#tipologia-nome-step5').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
   
   // Adatta l'interfaccia in base alla selezione della strip LED
   if (configurazione.stripLedSelezionata !== 'senza_strip') {
-    $('#strip-nome-step7').text(mappaStripLedVisualizzazione[configurazione.stripLedSelezionata] || configurazione.stripLedSelezionata);
+    $('#strip-nome-step5').text(mappaStripLedVisualizzazione[configurazione.stripLedSelezionata] || configurazione.stripLedSelezionata);
   } else {
-    $('#strip-nome-step7').text('Senza Strip LED');
+    $('#strip-nome-step5').text('Senza Strip LED');
   }
   
   // Mostra l'alimentazione selezionata
   if (configurazione.alimentazioneSelezionata === 'SENZA_ALIMENTATORE') {
-    $('#alimentazione-nome-step7').text('Senza alimentatore');
+    $('#alimentazione-nome-step5').text('Senza alimentatore');
   } else {
     let alimentazioneText = configurazione.alimentazioneSelezionata === 'ON/OFF' ? 'ON/OFF' : 'Dimmerabile TRIAC';
-    $('#alimentazione-nome-step7').text(alimentazioneText);
+    $('#alimentazione-nome-step5').text(alimentazioneText);
   }
   
   // Aggiorna la progress bar
-  updateProgressBar(7);
+  updateProgressBar(5);
   
   // Cambia pagina
-  $("#step6-alimentazione").fadeOut(300, function() {
-    $("#step7-controllo").fadeIn(300);
+  $("#step4-alimentazione").fadeOut(300, function() {
+    $("#step5-controllo").fadeIn(300);
     
     // Prepara l'interfaccia e i listener per le opzioni di controllo
     prepareControlloListeners();
@@ -1067,7 +991,7 @@ function prepareControlloListeners() {
   configurazione.lunghezzaCavoUscita = 1800;
   
   // Disabilita il pulsante continua
-  $('#btn-continua-step7').prop('disabled', true);
+  $('#btn-continua-step5').prop('disabled', true);
   
   // Rimuovi la classe selected da tutte le opzioni
   $('.dimmer-card, .alimentazione-cavo-card, .uscita-cavo-card').removeClass('selected');
@@ -1087,7 +1011,7 @@ function prepareControlloListeners() {
       $('#dimmer-warning').hide();
     }
     
-    checkStep7Completion();
+    checkStep5Completion();
   });
   
   // Event listener per il pulsante seleziona dimmer
@@ -1109,7 +1033,7 @@ function prepareControlloListeners() {
       $('#dimmer-warning').hide();
     }
     
-    checkStep7Completion();
+    checkStep5Completion();
   });
   
   // Aggiungi event listener alle opzioni di alimentazione cavo
@@ -1127,7 +1051,7 @@ function prepareControlloListeners() {
       $('#lunghezza-cavo-uscita-container').hide();
     }
     
-    checkStep7Completion();
+    checkStep5Completion();
   });
   
   // Event listener per il pulsante seleziona alimentazione cavo
@@ -1149,7 +1073,7 @@ function prepareControlloListeners() {
       $('#lunghezza-cavo-uscita-container').hide();
     }
     
-    checkStep7Completion();
+    checkStep5Completion();
   });
   
   // Aggiungi event listener alle opzioni di uscita cavo
@@ -1159,7 +1083,7 @@ function prepareControlloListeners() {
     
     configurazione.uscitaCavoSelezionata = $(this).data('uscita-cavo');
     
-    checkStep7Completion();
+    checkStep5Completion();
   });
   
   // Event listener per il pulsante seleziona uscita cavo
@@ -1173,7 +1097,7 @@ function prepareControlloListeners() {
     
     configurazione.uscitaCavoSelezionata = uscitaCavoCard.data('uscita-cavo');
     
-    checkStep7Completion();
+    checkStep5Completion();
   });
   
   // Aggiungi event listener ai campi di lunghezza cavo
@@ -1189,8 +1113,8 @@ function prepareControlloListeners() {
   });
 }
 
-// Funzione per verificare se tutte le selezioni del step 7 sono complete
-function checkStep7Completion() {
+// Funzione per verificare se tutte le selezioni del step 5 sono complete
+function checkStep5Completion() {
   let isComplete = true;
   
   // Verifica che tutte le opzioni necessarie siano state selezionate
@@ -1207,23 +1131,23 @@ function checkStep7Completion() {
   }
   
   // Abilita/disabilita il pulsante continua
-  $('#btn-continua-step7').prop('disabled', !isComplete);
+  $('#btn-continua-step5').prop('disabled', !isComplete);
 }
 
-// Funzione per passare alla personalizzazione (step 8)
+// Funzione per passare alla personalizzazione (step 6)
 function vaiAllaPersonalizzazione() {
   console.log("Passaggio alla personalizzazione");
   
-  // Prepara lo step 8
-  $('#profilo-nome-step8').text(configurazione.nomeModello);
-  $('#tipologia-nome-step8').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
+  // Prepara lo step 6
+  $('#profilo-nome-step6').text(configurazione.nomeModello);
+  $('#tipologia-nome-step6').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
   
   // Aggiorna la progress bar
-  updateProgressBar(8);
+  updateProgressBar(6);
   
   // Cambia pagina
-  $("#step7-controllo").fadeOut(300, function() {
-    $("#step8-personalizzazione").fadeIn(300);
+  $("#step5-controllo").fadeOut(300, function() {
+    $("#step6-personalizzazione").fadeIn(300);
     
     // Prepara l'interfaccia e i listener per le opzioni di personalizzazione
     preparePersonalizzazioneListeners();
@@ -1248,7 +1172,7 @@ function preparePersonalizzazioneListeners() {
     
     // Aggiorna le istruzioni di misurazione in base alla forma selezionata
     updateIstruzioniMisurazione(configurazione.formaDiTaglioSelezionata);
-    checkStep8Completion();
+    checkStep6Completion();
   });
   
   // Event listener per il pulsante seleziona forma taglio
@@ -1265,7 +1189,7 @@ function preparePersonalizzazioneListeners() {
     // Aggiorna le istruzioni di misurazione in base alla forma selezionata
     updateIstruzioniMisurazione(configurazione.formaDiTaglioSelezionata);
     
-    checkStep8Completion();
+    checkStep6Completion();
   });
   
   // Aggiungi event listener alle opzioni di finitura
@@ -1275,7 +1199,7 @@ function preparePersonalizzazioneListeners() {
     
     configurazione.finituraSelezionata = $(this).data('finitura');
     
-    checkStep8Completion();
+    checkStep6Completion();
   });
   
   // Event listener per il pulsante seleziona finitura
@@ -1289,7 +1213,7 @@ function preparePersonalizzazioneListeners() {
     
     configurazione.finituraSelezionata = finituraCard.data('finitura');
     
-    checkStep8Completion();
+    checkStep6Completion();
   });
   
   // Aggiungi event listener al campo lunghezza personalizzata
@@ -1304,7 +1228,7 @@ function preparePersonalizzazioneListeners() {
       $('#proposte-container').hide();
     }
     
-    checkStep8Completion();
+    checkStep6Completion();
   });
   
   // Event listener per le opzioni di proposta
@@ -1319,13 +1243,15 @@ function preparePersonalizzazioneListeners() {
       configurazione.lunghezzaRichiesta = valore;
       $('#lunghezza-personalizzata').val(valore);
     }
+    
+    checkStep6Completion();
   });
   
   // Inizializza con le opzioni predefinite
   updateIstruzioniMisurazione('DRITTO_SEMPLICE');
   
   // Disabilita il pulsante finalizza se non tutte le opzioni sono selezionate
-  checkStep8Completion();
+  checkStep6Completion();
 }
 
 // Funzione per aggiornare le istruzioni di misurazione in base alla forma selezionata
@@ -1409,8 +1335,8 @@ function calcolaProposte(lunghezzaRichiesta) {
       $('#spazio-produzione').text(data.spazioProduzione);
       
       // Aggiorna i valori dei pulsanti
-      $('.btn-proposta1').data('valore', data.proposte.proposta1);
-      $('.btn-proposta2').data('valore', data.proposte.proposta2);
+      $('.btn-seleziona-proposta[data-proposta="1"]').data('valore', data.proposte.proposta1);
+      $('.btn-seleziona-proposta[data-proposta="2"]').data('valore', data.proposte.proposta2);
       
       // Mostra il container delle proposte
       $('#proposte-container').show();
@@ -1422,8 +1348,8 @@ function calcolaProposte(lunghezzaRichiesta) {
   });
 }
 
-// Funzione per verificare se tutte le selezioni del step 8 sono complete
-function checkStep8Completion() {
+// Funzione per verificare se tutte le selezioni del step 6 sono complete
+function checkStep6Completion() {
   let isComplete = true;
   
   // Verifica che tutte le opzioni necessarie siano state selezionate
@@ -1445,258 +1371,239 @@ function checkStep8Completion() {
 
 // Funzione per caricare le finiture disponibili per un profilo
 function caricaFinitureDisponibili(profiloId) {
-	console.log("Caricamento finiture disponibili per profilo:", profiloId);
-	
-	// Reset delle selezioni
-	$('.finitura-card').removeClass('selected');
-	configurazione.finituraSelezionata = null;
-	
-	// Chiamata AJAX per ottenere le finiture disponibili
-	$.ajax({
-	  url: `/get_finiture/${profiloId}`,
-	  method: 'GET',
-	  success: function(data) {
-		console.log("Finiture ricevute:", data);
-		
-		if (!data.success) {
-		  // Se c'è un errore, mostra tutte le finiture di default
-		  $('.finitura-card').parent().show();
-		  return;
-		}
-		
-		// Mostra solo le finiture disponibili
-		const finitureDisponibili = data.finiture.map(f => f.id);
-		
-		// Nascondi tutte le finiture prima
-		$('.finitura-card').parent().hide();
-		
-		// Mostra solo quelle disponibili
-		finitureDisponibili.forEach(function(finituraId) {
-		  $(`.finitura-card[data-finitura="${finituraId}"]`).parent().show();
-		});
-		
-		// Se non ci sono finiture disponibili, mostra tutte
-		if (finitureDisponibili.length === 0) {
-		  $('.finitura-card').parent().show();
-		}
-	  },
-	  error: function(error) {
-		console.error("Errore nel caricamento delle finiture:", error);
-		// In caso di errore, mostra tutte le finiture
-		$('.finitura-card').parent().show();
-	  }
-	});
-  }
+  console.log("Caricamento finiture disponibili per profilo:", profiloId);
+  
+  // Reset delle selezioni
+  $('.finitura-card').removeClass('selected');
+  configurazione.finituraSelezionata = null;
+  
+  // Chiamata AJAX per ottenere le finiture disponibili
+  $.ajax({
+    url: `/get_finiture/${profiloId}`,
+    method: 'GET',
+    success: function(data) {
+      console.log("Finiture ricevute:", data);
+      
+      if (!data.success) {
+        // Se c'è un errore, mostra tutte le finiture di default
+        $('.finitura-card').parent().show();
+        return;
+      }
+      
+      // Mostra solo le finiture disponibili
+      const finitureDisponibili = data.finiture.map(f => f.id);
+      
+      // Nascondi tutte le finiture prima
+      $('.finitura-card').parent().hide();
+      
+      // Mostra solo quelle disponibili
+      finitureDisponibili.forEach(function(finituraId) {
+        $(`.finitura-card[data-finitura="${finituraId}"]`).parent().show();
+      });
+      
+      // Se non ci sono finiture disponibili, mostra tutte
+      if (finitureDisponibili.length === 0) {
+        $('.finitura-card').parent().show();
+      }
+    },
+    error: function(error) {
+      console.error("Errore nel caricamento delle finiture:", error);
+      // In caso di errore, mostra tutte le finiture
+      $('.finitura-card').parent().show();
+    }
+  });
+}
 
 // Funzione per finalizzare la configurazione
 function finalizzaConfigurazione() {
-	console.log("Finalizzazione della configurazione:", configurazione);
-	
-	// Mostra il loader
-	$('#riepilogo-container').html('<div class="text-center my-5"><div class="spinner-border" role="status"></div><p class="mt-3">Generazione riepilogo...</p></div>');
-	
-	// Cambia pagina dal Step 8 al Step 9 (Riepilogo)
-	$("#step8-personalizzazione").fadeOut(300, function() {
-	  $("#step9-riepilogo").fadeIn(300);
-	  
-	  // Aggiorna la progress bar per lo step finale
-	  updateProgressBar(9);
-	  
-	  // Chiamata AJAX per finalizzare la configurazione
-	  $.ajax({
-		url: '/finalizza_configurazione',
-		method: 'POST',
-		contentType: 'application/json',
-		data: JSON.stringify(configurazione),
-		success: function(data) {
-		  console.log("Riepilogo ricevuto:", data);
-		  
-		  if (!data.success) {
-			$('#riepilogo-container').html('<div class="alert alert-danger">Errore nella finalizzazione della configurazione. Riprova più tardi.</div>');
-			return;
-		  }
-		  
-		  // Costruisci il riepilogo
-		  const riepilogo = data.riepilogo;
-		  const potenzaTotale = data.potenzaTotale;
-		  const codiceProdotto = data.codiceProdotto;
-		  
-		  // Crea una tabella HTML con tutte le informazioni
-		  let riepilogoHtml = `
-			<div class="card">
-			  <div class="card-header bg-primary text-white">
-				<h4>Riepilogo della configurazione</h4>
-				<h6>Codice prodotto: ${codiceProdotto}</h6>
-			  </div>
-			  <div class="card-body">
-				<div class="row">
-				  <div class="col-md-6">
-					<table class="table table-striped">
-					  <tbody>
-						<tr>
-						  <th scope="row">Categoria</th>
-						  <td>${mappaCategorieVisualizzazione[riepilogo.categoriaSelezionata] || riepilogo.categoriaSelezionata}</td>
-						</tr>
-						<tr>
-						  <th scope="row">Modello</th>
-						  <td>${riepilogo.nomeModello}</td>
-						</tr>
-						<tr>
-						  <th scope="row">Tipologia</th>
-						  <td>${mappaTipologieVisualizzazione[riepilogo.tipologiaSelezionata] || riepilogo.tipologiaSelezionata}</td>
-						</tr>
-						<tr>
-						  <th scope="row">Strip LED</th>
-						  <td>${riepilogo.stripLedSelezionata === 'senza_strip' ? 'Senza Strip LED' : (mappaStripLedVisualizzazione[riepilogo.stripLedSelezionata] || riepilogo.stripLedSelezionata)}</td>
-						</tr>
-		  `;
-		  
-		  // Aggiungi le informazioni sulla temperatura e potenza solo se è stata selezionata una strip LED
-		  if (riepilogo.stripLedSelezionata !== 'senza_strip') {
-			riepilogoHtml += `
-						<tr>
-						  <th scope="row">Temperatura colore</th>
-						  <td>${formatTemperatura(riepilogo.temperaturaColoreSelezionata)}</td>
-						</tr>
-						<tr>
-						  <th scope="row">Potenza</th>
-						  <td>${riepilogo.potenzaSelezionata} - ${riepilogo.codicePotenza}</td>
-						</tr>
-			`;
-		  }
-		  
-		  riepilogoHtml += `
-						<tr>
-						  <th scope="row">Alimentazione</th>
-						  <td>${riepilogo.alimentazioneSelezionata === 'SENZA_ALIMENTATORE' ? 'Senza alimentatore' : (riepilogo.alimentazioneSelezionata === 'ON/OFF' ? 'ON/OFF' : 'Dimmerabile TRIAC')}</td>
-						</tr>
-		  `;
-		  
-		  // Aggiungi le informazioni sull'alimentatore solo se è stato selezionato
-		  if (riepilogo.alimentazioneSelezionata !== 'SENZA_ALIMENTATORE') {
-			riepilogoHtml += `
-						<tr>
-						  <th scope="row">Alimentatore</th>
-						  <td>${riepilogo.tipologiaAlimentatoreSelezionata}</td>
-						</tr>
-			`;
-		  }
-		  
-		  riepilogoHtml += `
-					  </tbody>
-					</table>
-				  </div>
-				  <div class="col-md-6">
-					<table class="table table-striped">
-					  <tbody>
-						<tr>
-						  <th scope="row">Dimmer</th>
-						  <td>${riepilogo.dimmerSelezionato === 'NESSUN_DIMMER' ? 'Nessun dimmer' : riepilogo.dimmerSelezionato.replace(/_/g, ' ')}</td>
-						</tr>
-						<tr>
-						  <th scope="row">Alimentazione cavo</th>
-						  <td>${riepilogo.tipoAlimentazioneCavo === 'ALIMENTAZIONE_UNICA' ? 'Alimentazione unica' : 'Alimentazione doppia'}</td>
-						</tr>
-						<tr>
-						  <th scope="row">Lunghezza cavo ingresso</th>
-						  <td>${riepilogo.lunghezzaCavoIngresso}mm</td>
-						</tr>
-		  `;
-		  
-		  // Aggiungi la lunghezza del cavo in uscita solo se è stata selezionata l'alimentazione doppia
-		  if (riepilogo.tipoAlimentazioneCavo === 'ALIMENTAZIONE_DOPPIA') {
-			riepilogoHtml += `
-						<tr>
-						  <th scope="row">Lunghezza cavo uscita</th>
-						  <td>${riepilogo.lunghezzaCavoUscita}mm</td>
-						</tr>
-			`;
-		  }
-		  
-		  riepilogoHtml += `
-						<tr>
-						  <th scope="row">Uscita cavo</th>
-						  <td>${riepilogo.uscitaCavoSelezionata}</td>
-						</tr>
-						<tr>
-						  <th scope="row">Forma di taglio</th>
-						  <td>${mappaFormeTaglio[riepilogo.formaDiTaglioSelezionata] || riepilogo.formaDiTaglioSelezionata}</td>
-						</tr>
-						<tr>
-						  <th scope="row">Finitura</th>
-						  <td>${mappaFiniture[riepilogo.finituraSelezionata] || riepilogo.finituraSelezionata}</td>
-						</tr>
-						<tr>
-						  <th scope="row">Lunghezza richiesta</th>
-						  <td>${riepilogo.lunghezzaRichiesta}mm</td>
-						</tr>
-		  `;
-		  
-		  // Aggiungi le informazioni sulla potenza totale solo se è stata selezionata una strip LED
-		  if (riepilogo.stripLedSelezionata !== 'senza_strip') {
-			riepilogoHtml += `
-						<tr>
-						  <th scope="row">Potenza totale</th>
-						  <td>${potenzaTotale}W</td>
-						</tr>
-			`;
-		  }
-		  
-		  riepilogoHtml += `
-					  </tbody>
-					</table>
-				  </div>
-				</div>
-				
-				<div class="text-center mt-4">
-				  <div class="alert alert-info">
-					<strong>Note:</strong> Lo spazio necessario per tappi e saldatura è di ${riepilogo.spazioProduzione || 5}mm.
-				  </div>
-				  <button class="btn btn-success btn-lg me-2" id="btn-salva-configurazione">Salva configurazione</button>
-				  <button class="btn btn-primary btn-lg" id="btn-preventivo">Richiedi preventivo</button>
-				</div>
-			  </div>
-			</div>
-		  `;
-		  
-		  // Inserisci il riepilogo nel container
-		  $('#riepilogo-container').html(riepilogoHtml);
-		  
-		  // Aggiungi gli event listener ai pulsanti
-		  $('#btn-salva-configurazione').on('click', function() {
-			salvaConfigurazione(codiceProdotto);
-		  });
-		  
-		  $('#btn-preventivo').on('click', function() {
-			richiedPreventivo(codiceProdotto);
-		  });
-		},
-		error: function(error) {
-		  console.error("Errore nella finalizzazione della configurazione:", error);
-		  $('#riepilogo-container').html('<div class="alert alert-danger">Errore nella finalizzazione della configurazione. Riprova più tardi.</div>');
-		}
-	  });
-	});
-  }
+  console.log("Finalizzazione della configurazione:", configurazione);
   
-  // Aggiungi anche questo event listener dopo gli altri event listener nel document.ready
-  $(document).ready(function() {
-	// ... codice esistente ...
-	
-	// Pulsante per tornare alla pagina personalizzazione dal riepilogo
-	$('#btn-torna-step8').on('click', function(e) {
-	  e.preventDefault();
-	  
-	  $("#step9-riepilogo").fadeOut(300, function() {
-		$("#step8-personalizzazione").fadeIn(300);
-		
-		// Aggiorna la progress bar
-		updateProgressBar(8);
-	  });
-	});
-	
-	// ... fine document.ready ...
+  // Mostra il loader
+  $('#riepilogo-container').html('<div class="text-center my-5"><div class="spinner-border" role="status"></div><p class="mt-3">Generazione riepilogo...</p></div>');
+  
+  // Cambia pagina dal Step 6 al Step 7 (Riepilogo)
+  $("#step6-personalizzazione").fadeOut(300, function() {
+    $("#step7-riepilogo").fadeIn(300);
+    
+    // Aggiorna la progress bar per lo step finale
+    updateProgressBar(7);
+    
+    // Chiamata AJAX per finalizzare la configurazione
+    $.ajax({
+      url: '/finalizza_configurazione',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(configurazione),
+      success: function(data) {
+        console.log("Riepilogo ricevuto:", data);
+        
+        if (!data.success) {
+          $('#riepilogo-container').html('<div class="alert alert-danger">Errore nella finalizzazione della configurazione. Riprova più tardi.</div>');
+          return;
+        }
+        
+        // Costruisci il riepilogo
+        const riepilogo = data.riepilogo;
+        const potenzaTotale = data.potenzaTotale;
+        const codiceProdotto = data.codiceProdotto;
+        
+        // Crea una tabella HTML con tutte le informazioni
+        let riepilogoHtml = `
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h4>Riepilogo della configurazione</h4>
+              <h6>Codice prodotto: ${codiceProdotto}</h6>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <th scope="row">Categoria</th>
+                        <td>${mappaCategorieVisualizzazione[riepilogo.categoriaSelezionata] || riepilogo.categoriaSelezionata}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Modello</th>
+                        <td>${riepilogo.nomeModello}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Tipologia</th>
+                        <td>${mappaTipologieVisualizzazione[riepilogo.tipologiaSelezionata] || riepilogo.tipologiaSelezionata}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Strip LED</th>
+                        <td>${riepilogo.stripLedSelezionata === 'senza_strip' ? 'Senza Strip LED' : (mappaStripLedVisualizzazione[riepilogo.stripLedSelezionata] || riepilogo.stripLedSelezionata)}</td>
+                      </tr>
+        `;
+        
+        // Aggiungi le informazioni sulla temperatura e potenza solo se è stata selezionata una strip LED
+        if (riepilogo.stripLedSelezionata !== 'senza_strip') {
+          riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Temperatura colore</th>
+                        <td>${formatTemperatura(riepilogo.temperaturaColoreSelezionata)}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Potenza</th>
+                        <td>${riepilogo.potenzaSelezionata} - ${riepilogo.codicePotenza}</td>
+                      </tr>
+          `;
+        }
+        
+        riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Alimentazione</th>
+                        <td>${riepilogo.alimentazioneSelezionata === 'SENZA_ALIMENTATORE' ? 'Senza alimentatore' : (riepilogo.alimentazioneSelezionata === 'ON/OFF' ? 'ON/OFF' : 'Dimmerabile TRIAC')}</td>
+                      </tr>
+        `;
+        
+        // Aggiungi le informazioni sull'alimentatore solo se è stato selezionato
+        if (riepilogo.alimentazioneSelezionata !== 'SENZA_ALIMENTATORE') {
+          riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Alimentatore</th>
+                        <td>${riepilogo.tipologiaAlimentatoreSelezionata}</td>
+                      </tr>
+          `;
+        }
+        
+        riepilogoHtml += `
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-md-6">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <th scope="row">Dimmer</th>
+                        <td>${riepilogo.dimmerSelezionato === 'NESSUN_DIMMER' ? 'Nessun dimmer' : riepilogo.dimmerSelezionato.replace(/_/g, ' ')}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Alimentazione cavo</th>
+                        <td>${riepilogo.tipoAlimentazioneCavo === 'ALIMENTAZIONE_UNICA' ? 'Alimentazione unica' : 'Alimentazione doppia'}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Lunghezza cavo ingresso</th>
+                        <td>${riepilogo.lunghezzaCavoIngresso}mm</td>
+                      </tr>
+        `;
+        
+        // Aggiungi la lunghezza del cavo in uscita solo se è stata selezionata l'alimentazione doppia
+        if (riepilogo.tipoAlimentazioneCavo === 'ALIMENTAZIONE_DOPPIA') {
+          riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Lunghezza cavo uscita</th>
+                        <td>${riepilogo.lunghezzaCavoUscita}mm</td>
+                      </tr>
+          `;
+        }
+        
+        riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Uscita cavo</th>
+                        <td>${riepilogo.uscitaCavoSelezionata}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Forma di taglio</th>
+                        <td>${mappaFormeTaglio[riepilogo.formaDiTaglioSelezionata] || riepilogo.formaDiTaglioSelezionata}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Finitura</th>
+                        <td>${mappaFiniture[riepilogo.finituraSelezionata] || riepilogo.finituraSelezionata}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Lunghezza richiesta</th>
+                        <td>${riepilogo.lunghezzaRichiesta}mm</td>
+                      </tr>
+        `;
+        
+        // Aggiungi le informazioni sulla potenza totale solo se è stata selezionata una strip LED
+        if (riepilogo.stripLedSelezionata !== 'senza_strip') {
+          riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Potenza totale</th>
+                        <td>${potenzaTotale}W</td>
+                      </tr>
+          `;
+        }
+        
+        riepilogoHtml += `
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+              <div class="text-center mt-4">
+                <div class="alert alert-info">
+                  <strong>Note:</strong> Lo spazio necessario per tappi e saldatura è di ${riepilogo.spazioProduzione || 5}mm.
+                </div>
+                <button class="btn btn-success btn-lg me-2" id="btn-salva-configurazione">Salva configurazione</button>
+                <button class="btn btn-primary btn-lg" id="btn-preventivo">Richiedi preventivo</button>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // Inserisci il riepilogo nel container
+        $('#riepilogo-container').html(riepilogoHtml);
+        
+        // Aggiungi gli event listener ai pulsanti
+        $('#btn-salva-configurazione').on('click', function() {
+          salvaConfigurazione(codiceProdotto);
+        });
+        
+        $('#btn-preventivo').on('click', function() {
+          richiedPreventivo(codiceProdotto);
+        });
+      },
+      error: function(error) {
+        console.error("Errore nella finalizzazione della configurazione:", error);
+        $('#riepilogo-container').html('<div class="alert alert-danger">Errore nella finalizzazione della configurazione. Riprova più tardi.</div>');
+      }
+    });
   });
+}
 
 // Funzione per salvare la configurazione
 function salvaConfigurazione(codiceProdotto) {

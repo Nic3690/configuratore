@@ -141,35 +141,35 @@ def get_opzioni_profilo(profilo_id):
     opzioni_profili = {
         'profilo_nano_1': {
             'tipologie': ['taglio_misura', 'profilo_intero'],
-            'strip_led': ['STRIP_24V_SMD_IP20', 'STRIP_24V_SMD_IP66']
+            'strip_led': ['senza_strip', 'STRIP_24V_SMD_IP20', 'STRIP_24V_SMD_IP66']
         },
         'profilo_nano_2': {
             'tipologie': ['taglio_misura', 'profilo_intero'],
-            'strip_led': ['STRIP_24V_SMD_IP20', 'STRIP_24V_COB_IP20']
+            'strip_led': ['senza_strip', 'STRIP_24V_SMD_IP20', 'STRIP_24V_COB_IP20']
         },
         'profilo_incasso_1': {
             'tipologie': ['taglio_misura', 'profilo_intero'],
-            'strip_led': ['STRIP_24V_SMD_IP20', 'STRIP_24V_SMD_IP66', 'STRIP_24V_COB_IP20', 'STRIP_24V_RGB_SMD_IP20']
+            'strip_led': ['senza_strip', 'STRIP_24V_SMD_IP20', 'STRIP_24V_SMD_IP66', 'STRIP_24V_COB_IP20', 'STRIP_24V_RGB_SMD_IP20']
         },
         'profilo_incasso_2': {
             'tipologie': ['taglio_misura', 'profilo_intero'],
-            'strip_led': ['STRIP_24V_SMD_IP20', 'STRIP_24V_COB_IP20', 'STRIP_24V_RGB_SMD_IP20']
+            'strip_led': ['senza_strip', 'STRIP_24V_SMD_IP20', 'STRIP_24V_COB_IP20', 'STRIP_24V_RGB_SMD_IP20']
         },
         'profilo_sospensione_1': {
             'tipologie': ['taglio_misura', 'profilo_intero'],
-            'strip_led': ['STRIP_24V_SMD_IP20', 'STRIP_24V_COB_IP20', 'STRIP_48V_SMD_IP20']
+            'strip_led': ['senza_strip', 'STRIP_24V_SMD_IP20', 'STRIP_24V_COB_IP20', 'STRIP_48V_SMD_IP20']
         },
         'profilo_plafone_1': {
             'tipologie': ['taglio_misura', 'profilo_intero'],
-            'strip_led': ['STRIP_24V_SMD_IP20', 'STRIP_24V_COB_IP20']
+            'strip_led': ['senza_strip', 'STRIP_24V_SMD_IP20', 'STRIP_24V_COB_IP20']
         },
         'profilo_parete_1': {
             'tipologie': ['taglio_misura', 'profilo_intero'],
-            'strip_led': ['STRIP_24V_SMD_IP20', 'STRIP_24V_COB_IP20']
+            'strip_led': ['senza_strip', 'STRIP_24V_SMD_IP20', 'STRIP_24V_COB_IP20']
         },
         'profilo_part_1': {
             'tipologie': ['taglio_misura', 'profilo_intero'],
-            'strip_led': ['STRIP_24V_SMD_IP20', 'STRIP_24V_COB_IP20']
+            'strip_led': ['senza_strip', 'STRIP_24V_SMD_IP20', 'STRIP_24V_COB_IP20']
         }
     }
     
@@ -240,13 +240,25 @@ def get_opzioni_potenza(strip_id, temperatura):
             'codice': 'RB12820WW',
             'specifiche': '24V DC · 12W/m · 128 LED/m · 1480lm/m· CRI80'
         },
+        '12W/m_CRI90': {
+            'codice': 'RB12820WWCRI90',
+            'specifiche': '24V DC · 12W/m · 128 LED/m · 1440lm/m· CRI90'
+        },
         '18W/m': {
             'codice': 'RB219220WW',
             'specifiche': '24V DC · 18W/m · 192 LED/m · 2304lm/m· CRI80'
         },
+        '18W/m_CRI90': {
+            'codice': 'RB219220WWCRI90',
+            'specifiche': '24V DC · 18W/m · 192 LED/m · 2246lm/m· CRI90'
+        },
         '22W/m': {
             'codice': 'RB224020WW',
             'specifiche': '24V DC · 22W/m · 240 LED/m · 2746lm/m· CRI80'
+        },
+        '14.4W/m': {
+            'codice': 'RB27265ZWW',
+            'specifiche': '24V DC · 14,4W/m · 72 LED/m · 1460lm/m· CRI80'
         }
     }
     

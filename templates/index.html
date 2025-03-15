@@ -28,23 +28,23 @@
       </div>
       <div class="step-item" id="progress-step3">
         <div class="step-number">3</div>
-        <div class="step-title">Tipologia</div>
+        <div class="step-title">Temperatura/Potenza</div>
       </div>
       <div class="step-item" id="progress-step4">
         <div class="step-number">4</div>
-        <div class="step-title">Strip LED</div>
+        <div class="step-title">Alimentazione</div>
       </div>
       <div class="step-item" id="progress-step5">
         <div class="step-number">5</div>
-        <div class="step-title">Alimentazione</div>
+        <div class="step-title">Dimmer/Cavi</div>
       </div>
       <div class="step-item" id="progress-step6">
         <div class="step-number">6</div>
-        <div class="step-title">Controllo</div>
+        <div class="step-title">Personalizzazione</div>
       </div>
       <div class="step-item" id="progress-step7">
         <div class="step-number">7</div>
-        <div class="step-title">Personalizzazione</div>
+        <div class="step-title">Riepilogo</div>
       </div>
     </div>
     
@@ -95,7 +95,7 @@
       </div>
     </div>
     
-    <!-- Step 2: Selezione Modello -->
+    <!-- Step 2: Selezione Modello, Tipologia e StripLED -->
     <div class="step-section" id="step2-modello">
       <div class="row">
         <div class="col-12">
@@ -109,6 +109,22 @@
         <!-- I profili verranno caricati dinamicamente qui -->
       </div>
       
+      <!-- Container per la tipologia -->
+      <div id="tipologia-container" class="container mt-4" style="display: none;">
+        <h3 class="text-center mb-3">Seleziona la tipologia</h3>
+        <div class="row justify-content-center" id="tipologie-options">
+          <!-- Le tipologie verranno caricate dinamicamente qui -->
+        </div>
+      </div>
+      
+      <!-- Container per la strip LED -->
+      <div id="strip-led-container" class="container mt-4" style="display: none;">
+        <h3 class="text-center mb-3">Seleziona la Strip LED</h3>
+        <div class="row" id="strip-led-options">
+          <!-- Le strip LED verranno caricate dinamicamente qui -->
+        </div>
+      </div>
+      
       <div class="row mt-4">
         <div class="col-12 text-center">
           <button class="btn btn-secondary btn-torna-indietro me-2">Torna alla selezione tipologia</button>
@@ -117,73 +133,16 @@
       </div>
     </div>
     
-    <!-- Step 3: Selezione Tipologia Profilo -->
-    <div class="step-section" id="step3-tipologia">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="text-center mb-2">Seleziona la tipologia del profilo</h2>
-          <p class="text-center mb-4">
-            <span class="badge selection-badge bg-primary p-2">Modello selezionato: <span id="profilo-nome-step3">Profilo</span></span>
-          </p>
-        </div>
-      </div>
-      
-      <!-- Container per le tipologie -->
-      <div class="container">
-        <div class="row justify-content-center" id="tipologie-container">
-          <!-- Le tipologie verranno caricate dinamicamente qui -->
-        </div>
-      </div>
-      
-      <div class="row mt-4">
-        <div class="col-12 text-center">
-          <button class="btn btn-secondary" id="btn-torna-step2">Indietro</button>
-          <button class="btn btn-primary ms-2" id="btn-continua-step3" disabled>Continua</button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Step 4: Selezione Strip LED -->
-    <div class="step-section" id="step4-strip">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="text-center mb-3">Seleziona la Strip LED</h2>
-          
-          <div class="selection-badges">
-            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step4">Profilo</span></span>
-            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step4">Tipologia</span></span>
-          </div>
-          
-          <p class="text-center mb-4 text-muted">
-            <small>Seleziona la Strip LED da utilizzare con il profilo scelto, o scegli "Senza Strip LED" se preferisci</small>
-          </p>
-        </div>
-      </div>
-      
-      <!-- Container per le strip LED -->
-      <div class="container">
-        <div class="row" id="strip-led-container">
-          <!-- Le strip LED verranno caricate dinamicamente qui -->
-        </div>
-      </div>
-      
-      <div class="row mt-4">
-        <div class="col-12 text-center">
-          <button class="btn btn-secondary" id="btn-torna-step3">Indietro</button>
-          <button class="btn btn-primary ms-2" id="btn-continua-step4" disabled>Continua</button>
-        </div>
-      </div>
-    </div>
-    <!-- Step 5: Temperatura e Potenza -->
-    <div class="step-section" id="step5-temperatura-potenza">
+    <!-- Step 3: Temperatura e Potenza -->
+    <div class="step-section" id="step3-temperatura-potenza">
       <div class="row">
         <div class="col-12">
           <h2 class="text-center mb-3">Configura l'illuminazione</h2>
           
           <div class="selection-badges">
-            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step5">Profilo</span></span>
-            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step5">Tipologia</span></span>
-            <span class="badge bg-info selection-badge">Strip LED: <span id="strip-nome-step5">Strip LED</span></span>
+            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step3">Profilo</span></span>
+            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step3">Tipologia</span></span>
+            <span class="badge bg-info selection-badge">Strip LED: <span id="strip-nome-step3">Strip LED</span></span>
           </div>
           
           <p class="text-center mb-4 text-muted">
@@ -214,24 +173,24 @@
       
       <div class="row mt-5">
         <div class="col-12 text-center">
-          <button class="btn btn-secondary" id="btn-torna-step4">Indietro</button>
-          <button class="btn btn-primary ms-2" id="btn-continua-step5" disabled>Continua</button>
+          <button class="btn btn-secondary" id="btn-torna-step2">Indietro</button>
+          <button class="btn btn-primary ms-2" id="btn-continua-step3" disabled>Continua</button>
         </div>
       </div>
     </div>
 
-    <!-- Step 6: Alimentazione -->
-    <div class="step-section" id="step6-alimentazione">
+    <!-- Step 4: Alimentazione -->
+    <div class="step-section" id="step4-alimentazione">
       <div class="row">
         <div class="col-12">
           <h2 class="text-center mb-3">Configura l'alimentazione</h2>
           
           <div class="selection-badges">
-            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step6">Profilo</span></span>
-            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step6">Tipologia</span></span>
-            <span class="badge bg-info selection-badge">Strip LED: <span id="strip-nome-step6">Strip LED</span></span>
-            <span class="badge bg-warning selection-badge" id="badge-temperatura-step6">Temperatura: <span id="temperatura-nome-step6">Temperatura</span></span>
-            <span class="badge bg-secondary selection-badge" id="badge-potenza-step6">Potenza: <span id="potenza-nome-step6">Potenza</span></span>
+            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step4">Profilo</span></span>
+            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step4">Tipologia</span></span>
+            <span class="badge bg-info selection-badge">Strip LED: <span id="strip-nome-step4">Strip LED</span></span>
+            <span class="badge bg-warning selection-badge" id="badge-temperatura-step4">Temperatura: <span id="temperatura-nome-step4">Temperatura</span></span>
+            <span class="badge bg-secondary selection-badge" id="badge-potenza-step4">Potenza: <span id="potenza-nome-step4">Potenza</span></span>
           </div>
           
           <p class="text-center mb-4 text-muted">
@@ -277,23 +236,23 @@
       
       <div class="row mt-5">
         <div class="col-12 text-center">
-          <button class="btn btn-secondary" id="btn-torna-step5">Indietro</button>
-          <button class="btn btn-primary ms-2" id="btn-continua-step6" disabled>Continua</button>
+          <button class="btn btn-secondary" id="btn-torna-step3">Indietro</button>
+          <button class="btn btn-primary ms-2" id="btn-continua-step4" disabled>Continua</button>
         </div>
       </div>
     </div>
 
-    <!-- Step 7: Controllo - Dimmer e Cavi -->
-    <div class="step-section" id="step7-controllo">
+    <!-- Step 5: Controllo - Dimmer e Cavi -->
+    <div class="step-section" id="step5-controllo">
       <div class="row">
         <div class="col-12">
           <h2 class="text-center mb-3">Configura controllo e cablaggio</h2>
           
           <div class="selection-badges">
-            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step7">Profilo</span></span>
-            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step7">Tipologia</span></span>
-            <span class="badge bg-info selection-badge">Strip LED: <span id="strip-nome-step7">Strip LED</span></span>
-            <span class="badge bg-dark selection-badge">Alimentazione: <span id="alimentazione-nome-step7">Alimentazione</span></span>
+            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step5">Profilo</span></span>
+            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step5">Tipologia</span></span>
+            <span class="badge bg-info selection-badge">Strip LED: <span id="strip-nome-step5">Strip LED</span></span>
+            <span class="badge bg-dark selection-badge">Alimentazione: <span id="alimentazione-nome-step5">Alimentazione</span></span>
           </div>
           
           <p class="text-center mb-4 text-muted">
@@ -455,21 +414,21 @@
       
       <div class="row mt-4">
         <div class="col-12 text-center">
-          <button class="btn btn-secondary" id="btn-torna-step6">Indietro</button>
-          <button class="btn btn-primary ms-2" id="btn-continua-step7" disabled>Continua</button>
+          <button class="btn btn-secondary" id="btn-torna-step4">Indietro</button>
+          <button class="btn btn-primary ms-2" id="btn-continua-step5" disabled>Continua</button>
         </div>
       </div>
     </div>
 
-    <!-- Step 8: Personalizzazione (Forma, Finitura, Lunghezza) -->
-    <div class="step-section" id="step8-personalizzazione">
+    <!-- Step 6: Personalizzazione (Forma, Finitura, Lunghezza) -->
+    <div class="step-section" id="step6-personalizzazione">
       <div class="row">
         <div class="col-12">
           <h2 class="text-center mb-3">Personalizzazione del profilo</h2>
           
           <div class="selection-badges">
-            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step8">Profilo</span></span>
-            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step8">Tipologia</span></span>
+            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step6">Profilo</span></span>
+            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step6">Tipologia</span></span>
           </div>
           
           <p class="text-center mb-4 text-muted">
@@ -660,14 +619,14 @@
       
       <div class="row mt-4">
         <div class="col-12 text-center">
-          <button class="btn btn-secondary" id="btn-torna-step7">Indietro</button>
+          <button class="btn btn-secondary" id="btn-torna-step5">Indietro</button>
           <button class="btn btn-success ms-2" id="btn-finalizza" disabled>Finalizza configurazione</button>
         </div>
       </div>
     </div>
 
-    <!-- Riepilogo -->
-    <div class="step-section" id="step9-riepilogo">
+    <!-- Step 7: Riepilogo -->
+    <div class="step-section" id="step7-riepilogo">
       <div class="row">
         <div class="col-12">
           <h2 class="text-center mb-3">Riepilogo configurazione</h2>
@@ -683,7 +642,7 @@
       
       <div class="row mt-4">
         <div class="col-12 text-center">
-          <button class="btn btn-secondary" id="btn-torna-step8">Modifica configurazione</button>
+          <button class="btn btn-secondary" id="btn-torna-step6">Modifica configurazione</button>
         </div>
       </div>
     </div>
