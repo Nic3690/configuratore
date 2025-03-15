@@ -57,7 +57,7 @@
       "voltaggio": ["24V", "48V"],
       "ip": ["IP65"],
       "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K"],
-      "potenzeDisponibili": ["6W/m", "12W/m", "18W/m", "22W/m"]
+      "potenzeDisponibili": ["14W/m"]
     }
   },
   
@@ -93,9 +93,9 @@
   },
   
   "alimentazione": {
-    "tipi": ["ON/OFF", "DIMMERABILE_TRIAC"],
+    "tipi": ["ON-OFF", "DIMMERABILE_TRIAC"],
     "alimentatori": {
-      "ON/OFF": ["SERIE_AT24", "SERIE_ATN24", "SERIE_ATS", "SERIE_ATUS", "SERIE_ATSIP44"],
+      "ON-OFF": ["SERIE_AT24", "SERIE_ATN24", "SERIE_ATS", "SERIE_ATUS", "SERIE_ATSIP44"],
       "DIMMERABILE_TRIAC": ["SERIE_ATD24"]
     }
   },

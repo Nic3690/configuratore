@@ -1,0 +1,125 @@
+/**
+ * utils.js
+ * Funzioni di utilità per il configuratore
+ */
+
+import { configurazione } from './config.js';
+
+/**
+ * Aggiorna la barra di progresso
+ * @param {number} step - Il numero dello step corrente
+ */
+export function updateProgressBar(step) {
+  $('.step-item').removeClass('active completed');
+  
+  $(`#progress-step${step}`).addClass('active');
+  
+  for (let i = 1; i < step; i++) {
+    $(`#progress-step${i}`).addClass('completed');
+  }
+}
+
+/**
+ * Formatta la temperatura per la visualizzazione
+ * @param {string} temperatura - Valore della temperatura
+ * @returns {string} - Temperatura formattata
+ */
+export function formatTemperatura(temperatura) {
+  if (temperatura === 'CCT') {
+    return 'Temperatura Dinamica (CCT)';
+  } else if (temperatura === 'RGB') {
+    return 'RGB Multicolore';
+  } else if (temperatura === 'RGBW') {
+    return 'RGBW (RGB + Bianco)';
+  } else {
+    return temperatura;
+  }
+}
+
+/**
+ * Restituisce il colore per la rappresentazione della temperatura
+ * @param {string} temperatura - Valore della temperatura
+ * @returns {string} - Codice colore o gradiente CSS
+ */
+export function getTemperaturaColor(temperatura) {
+  switch(temperatura) {
+    case '2700K':
+      return '#FFE9C0';
+    case '3000K':
+      return '#FFF1D9';
+    case '6500K':
+      return '#F5FBFF';
+    case 'CCT':
+      return 'linear-gradient(to right, #FFE9C0, #F5FBFF)';
+    case 'RGB':
+      return 'linear-gradient(to right, red, green, blue)';
+    case 'RGBW':
+      return 'linear-gradient(to right, red, green, blue, white)';
+    default:
+      return '#FFFFFF';
+  }
+}
+
+/**
+ * Controlla se lo step 2 è completo
+ */
+export function checkStep2Completion() {
+  if (configurazione.profiloSelezionato && configurazione.tipologiaSelezionata) {
+    $('#btn-continua-step2').prop('disabled', false);
+  } else {
+    $('#btn-continua-step2').prop('disabled', true);
+  }
+}
+
+/**
+ * Controlla se la sezione parametri è completa
+ */
+export function checkParametriCompletion() {
+  if (configurazione.voltaggioSelezionato && configurazione.ipSelezionato && configurazione.temperaturaSelezionata) {
+    $('#btn-continua-parametri').prop('disabled', false);
+  } else {
+    $('#btn-continua-parametri').prop('disabled', true);
+  }
+}
+
+/**
+ * Controlla se lo step 5 è completo
+ */
+export function checkStep5Completion() {
+  let isComplete = true;
+  
+  if (!configurazione.dimmerSelezionato) {
+    isComplete = false;
+  }
+  
+  if (!configurazione.tipoAlimentazioneCavo) {
+    isComplete = false;
+  }
+  
+  if (!configurazione.uscitaCavoSelezionata) {
+    isComplete = false;
+  }
+  
+  $('#btn-continua-step5').prop('disabled', !isComplete);
+}
+
+/**
+ * Controlla se lo step 6 è completo
+ */
+export function checkStep6Completion() {
+  let isComplete = true;
+  
+  if (!configurazione.formaDiTaglioSelezionata) {
+    isComplete = false;
+  }
+  
+  if (!configurazione.finituraSelezionata) {
+    isComplete = false;
+  }
+  
+  if (configurazione.tipologiaSelezionata === 'taglio_misura' && !configurazione.lunghezzaRichiesta) {
+    isComplete = false;
+  }
+  
+  $('#btn-finalizza').prop('disabled', !isComplete);
+}

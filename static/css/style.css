@@ -18,6 +18,21 @@ body {
 	font-weight: 600;
   }
 
+  .site-logo {
+	width: 170px;
+	height: auto;
+	padding-left: 20px;
+  }
+
+  .site-header-title
+  {
+	font-size: 28px;
+  }
+
+  .site-header-lead {
+	font-size: 16px;
+  }
+
   button:active, button:focus {
 	background-color: #e83f34 !important;
 	border-color: #e83f34 !important;
