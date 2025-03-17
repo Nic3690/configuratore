@@ -181,6 +181,12 @@ export function caricaOpzioniParametri(profiloId) {
         return;
       }
       
+      data.voltaggi.sort((a, b) => {
+        const voltA = parseInt(a.replace('V', ''));
+        const voltB = parseInt(b.replace('V', ''));
+        return voltA - voltB;  
+      });
+
       data.voltaggi.forEach(function(voltaggio) {
         $('#voltaggio-options').append(`
           <div class="col-md-4 mb-3">

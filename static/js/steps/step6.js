@@ -153,47 +153,41 @@ export function preparePersonalizzazioneListeners() {
 export function updateIstruzioniMisurazione(forma) {
   const istruzioniContainer = $('#istruzioni-misurazione');
   istruzioniContainer.empty();
-  
+
   switch(forma) {
     case 'DRITTO_SEMPLICE':
       istruzioniContainer.html(`
         <p>Inserisci la lunghezza desiderata in millimetri.</p>
-        <img src="/static/img/forma_dritto.png" alt="Forma dritta" class="img-fluid mb-3" style="max-height: 120px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='120px'">
+        <img src="/static/img/dritto_semplice.png" alt="Forma dritta" class="img-fluid mb-3" 
+             style="width: 100%; max-width: 300px;">
       `);
       break;
     case 'FORMA_L_DX':
       istruzioniContainer.html(`
-        <p>Inserisci la lunghezza dei due lati (A e B) in millimetri separati da 'x'.</p>
-        <p>Esempio: 1000x500 (dove 1000mm è il lato A e 500mm è il lato B)</p>
-        <img src="/static/img/forma_l_dx.png" alt="Forma L destra" class="img-fluid mb-3" style="max-height: 120px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='120px'">
+        <p>Inserisci la lunghezza desiderata in millimetri.</p>
+        <img src="/static/img/forma_a_l_dx.png" alt="Forma dritta" class="img-fluid mb-3" 
+            style="width: 100%; max-width: 300px;">
       `);
       break;
     case 'FORMA_L_SX':
       istruzioniContainer.html(`
-        <p>Inserisci la lunghezza dei due lati (A e B) in millimetri separati da 'x'.</p>
-        <p>Esempio: 1000x500 (dove 1000mm è il lato A e 500mm è il lato B)</p>
-        <img src="/static/img/forma_l_sx.png" alt="Forma L sinistra" class="img-fluid mb-3" style="max-height: 120px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='120px'">
+        <p>Inserisci la lunghezza desiderata in millimetri.</p>
+        <img src="/static/img/forma_a_l_sx.png" alt="Forma dritta" class="img-fluid mb-3" 
+            style="width: 100%; max-width: 300px;">
       `);
       break;
     case 'FORMA_C':
       istruzioniContainer.html(`
-        <p>Inserisci la lunghezza dei tre lati (A, B e C) in millimetri separati da 'x'.</p>
-        <p>Esempio: 500x1000x500 (dove 500mm sono i lati verticali e 1000mm è il lato orizzontale)</p>
-        <img src="/static/img/forma_c.png" alt="Forma C" class="img-fluid mb-3" style="max-height: 120px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='120px'">
-      `);
-      break;
-    case 'FORMA_A':
-      istruzioniContainer.html(`
-        <p>Inserisci la lunghezza dei quattro lati (A, B, C e D) in millimetri separati da 'x'.</p>
-        <p>Esempio: 500x1000x500x1000 (dove 500mm sono i lati verticali e 1000mm sono i lati orizzontali)</p>
-        <img src="/static/img/forma_a.png" alt="Forma A" class="img-fluid mb-3" style="max-height: 120px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='120px'">
+        <p>Inserisci la lunghezza desiderata in millimetri.</p>
+        <img src="/static/img/forma_a_c.png" alt="Forma dritta" class="img-fluid mb-3" 
+            style="width: 100%; max-width: 300px;">
       `);
       break;
     case 'RETTANGOLO_QUADRATO':
       istruzioniContainer.html(`
-        <p>Inserisci la lunghezza dei lati (A e B) in millimetri separati da 'x'.</p>
-        <p>Esempio: 1000x1000 per un quadrato o 1200x800 per un rettangolo</p>
-        <img src="/static/img/forma_rettangolo.png" alt="Rettangolo/Quadrato" class="img-fluid mb-3" style="max-height: 120px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='120px'">
+        <p>Inserisci la lunghezza desiderata in millimetri.</p>
+        <img src="/static/img/forma_a_rettangolo.png" alt="Forma dritta" class="img-fluid mb-3" 
+            style="width: 100%; max-width: 300px;">
       `);
       break;
     default:

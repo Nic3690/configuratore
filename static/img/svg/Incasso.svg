@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 2500 1000">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#Sfumatura_senza_nome_22);
+      }
+
+      .cls-1, .cls-2 {
+        opacity: .85;
+      }
+
+      .cls-2 {
+        fill: url(#Sfumatura_senza_nome_22-2);
+      }
+    </style>
+    <linearGradient id="Sfumatura_senza_nome_22" data-name="Sfumatura senza nome 22" x1="1405.06" y1="-4514.17" x2="1208.8" y2="-4461.67" gradientTransform="translate(-3008.72 655.7) rotate(68.1)" gradientUnits="userSpaceOnUse">
+      <stop offset=".01" stop-color="#dae0a3" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="Sfumatura_senza_nome_22-2" data-name="Sfumatura senza nome 22" x1="-4466.64" y1="-1369.27" x2="-4662.89" y2="-1316.77" gradientTransform="translate(1574.63 -4658.69) rotate(-111.9)" xlink:href="#Sfumatura_senza_nome_22"/>
+  </defs>
+  <polygon class="cls-1" points="1174 270 1437 2 2024 2 1631 270 1174 270"/>
+  <polygon class="cls-2" points="2499.91 2 2236.91 270 1649.91 270 2042.91 2 2499.91 2"/>
+</svg>
