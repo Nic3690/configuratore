@@ -1,15 +1,7 @@
-/**
- * step1.js
- * Gestione dello step 1 - Selezione della tipologia
- */
-
 import { configurazione, mappaCategorieVisualizzazione } from '../config.js';
 import { updateProgressBar } from '../utils.js';
 import { caricaProfili } from '../api.js';
 
-/**
- * Inizializza gli event listener per lo step 1
- */
 export function initStep1Listeners() {
   $('.hotspot').on('click', function() {
     const categoria = $(this).data('categoria');

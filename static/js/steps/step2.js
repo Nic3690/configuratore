@@ -1,16 +1,8 @@
-/**
- * step2.js
- * Gestione dello step 2 - Selezione del modello e parametri
- */
-
 import { configurazione, mappaTipologieVisualizzazione, mappaVoltaggioVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione } from '../config.js';
 import { formatTemperatura } from '../utils.js';
 import { caricaOpzioniParametri, caricaStripLedFiltrate } from '../api.js';
 import { vaiAllaTemperaturaEPotenza } from './step3.js';
 
-/**
- * Inizializza gli event listener per lo step 2
- */
 export function initStep2Listeners() {
   $('#btn-continua-step2').on('click', function(e) {
     e.preventDefault();
@@ -74,9 +66,7 @@ export function initStep2Listeners() {
   });
 }
 
-/**
- * Passa alla selezione dei parametri Strip LED
- */
+/* Selezione parametri Strip LED */
 export function vaiAiParametriStripLed() {
   console.log("Passaggio ai parametri della strip LED");
   
@@ -90,9 +80,7 @@ export function vaiAiParametriStripLed() {
   });
 }
 
-/**
- * Passa alla selezione della strip LED
- */
+/* Selezione strip LED */
 export function vaiAllaSelezioneDiStripLed() {
   console.log("Passaggio alla selezione della strip LED");
   

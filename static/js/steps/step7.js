@@ -1,13 +1,5 @@
-/**
- * step7.js
- * Gestione dello step 7 - Riepilogo
- */
-
 import { salvaConfigurazione, richiedPreventivo } from '../api.js';
 
-/**
- * Inizializza gli event listener per lo step 7
- */
 export function initStep7Listeners() {
   $('#btn-torna-step6').on('click', function(e) {
     e.preventDefault();

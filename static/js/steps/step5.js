@@ -1,15 +1,7 @@
-/**
- * step5.js
- * Gestione dello step 5 - Controllo (dimmer e cavi)
- */
-
 import { configurazione, mappaTipologieVisualizzazione, mappaStripLedVisualizzazione } from '../config.js';
 import { updateProgressBar, checkStep5Completion } from '../utils.js';
 import { vaiAllaPersonalizzazione } from './step6.js';
 
-/**
- * Inizializza gli event listener per lo step 5
- */
 export function initStep5Listeners() {
   $('#btn-torna-step4').on('click', function(e) {
     e.preventDefault();
@@ -43,9 +35,7 @@ export function initStep5Listeners() {
   });
 }
 
-/**
- * Passa al controllo (dimmer e cavi)
- */
+/* Controllo (dimmer e cavi) */
 export function vaiAlControllo() {
   console.log("Passaggio al controllo (dimmer e cavi)");
   
@@ -74,9 +64,7 @@ export function vaiAlControllo() {
   });
 }
 
-/**
- * Prepara gli event listener per il controllo
- */
+/* Event listener per il controllo */
 export function prepareControlloListeners() {
   configurazione.dimmerSelezionato = null;
   configurazione.tipoAlimentazioneCavo = null;
@@ -110,25 +98,6 @@ export function prepareControlloListeners() {
     checkStep5Completion();
   });
   
-  $('.btn-seleziona-dimmer').on('click', function(e) {
-    e.stopPropagation();
-    
-    const dimmerCard = $(this).closest('.dimmer-card');
-    $('.dimmer-card').removeClass('selected');
-    dimmerCard.addClass('selected');
-    
-    const dimmer = dimmerCard.data('dimmer');
-    configurazione.dimmerSelezionato = dimmer;
-    
-    if (dimmer === 'TOUCH_SU_PROFILO') {
-      $('#dimmer-warning').show();
-    } else {
-      $('#dimmer-warning').hide();
-    }
-    
-    checkStep5Completion();
-  });
-  
   $('.alimentazione-cavo-card').on('click', function() {
     $('.alimentazione-cavo-card').removeClass('selected');
     $(this).addClass('selected');
@@ -144,43 +113,12 @@ export function prepareControlloListeners() {
     
     checkStep5Completion();
   });
-  
-  $('.btn-seleziona-alimentazione-cavo').on('click', function(e) {
-    e.stopPropagation();
-    
-    const alimentazioneCavoCard = $(this).closest('.alimentazione-cavo-card');
-    $('.alimentazione-cavo-card').removeClass('selected');
-    alimentazioneCavoCard.addClass('selected');
-    
-    const alimentazioneCavo = alimentazioneCavoCard.data('alimentazione-cavo');
-    configurazione.tipoAlimentazioneCavo = alimentazioneCavo;
-    
-    if (alimentazioneCavo === 'ALIMENTAZIONE_DOPPIA') {
-      $('#lunghezza-cavo-uscita-container').show();
-    } else {
-      $('#lunghezza-cavo-uscita-container').hide();
-    }
-    
-    checkStep5Completion();
-  });
-  
+
   $('.uscita-cavo-card').on('click', function() {
     $('.uscita-cavo-card').removeClass('selected');
     $(this).addClass('selected');
     
     configurazione.uscitaCavoSelezionata = $(this).data('uscita-cavo');
-    
-    checkStep5Completion();
-  });
-  
-  $('.btn-seleziona-uscita-cavo').on('click', function(e) {
-    e.stopPropagation();
-    
-    const uscitaCavoCard = $(this).closest('.uscita-cavo-card');
-    $('.uscita-cavo-card').removeClass('selected');
-    uscitaCavoCard.addClass('selected');
-    
-    configurazione.uscitaCavoSelezionata = uscitaCavoCard.data('uscita-cavo');
     
     checkStep5Completion();
   });

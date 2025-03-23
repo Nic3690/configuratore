@@ -1,8 +1,3 @@
-/**
- * api.js
- * Funzioni per le chiamate API del configuratore
- */
-
 import { configurazione, mappaTipologieVisualizzazione, mappaVoltaggioVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione, mappaFormeTaglio, mappaFiniture, mappaCategorieVisualizzazione } from './config.js';
 import { formatTemperatura, getTemperaturaColor, checkParametriCompletion, checkStep2Completion, updateProgressBar } from './utils.js';
 
@@ -38,7 +33,6 @@ export function caricaProfili(categoria) {
               <img src="${profilo.immagine || '/static/img/placeholder.jpg'}" class="card-img-top" alt="${profilo.nome}" onerror="this.src='/static/img/placeholder.jpg'">
               <div class="card-body">
                 <h5 class="card-title">${profilo.nome}</h5>
-                <button class="btn btn-sm btn-primary mt-2 btn-seleziona-profilo">Seleziona</button>
               </div>
             </div>
           </div>
@@ -54,19 +48,6 @@ export function caricaProfili(categoria) {
         $(this).addClass('selected');
         configurazione.profiloSelezionato = $(this).data('id');
         configurazione.nomeModello = $(this).data('nome');
-        
-        caricaOpzioniProfilo(configurazione.profiloSelezionato);
-      });
-      
-      $('.btn-seleziona-profilo').on('click', function(e) {
-        e.stopPropagation();
-        
-        const profiloCard = $(this).closest('.profilo-card');
-        $('.profilo-card').removeClass('selected');
-        profiloCard.addClass('selected');
-        
-        configurazione.profiloSelezionato = profiloCard.data('id');
-        configurazione.nomeModello = profiloCard.data('nome');
         
         caricaOpzioniProfilo(configurazione.profiloSelezionato);
       });
@@ -111,7 +92,6 @@ export function caricaOpzioniProfilo(profiloId) {
               <div class="card option-card tipologia-card" data-id="${tipologia}">
                 <div class="card-body text-center">
                   <h5 class="card-title">${mappaTipologieVisualizzazione[tipologia] || tipologia}</h5>
-                  <button class="btn btn-sm btn-primary mt-2 btn-seleziona-tipologia">Seleziona</button>
                 </div>
               </div>
             </div>
@@ -123,18 +103,6 @@ export function caricaOpzioniProfilo(profiloId) {
         $('.tipologia-card').removeClass('selected');
         $(this).addClass('selected');
         configurazione.tipologiaSelezionata = $(this).data('id');
-        
-        checkStep2Completion();
-      });
-      
-      $('.btn-seleziona-tipologia').on('click', function(e) {
-        e.stopPropagation();
-        
-        const tipologiaCard = $(this).closest('.tipologia-card');
-        $('.tipologia-card').removeClass('selected');
-        tipologiaCard.addClass('selected');
-        
-        configurazione.tipologiaSelezionata = tipologiaCard.data('id');
         
         checkStep2Completion();
       });
@@ -193,7 +161,6 @@ export function caricaOpzioniParametri(profiloId) {
             <div class="card option-card voltaggio-card" data-voltaggio="${voltaggio}">
               <div class="card-body text-center">
                 <h5 class="card-title">${mappaVoltaggioVisualizzazione[voltaggio] || voltaggio}</h5>
-                <button class="btn btn-sm btn-primary mt-2 btn-seleziona-voltaggio">Seleziona</button>
               </div>
             </div>
           </div>
@@ -204,19 +171,6 @@ export function caricaOpzioniParametri(profiloId) {
         $('.voltaggio-card').removeClass('selected');
         $(this).addClass('selected');
         configurazione.voltaggioSelezionato = $(this).data('voltaggio');
-        
-        caricaOpzioniIP(profiloId, configurazione.voltaggioSelezionato);
-        checkParametriCompletion();
-      });
-      
-      $('.btn-seleziona-voltaggio').on('click', function(e) {
-        e.stopPropagation();
-        
-        const voltaggioCard = $(this).closest('.voltaggio-card');
-        $('.voltaggio-card').removeClass('selected');
-        voltaggioCard.addClass('selected');
-        
-        configurazione.voltaggioSelezionato = voltaggioCard.data('voltaggio');
         
         caricaOpzioniIP(profiloId, configurazione.voltaggioSelezionato);
         checkParametriCompletion();
@@ -267,7 +221,6 @@ export function caricaOpzioniIP(profiloId, voltaggio) {
             <div class="card option-card ip-card" data-ip="${ip}">
               <div class="card-body text-center">
                 <h5 class="card-title">${mappaIPVisualizzazione[ip] || ip}</h5>
-                <button class="btn btn-sm btn-primary mt-2 btn-seleziona-ip">Seleziona</button>
               </div>
             </div>
           </div>
@@ -278,19 +231,6 @@ export function caricaOpzioniIP(profiloId, voltaggio) {
         $('.ip-card').removeClass('selected');
         $(this).addClass('selected');
         configurazione.ipSelezionato = $(this).data('ip');
-        
-        caricaOpzioniTemperaturaIniziale(profiloId, configurazione.voltaggioSelezionato, configurazione.ipSelezionato);
-        checkParametriCompletion();
-      });
-      
-      $('.btn-seleziona-ip').on('click', function(e) {
-        e.stopPropagation();
-        
-        const ipCard = $(this).closest('.ip-card');
-        $('.ip-card').removeClass('selected');
-        ipCard.addClass('selected');
-        
-        configurazione.ipSelezionato = ipCard.data('ip');
         
         caricaOpzioniTemperaturaIniziale(profiloId, configurazione.voltaggioSelezionato, configurazione.ipSelezionato);
         checkParametriCompletion();
@@ -341,7 +281,6 @@ export function caricaOpzioniTemperaturaIniziale(profiloId, voltaggio, ip) {
               <div class="card-body text-center">
                 <h5 class="card-title">${formatTemperatura(temperatura)}</h5>
                 <div class="temperatura-color-preview mt-2 mb-3" style="background: ${getTemperaturaColor(temperatura)};"></div>
-                <button class="btn btn-sm btn-primary mt-2 btn-seleziona-temperatura-iniziale">Seleziona</button>
               </div>
             </div>
           </div>
@@ -361,18 +300,6 @@ export function caricaOpzioniTemperaturaIniziale(profiloId, voltaggio, ip) {
         $('.temperatura-iniziale-card').removeClass('selected');
         $(this).addClass('selected');
         configurazione.temperaturaSelezionata = $(this).data('temperatura');
-        
-        checkParametriCompletion();
-      });
-      
-      $('.btn-seleziona-temperatura-iniziale').on('click', function(e) {
-        e.stopPropagation();
-        
-        const temperaturaCard = $(this).closest('.temperatura-iniziale-card');
-        $('.temperatura-iniziale-card').removeClass('selected');
-        temperaturaCard.addClass('selected');
-        
-        configurazione.temperaturaSelezionata = temperaturaCard.data('temperatura');
         
         checkParametriCompletion();
       });
@@ -430,7 +357,6 @@ export function caricaStripLedFiltrate(profiloId, voltaggio, ip, temperatura) {
                   IP: ${strip.ip}, 
                   Temperatura: ${formatTemperatura(strip.temperatura)}
                 </p>
-                <button class="btn btn-sm btn-primary mt-2 btn-seleziona-strip-filtrata">Seleziona</button>
               </div>
             </div>
           </div>
@@ -444,7 +370,6 @@ export function caricaStripLedFiltrate(profiloId, voltaggio, ip, temperatura) {
               <div class="card-body text-center">
                 <h5 class="card-title">Senza Strip LED</h5>
                 <p class="card-text small text-muted">Configura il profilo senza illuminazione</p>
-                <button class="btn btn-sm btn-primary mt-2 btn-seleziona-strip-filtrata">Seleziona</button>
               </div>
             </div>
           </div>
@@ -455,18 +380,6 @@ export function caricaStripLedFiltrate(profiloId, voltaggio, ip, temperatura) {
         $('.strip-led-filtrata-card').removeClass('selected');
         $(this).addClass('selected');
         configurazione.stripLedSelezionata = $(this).data('strip');
-        
-        $('#btn-continua-strip').prop('disabled', false);
-      });
-      
-      $('.btn-seleziona-strip-filtrata').on('click', function(e) {
-        e.stopPropagation();
-        
-        const stripCard = $(this).closest('.strip-led-filtrata-card');
-        $('.strip-led-filtrata-card').removeClass('selected');
-        stripCard.addClass('selected');
-        
-        configurazione.stripLedSelezionata = stripCard.data('strip');
         
         $('#btn-continua-strip').prop('disabled', false);
       });
@@ -518,7 +431,6 @@ export function caricaOpzioniPotenza(stripId, temperatura) {
                 <h5 class="card-title">${potenza.nome}</h5>
                 <p class="card-text small text-muted">${potenza.specifiche}</p>
                 <p class="card-text small">Codice: <strong>${potenza.codice}</strong></p>
-                <button class="btn btn-sm btn-primary mt-2 btn-seleziona-potenza">Seleziona</button>
               </div>
             </div>
           </div>
@@ -530,19 +442,6 @@ export function caricaOpzioniPotenza(stripId, temperatura) {
         $(this).addClass('selected');
         configurazione.potenzaSelezionata = $(this).data('potenza');
         configurazione.codicePotenza = $(this).data('codice');
-        
-        $('#btn-continua-step3').prop('disabled', false);
-      });
-      
-      $('.btn-seleziona-potenza').on('click', function(e) {
-        e.stopPropagation();
-        
-        const potenzaCard = $(this).closest('.potenza-card');
-        $('.potenza-card').removeClass('selected');
-        potenzaCard.addClass('selected');
-        
-        configurazione.potenzaSelezionata = potenzaCard.data('potenza');
-        configurazione.codicePotenza = potenzaCard.data('codice');
         
         $('#btn-continua-step3').prop('disabled', false);
       });
@@ -595,7 +494,6 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
                 <h5 class="card-title">${alimentatore.nome}</h5>
                 <p class="card-text small text-muted">${alimentatore.descrizione}</p>
                 <p class="card-text small">Potenze disponibili: ${alimentatore.potenze.join(', ')}W</p>
-                <button class="btn btn-sm btn-primary mt-2 btn-seleziona-alimentatore">Seleziona</button>
               </div>
             </div>
           </div>
@@ -606,18 +504,6 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
         $('.alimentatore-card').removeClass('selected');
         $(this).addClass('selected');
         configurazione.tipologiaAlimentatoreSelezionata = $(this).data('alimentatore');
-        
-        $('#btn-continua-step4').prop('disabled', false);
-      });
-      
-      $('.btn-seleziona-alimentatore').on('click', function(e) {
-        e.stopPropagation();
-        
-        const alimentatoreCard = $(this).closest('.alimentatore-card');
-        $('.alimentatore-card').removeClass('selected');
-        alimentatoreCard.addClass('selected');
-        
-        configurazione.tipologiaAlimentatoreSelezionata = alimentatoreCard.data('alimentatore');
         
         $('#btn-continua-step4').prop('disabled', false);
       });

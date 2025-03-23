@@ -1,8 +1,3 @@
-/* 
- * Stile ottimizzato per il configuratore Redo
- * Tutti gli stili consolidati in un unico file
- */
-
 /* Stili generali */
 body {
   font-family: 'Helvetica Neue', Tahoma, Geneva, Verdana, sans-serif;
@@ -155,8 +150,7 @@ h1, h2, h3, h4 {
 	transition: opacity 0.5s ease;
 	pointer-events: none;
   }
-  
-  /* Hotspot invisibili ma cliccabili */
+
   .hotspot {
 	position: absolute;
 	cursor: pointer;
@@ -262,12 +256,7 @@ h1, h2, h3, h4 {
 }
 
 /* Stile base per tutti i tipi di pulsanti */
-.btn-primary, .btn-secondary, .btn-outline-primary, .btn-seleziona-proposta,
-.btn-seleziona-forma, .btn-seleziona-finitura, .btn-seleziona-voltaggio,
-.btn-seleziona-strip-filtrata, .btn-seleziona-potenza, .btn-seleziona-alimentazione,
-.btn-seleziona-alimentatore, .btn-seleziona-dimmer, .btn-seleziona-alimentazione-cavo,
-.btn-seleziona-uscita-cavo, .btn-seleziona-ip, .btn-seleziona-temperatura-iniziale,
-.btn-torna-indietro {
+.btn-primary, .btn-secondary, .btn-seleziona-proposta, .btn-outline-primary, .btn-torna-indietro {
   background-color: transparent !important;
   border: 1px solid #333 !important;
   color: #333 !important;
@@ -275,13 +264,7 @@ h1, h2, h3, h4 {
 
 /* Stato hover per tutti i pulsanti */
 .btn-primary:hover, .btn-secondary:hover, .btn-outline-primary:hover, 
-.btn-seleziona-proposta:hover, .btn-seleziona-forma:hover, .btn-seleziona-finitura:hover,
-.btn-seleziona-voltaggio:hover, .btn-seleziona-strip-filtrata:hover, 
-.btn-seleziona-potenza:hover, .btn-seleziona-alimentazione:hover,
-.btn-seleziona-alimentatore:hover, .btn-seleziona-dimmer:hover, 
-.btn-seleziona-alimentazione-cavo:hover, .btn-seleziona-uscita-cavo:hover,
-.btn-seleziona-ip:hover, .btn-seleziona-temperatura-iniziale:hover,
-.btn-torna-indietro:hover {
+.btn-seleziona-proposta:hover, .btn-torna-indietro:hover {
   border-color: #e83f34 !important;
 }
 

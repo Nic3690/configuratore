@@ -1,16 +1,8 @@
-/**
- * step3.js
- * Gestione dello step 3 - Temperatura e potenza
- */
-
 import { configurazione, mappaTipologieVisualizzazione, mappaStripLedVisualizzazione } from '../config.js';
 import { updateProgressBar } from '../utils.js';
 import { caricaOpzioniPotenza } from '../api.js';
 import { vaiAllAlimentazione } from './step4.js';
 
-/**
- * Inizializza gli event listener per lo step 3
- */
 export function initStep3Listeners() {
   $('#btn-torna-step2').on('click', function(e) {
     e.preventDefault();
@@ -33,9 +25,7 @@ export function initStep3Listeners() {
   });
 }
 
-/**
- * Passa alla selezione di temperatura e potenza
- */
+/* Selezione temperatura e potenza */
 export function vaiAllaTemperaturaEPotenza() {
   console.log("Passaggio alla temperatura e potenza");
   

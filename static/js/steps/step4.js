@@ -1,16 +1,8 @@
-/**
- * step4.js
- * Gestione dello step 4 - Alimentazione
- */
-
 import { configurazione, mappaTipologieVisualizzazione, mappaStripLedVisualizzazione } from '../config.js';
 import { updateProgressBar } from '../utils.js';
 import { caricaOpzioniAlimentatore } from '../api.js';
 import { vaiAlControllo } from './step5.js';
 
-/**
- * Inizializza gli event listener per lo step 4
- */
 export function initStep4Listeners() {
   $('#btn-torna-step3').on('click', function(e) {
     e.preventDefault();
@@ -43,9 +35,7 @@ export function initStep4Listeners() {
   });
 }
 
-/**
- * Passa all'alimentazione
- */
+/* Passa all'alimentazione */
 export function vaiAllAlimentazione() {
   console.log("Passaggio all'alimentazione");
   
@@ -84,9 +74,7 @@ export function vaiAllAlimentazione() {
   }
 }
 
-/**
- * Prepara gli event listener per l'alimentazione
- */
+/* Event listener per l'alimentazione */
 export function prepareAlimentazioneListeners() {
   configurazione.alimentazioneSelezionata = null;
   configurazione.tipologiaAlimentatoreSelezionata = null;
@@ -102,28 +90,6 @@ export function prepareAlimentazioneListeners() {
     $(this).addClass('selected');
     
     const alimentazione = $(this).data('alimentazione');
-    configurazione.alimentazioneSelezionata = alimentazione;
-    
-    if (alimentazione === 'SENZA_ALIMENTATORE') {
-      $('#alimentatore-section').hide();
-      configurazione.tipologiaAlimentatoreSelezionata = null;
-      
-      $('#btn-continua-step4').prop('disabled', false);
-    } else {
-      caricaOpzioniAlimentatore(alimentazione);
-      
-      $('#alimentatore-section').show();
-    }
-  });
-  
-  $('.btn-seleziona-alimentazione').on('click', function(e) {
-    e.stopPropagation();
-    
-    const alimentazioneCard = $(this).closest('.alimentazione-card');
-    $('.alimentazione-card').removeClass('selected');
-    alimentazioneCard.addClass('selected');
-    
-    const alimentazione = alimentazioneCard.data('alimentazione');
     configurazione.alimentazioneSelezionata = alimentazione;
     
     if (alimentazione === 'SENZA_ALIMENTATORE') {

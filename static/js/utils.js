@@ -1,8 +1,3 @@
-/**
- * utils.js
- * Funzioni di utilità per il configuratore
- */
-
 import { configurazione } from './config.js';
 
 /**

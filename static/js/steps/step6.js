@@ -1,15 +1,7 @@
-/**
- * step6.js
- * Gestione dello step 6 - Personalizzazione
- */
-
 import { configurazione, mappaTipologieVisualizzazione } from '../config.js';
 import { updateProgressBar, checkStep6Completion } from '../utils.js';
 import { caricaFinitureDisponibili, calcolaProposte, finalizzaConfigurazione } from '../api.js';
 
-/**
- * Inizializza gli event listener per lo step 6
- */
 export function initStep6Listeners() {
   $('#btn-torna-step5').on('click', function(e) {
     e.preventDefault();
@@ -43,9 +35,6 @@ export function initStep6Listeners() {
   });
 }
 
-/**
- * Passa alla personalizzazione
- */
 export function vaiAllaPersonalizzazione() {
   console.log("Passaggio alla personalizzazione");
   
@@ -61,9 +50,7 @@ export function vaiAllaPersonalizzazione() {
   });
 }
 
-/**
- * Prepara gli event listener per la personalizzazione
- */
+/* Event Listener */
 export function preparePersonalizzazioneListeners() {
   configurazione.formaDiTaglioSelezionata = "DRITTO_SEMPLICE";
   caricaFinitureDisponibili(configurazione.profiloSelezionato);
@@ -79,37 +66,11 @@ export function preparePersonalizzazioneListeners() {
     checkStep6Completion();
   });
   
-  $('.btn-seleziona-forma').on('click', function(e) {
-    e.stopPropagation();
-    
-    const formaCard = $(this).closest('.forma-taglio-card');
-    $('.forma-taglio-card').removeClass('selected');
-    formaCard.addClass('selected');
-    
-    configurazione.formaDiTaglioSelezionata = formaCard.data('forma');
-    
-    updateIstruzioniMisurazione(configurazione.formaDiTaglioSelezionata);
-    
-    checkStep6Completion();
-  });
-  
   $('.finitura-card').on('click', function() {
     $('.finitura-card').removeClass('selected');
     $(this).addClass('selected');
     
     configurazione.finituraSelezionata = $(this).data('finitura');
-    
-    checkStep6Completion();
-  });
-  
-  $('.btn-seleziona-finitura').on('click', function(e) {
-    e.stopPropagation();
-    
-    const finituraCard = $(this).closest('.finitura-card');
-    $('.finitura-card').removeClass('selected');
-    finituraCard.addClass('selected');
-    
-    configurazione.finituraSelezionata = finituraCard.data('finitura');
     
     checkStep6Completion();
   });

@@ -1,9 +1,3 @@
-/**
- * config.js
- * Configurazioni e mappature per il configuratore
- */
-
-// Oggetto principale della configurazione
 const configurazione = {
 	categoriaSelezionata: null,
 	profiloSelezionato: null,
@@ -29,8 +23,7 @@ const configurazione = {
 	codiceModello: null,
 	nomeModello: null
   };
-  
-  // Mappature per visualizzazione
+
   const mappaCategorieVisualizzazione = {
 	'nanoprofili': 'Nanoprofili',
 	'incasso': 'Profili a Incasso',
@@ -66,7 +59,6 @@ const configurazione = {
 	'FORMA_L_DX': 'Forma a L DX',
 	'FORMA_L_SX': 'Forma a L SX',
 	'FORMA_C': 'Forma a C',
-	'FORMA_A': 'Forma a A',
 	'RETTANGOLO_QUADRATO': 'Rettangolo/Quadrato'
   };
   
@@ -88,8 +80,7 @@ const configurazione = {
 	'IP65': 'IP65 (Resistente all\'umidità)',
 	'IP66': 'IP66 (Resistente all\'acqua)'
   };
-  
-  // Esporta gli oggetti di configurazione
+
   export {
 	configurazione,
 	mappaCategorieVisualizzazione,
