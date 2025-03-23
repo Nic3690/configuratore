@@ -68,7 +68,6 @@ export function initStep2Listeners() {
 
 /* Selezione parametri Strip LED */
 export function vaiAiParametriStripLed() {
-  console.log("Passaggio ai parametri della strip LED");
   
   $('#profilo-nome-step2-parametri').text(configurazione.nomeModello);
   $('#tipologia-nome-step2-parametri').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
@@ -82,7 +81,6 @@ export function vaiAiParametriStripLed() {
 
 /* Selezione strip LED */
 export function vaiAllaSelezioneDiStripLed() {
-  console.log("Passaggio alla selezione della strip LED");
   
   $('#profilo-nome-step2-strip').text(configurazione.nomeModello);
   $('#tipologia-nome-step2-strip').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);

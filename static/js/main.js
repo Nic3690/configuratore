@@ -10,7 +10,6 @@ import { initStep7Listeners } from './steps/step7.js';
 import { caricaProfili } from './api.js';
 
 $(document).ready(function() {
-  console.log("Document ready - Configuratore inizializzato");
 
   $(".step-section").hide();
   $("#step1-tipologia").show();

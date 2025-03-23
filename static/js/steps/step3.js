@@ -27,7 +27,6 @@ export function initStep3Listeners() {
 
 /* Selezione temperatura e potenza */
 export function vaiAllaTemperaturaEPotenza() {
-  console.log("Passaggio alla temperatura e potenza");
   
   $('#profilo-nome-step3').text(configurazione.nomeModello);
   $('#tipologia-nome-step3').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);

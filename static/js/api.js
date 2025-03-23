@@ -6,7 +6,6 @@ import { formatTemperatura, getTemperaturaColor, checkParametriCompletion, check
  * @param {string} categoria - La categoria selezionata
  */
 export function caricaProfili(categoria) {
-  console.log("Caricamento profili per la categoria:", categoria);
   
   $('#profili-container').empty().html('<div class="text-center mt-5"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento profili...</p></div>');
   
@@ -14,7 +13,6 @@ export function caricaProfili(categoria) {
     url: `/get_profili/${categoria}`,
     method: 'GET',
     success: function(data) {
-      console.log("Profili ricevuti:", data);
       
       $('#profili-container').empty();
       
@@ -43,7 +41,6 @@ export function caricaProfili(categoria) {
       
       $('.profilo-card').on('click', function(e) {
         e.stopPropagation();
-        console.log("Profilo selezionato:", $(this).data('id'));
         $('.profilo-card').removeClass('selected');
         $(this).addClass('selected');
         configurazione.profiloSelezionato = $(this).data('id');
@@ -64,7 +61,6 @@ export function caricaProfili(categoria) {
  * @param {string} profiloId - ID del profilo selezionato
  */
 export function caricaOpzioniProfilo(profiloId) {
-  console.log("Caricamento opzioni per profilo:", profiloId);
   
   $('#tipologie-options').empty().html('<div class="text-center mt-3"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni...</p></div>');
   
@@ -77,7 +73,6 @@ export function caricaOpzioniProfilo(profiloId) {
     url: `/get_opzioni_profilo/${profiloId}`,
     method: 'GET',
     success: function(data) {
-      console.log("Opzioni profilo ricevute:", data);
       
       $('#tipologie-options').empty();
       
@@ -119,7 +114,6 @@ export function caricaOpzioniProfilo(profiloId) {
  * @param {string} profiloId - ID del profilo selezionato
  */
 export function caricaOpzioniParametri(profiloId) {
-  console.log("Caricamento opzioni parametri per profilo:", profiloId);
   
   $('#voltaggio-options').empty().html('<div class="spinner-border" role="status"></div><p>Caricamento opzioni voltaggio...</p>');
   $('#ip-options').empty();
@@ -135,7 +129,6 @@ export function caricaOpzioniParametri(profiloId) {
     url: `/get_opzioni_voltaggio/${profiloId}`,
     method: 'GET',
     success: function(data) {
-      console.log("Opzioni voltaggio ricevute:", data);
       
       $('#voltaggio-options').empty();
       
@@ -189,7 +182,6 @@ export function caricaOpzioniParametri(profiloId) {
  * @param {string} voltaggio - Voltaggio selezionato
  */
 export function caricaOpzioniIP(profiloId, voltaggio) {
-  console.log("Caricamento opzioni IP per profilo:", profiloId, "e voltaggio:", voltaggio);
   
   $('#ip-options').empty().html('<div class="spinner-border" role="status"></div><p>Caricamento opzioni IP...</p>');
   $('#temperatura-iniziale-options').empty();
@@ -201,7 +193,6 @@ export function caricaOpzioniIP(profiloId, voltaggio) {
     url: `/get_opzioni_ip/${profiloId}/${voltaggio}`,
     method: 'GET',
     success: function(data) {
-      console.log("Opzioni IP ricevute:", data);
       
       $('#ip-options').empty();
       
@@ -250,7 +241,6 @@ export function caricaOpzioniIP(profiloId, voltaggio) {
  * @param {string} ip - IP selezionato
  */
 export function caricaOpzioniTemperaturaIniziale(profiloId, voltaggio, ip) {
-  console.log("Caricamento opzioni temperatura iniziale per profilo:", profiloId, "voltaggio:", voltaggio, "e IP:", ip);
   
   $('#temperatura-iniziale-options').empty().html('<div class="spinner-border" role="status"></div><p>Caricamento opzioni temperatura...</p>');
   
@@ -260,7 +250,6 @@ export function caricaOpzioniTemperaturaIniziale(profiloId, voltaggio, ip) {
     url: `/get_opzioni_temperatura_iniziale/${profiloId}/${voltaggio}/${ip}`,
     method: 'GET',
     success: function(data) {
-      console.log("Opzioni temperatura iniziale ricevute:", data);
       
       $('#temperatura-iniziale-options').empty();
       
@@ -319,7 +308,6 @@ export function caricaOpzioniTemperaturaIniziale(profiloId, voltaggio, ip) {
  * @param {string} temperatura - Temperatura selezionata
  */
 export function caricaStripLedFiltrate(profiloId, voltaggio, ip, temperatura) {
-  console.log("Caricamento strip LED filtrate per profilo:", profiloId, "voltaggio:", voltaggio, "IP:", ip, "e temperatura:", temperatura);
   
   $('#strip-led-filtrate-options').empty().html('<div class="text-center mt-3"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni strip LED...</p></div>');
   
@@ -331,7 +319,6 @@ export function caricaStripLedFiltrate(profiloId, voltaggio, ip, temperatura) {
     url: `/get_strip_led_filtrate/${profiloId}/${voltaggio}/${ip}/${temperatura}`,
     method: 'GET',
     success: function(data) {
-      console.log("Strip LED filtrate ricevute:", data);
       
       $('#strip-led-filtrate-options').empty();
       
@@ -397,7 +384,6 @@ export function caricaStripLedFiltrate(profiloId, voltaggio, ip, temperatura) {
  * @param {string} temperatura - Temperatura selezionata
  */
 export function caricaOpzioniPotenza(stripId, temperatura) {
-  console.log("Caricamento opzioni potenza per strip:", stripId, "e temperatura:", temperatura);
   
   $('#potenza-container').html('<div class="col-12 text-center"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni potenza...</p></div>');
   
@@ -409,7 +395,6 @@ export function caricaOpzioniPotenza(stripId, temperatura) {
     url: `/get_opzioni_potenza/${stripId}/${temperatura}`,
     method: 'GET',
     success: function(data) {
-      console.log("Opzioni potenza ricevute:", data);
       
       $('#potenza-container').empty();
       
@@ -458,7 +443,6 @@ export function caricaOpzioniPotenza(stripId, temperatura) {
  * @param {string} tipoAlimentazione - Tipo di alimentazione selezionato
  */
 export function caricaOpzioniAlimentatore(tipoAlimentazione) {
-  console.log("Caricamento opzioni alimentatore per tipo:", tipoAlimentazione);
   
   $('#alimentatore-container').html('<div class="col-12 text-center"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni alimentatore...</p></div>');
   
@@ -470,7 +454,6 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
     url: `/get_opzioni_alimentatore/${tipoAlimentazione}`,
     method: 'GET',
     success: function(data) {
-      console.log("Opzioni alimentatore ricevute:", data);
       
       $('#alimentatore-container').empty();
       
@@ -520,7 +503,6 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
  * @param {string} profiloId - ID del profilo selezionato
  */
 export function caricaFinitureDisponibili(profiloId) {
-  console.log("Caricamento finiture disponibili per profilo:", profiloId);
   
   $('.finitura-card').removeClass('selected');
   configurazione.finituraSelezionata = null;
@@ -529,7 +511,6 @@ export function caricaFinitureDisponibili(profiloId) {
     url: `/get_finiture/${profiloId}`,
     method: 'GET',
     success: function(data) {
-      console.log("Finiture ricevute:", data);
       
       if (!data.success) {
         $('.finitura-card').parent().show();
@@ -568,7 +549,6 @@ export function calcolaProposte(lunghezzaRichiesta) {
       lunghezzaRichiesta: lunghezzaRichiesta
     }),
     success: function(data) {
-      console.log("Proposte di lunghezza ricevute:", data);
       
       if (!data.success) {
         $('#proposte-container').hide();
@@ -599,7 +579,6 @@ export function calcolaProposte(lunghezzaRichiesta) {
  * Finalizza la configurazione e genera il riepilogo
  */
 export function finalizzaConfigurazione() {
-  console.log("Finalizzazione della configurazione:", configurazione);
   
   $('#riepilogo-container').html('<div class="text-center my-5"><div class="spinner-border" role="status"></div><p class="mt-3">Generazione riepilogo...</p></div>');
   
@@ -614,7 +593,6 @@ export function finalizzaConfigurazione() {
       contentType: 'application/json',
       data: JSON.stringify(configurazione),
       success: function(data) {
-        console.log("Riepilogo ricevuto:", data);
         
         if (!data.success) {
           $('#riepilogo-container').html('<div class="alert alert-danger">Errore nella finalizzazione della configurazione. Riprova più tardi.</div>');

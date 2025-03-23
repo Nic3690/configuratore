@@ -36,7 +36,6 @@ export function initStep6Listeners() {
 }
 
 export function vaiAllaPersonalizzazione() {
-  console.log("Passaggio alla personalizzazione");
   
   $('#profilo-nome-step6').text(configurazione.nomeModello);
   $('#tipologia-nome-step6').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);

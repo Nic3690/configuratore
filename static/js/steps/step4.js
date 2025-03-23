@@ -37,7 +37,6 @@ export function initStep4Listeners() {
 
 /* Passa all'alimentazione */
 export function vaiAllAlimentazione() {
-  console.log("Passaggio all'alimentazione");
   
   $('#profilo-nome-step4').text(configurazione.nomeModello);
   $('#tipologia-nome-step4').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);

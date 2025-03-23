@@ -37,7 +37,6 @@ export function initStep5Listeners() {
 
 /* Controllo (dimmer e cavi) */
 export function vaiAlControllo() {
-  console.log("Passaggio al controllo (dimmer e cavi)");
   
   $('#profilo-nome-step5').text(configurazione.nomeModello);
   $('#tipologia-nome-step5').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
