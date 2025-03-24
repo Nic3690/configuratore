@@ -73,7 +73,7 @@ export function preparePersonalizzazioneListeners() {
     
     checkStep6Completion();
   });
-  
+
   $('#lunghezza-personalizzata').on('input', function() {
     configurazione.lunghezzaRichiesta = parseInt($(this).val(), 10) || null;
     
