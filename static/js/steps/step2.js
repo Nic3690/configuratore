@@ -1,5 +1,5 @@
 import { configurazione, mappaTipologieVisualizzazione, mappaVoltaggioVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione } from '../config.js';
-import { formatTemperatura } from '../utils.js';
+import { formatTemperatura, updateProgressBar } from '../utils.js';
 import { caricaOpzioniParametri, caricaStripLedFiltrate } from '../api.js';
 import { vaiAllaTemperaturaEPotenza } from './step3.js';
 
@@ -75,6 +75,7 @@ export function vaiAiParametriStripLed() {
   $("#step2-modello").fadeOut(300, function() {
     $("#step2-parametri").fadeIn(300);
     
+    updateProgressBar(2);
     caricaOpzioniParametri(configurazione.profiloSelezionato);
   });
 }
