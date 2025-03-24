@@ -45,7 +45,7 @@
       "categoria": "plafone",
       "immagine": "/static/img/prf007_200set.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
-      "stripLedCompatibili": ["RB27265Z", "STRIP_24V_SMD_IP66"],
+      "stripLedCompatibili": ["RB27265Z", "SLS01RGB"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000
     }
@@ -58,6 +58,13 @@
       "ip": ["IP65"],
       "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K"],
       "potenzeDisponibili": ["14W/m"]
+    },
+    "SLS01RGB": {
+      "nome": "SLS01RGB",
+      "tensione": ["24V"],
+      "ip": ["IP20", "IP65"],
+      "temperaturaColoreDisponibili": ["RGB"],
+      "potenzeDisponibili": ["13W/m"]
     }
   },
   
