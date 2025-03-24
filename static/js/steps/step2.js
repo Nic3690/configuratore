@@ -1,4 +1,4 @@
-import { configurazione, mappaTipologieVisualizzazione, mappaVoltaggioVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione } from '../config.js';
+import { configurazione, mappaTipologieVisualizzazione, mappaTensioneVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione } from '../config.js';
 import { formatTemperatura, updateProgressBar } from '../utils.js';
 import { caricaOpzioniParametri, caricaStripLedFiltrate } from '../api.js';
 import { vaiAllaTemperaturaEPotenza } from './step3.js';
@@ -31,11 +31,11 @@ export function initStep2Listeners() {
   $('#btn-continua-parametri').on('click', function(e) {
     e.preventDefault();
     
-    if (configurazione.voltaggioSelezionato && configurazione.ipSelezionato && configurazione.temperaturaSelezionata) {
+    if (configurazione.tensioneSelezionato && configurazione.ipSelezionato && configurazione.temperaturaSelezionata) {
       vaiAllaSelezioneDiStripLed();
     } else {
       let messaggi = [];
-      if (!configurazione.voltaggioSelezionato) messaggi.push("un voltaggio");
+      if (!configurazione.tensioneSelezionato) messaggi.push("un tensione");
       if (!configurazione.ipSelezionato) messaggi.push("un grado IP");
       if (!configurazione.temperaturaSelezionata) messaggi.push("una temperatura");
       
@@ -85,7 +85,7 @@ export function vaiAllaSelezioneDiStripLed() {
   
   $('#profilo-nome-step2-strip').text(configurazione.nomeModello);
   $('#tipologia-nome-step2-strip').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
-  $('#voltaggio-nome-step2-strip').text(mappaVoltaggioVisualizzazione[configurazione.voltaggioSelezionato] || configurazione.voltaggioSelezionato);
+  $('#tensione-nome-step2-strip').text(mappaTensioneVisualizzazione[configurazione.tensioneSelezionato] || configurazione.tensioneSelezionato);
   $('#ip-nome-step2-strip').text(mappaIPVisualizzazione[configurazione.ipSelezionato] || configurazione.ipSelezionato);
   $('#temperatura-nome-step2-strip').text(formatTemperatura(configurazione.temperaturaSelezionata));
   
@@ -94,7 +94,7 @@ export function vaiAllaSelezioneDiStripLed() {
     
     caricaStripLedFiltrate(
       configurazione.profiloSelezionato, 
-      configurazione.voltaggioSelezionato, 
+      configurazione.tensioneSelezionato, 
       configurazione.ipSelezionato, 
       configurazione.temperaturaSelezionata
     );

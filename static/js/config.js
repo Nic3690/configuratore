@@ -2,7 +2,7 @@ const configurazione = {
 	categoriaSelezionata: null,
 	profiloSelezionato: null,
 	tipologiaSelezionata: null,
-	voltaggioSelezionato: null,
+	tensioneSelezionato: null,
 	ipSelezionato: null,
 	temperaturaSelezionata: null,
 	stripLedSelezionata: null,
@@ -69,7 +69,7 @@ const configurazione = {
 	'ALLUMINIO': 'Alluminio'
   };
   
-  const mappaVoltaggioVisualizzazione = {
+  const mappaTensioneVisualizzazione = {
 	'24V': '24V',
 	'48V': '48V',
 	'220V': '220V'
@@ -88,6 +88,6 @@ const configurazione = {
 	mappaStripLedVisualizzazione,
 	mappaFormeTaglio,
 	mappaFiniture,
-	mappaVoltaggioVisualizzazione,
+	mappaTensioneVisualizzazione,
 	mappaIPVisualizzazione
   };

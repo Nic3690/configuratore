@@ -1,4 +1,4 @@
-import { configurazione, mappaTipologieVisualizzazione, mappaVoltaggioVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione, mappaFormeTaglio, mappaFiniture, mappaCategorieVisualizzazione } from './config.js';
+import { configurazione, mappaTipologieVisualizzazione, mappaTensioneVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione, mappaFormeTaglio, mappaFiniture, mappaCategorieVisualizzazione } from './config.js';
 import { formatTemperatura, getTemperaturaColor, checkParametriCompletion, checkStep2Completion, updateProgressBar } from './utils.js';
 
 /**
@@ -115,30 +115,30 @@ export function caricaOpzioniProfilo(profiloId) {
  */
 export function caricaOpzioniParametri(profiloId) {
   
-  $('#voltaggio-options').empty().html('<div class="spinner-border" role="status"></div><p>Caricamento opzioni voltaggio...</p>');
+  $('#tensione-options').empty().html('<div class="spinner-border" role="status"></div><p>Caricamento opzioni tensione...</p>');
   $('#ip-options').empty();
   $('#temperatura-iniziale-options').empty();
   
-  configurazione.voltaggioSelezionato = null;
+  configurazione.tensioneSelezionato = null;
   configurazione.ipSelezionato = null;
   configurazione.temperaturaSelezionata = null;
   
   $('#btn-continua-parametri').prop('disabled', true);
   
   $.ajax({
-    url: `/get_opzioni_voltaggio/${profiloId}`,
+    url: `/get_opzioni_tensione/${profiloId}`,
     method: 'GET',
     success: function(data) {
       
-      $('#voltaggio-options').empty();
+      $('#tensione-options').empty();
       
       if (!data.success) {
-        $('#voltaggio-options').html('<p class="text-danger">Errore nel caricamento delle opzioni voltaggio.</p>');
+        $('#tensione-options').html('<p class="text-danger">Errore nel caricamento delle opzioni tensione.</p>');
         return;
       }
       
       if (!data.voltaggi || data.voltaggi.length === 0) {
-        $('#voltaggio-options').html('<p>Nessuna opzione di voltaggio disponibile per questo profilo.</p>');
+        $('#tensione-options').html('<p>Nessuna opzione di tensione disponibile per questo profilo.</p>');
         return;
       }
       
@@ -148,40 +148,40 @@ export function caricaOpzioniParametri(profiloId) {
         return voltA - voltB;  
       });
 
-      data.voltaggi.forEach(function(voltaggio) {
-        $('#voltaggio-options').append(`
+      data.voltaggi.forEach(function(tensione) {
+        $('#tensione-options').append(`
           <div class="col-md-4 mb-3">
-            <div class="card option-card voltaggio-card" data-voltaggio="${voltaggio}">
+            <div class="card option-card tensione-card" data-tensione="${tensione}">
               <div class="card-body text-center">
-                <h5 class="card-title">${mappaVoltaggioVisualizzazione[voltaggio] || voltaggio}</h5>
+                <h5 class="card-title">${mappaTensioneVisualizzazione[tensione] || tensione}</h5>
               </div>
             </div>
           </div>
         `);
       });
       
-      $('.voltaggio-card').on('click', function() {
-        $('.voltaggio-card').removeClass('selected');
+      $('.tensione-card').on('click', function() {
+        $('.tensione-card').removeClass('selected');
         $(this).addClass('selected');
-        configurazione.voltaggioSelezionato = $(this).data('voltaggio');
+        configurazione.tensioneSelezionato = $(this).data('tensione');
         
-        caricaOpzioniIP(profiloId, configurazione.voltaggioSelezionato);
+        caricaOpzioniIP(profiloId, configurazione.tensioneSelezionato);
         checkParametriCompletion();
       });
     },
     error: function(error) {
-      console.error("Errore nel caricamento delle opzioni voltaggio:", error);
-      $('#voltaggio-options').html('<p class="text-danger">Errore nel caricamento delle opzioni voltaggio. Riprova più tardi.</p>');
+      console.error("Errore nel caricamento delle opzioni tensione:", error);
+      $('#tensione-options').html('<p class="text-danger">Errore nel caricamento delle opzioni tensione. Riprova più tardi.</p>');
     }
   });
 }
 
 /**
- * Carica le opzioni IP per il profilo e voltaggio selezionati
+ * Carica le opzioni IP per il profilo e tensione selezionati
  * @param {string} profiloId - ID del profilo
- * @param {string} voltaggio - Voltaggio selezionato
+ * @param {string} tensione - Tensione selezionato
  */
-export function caricaOpzioniIP(profiloId, voltaggio) {
+export function caricaOpzioniIP(profiloId, tensione) {
   
   $('#ip-options').empty().html('<div class="spinner-border" role="status"></div><p>Caricamento opzioni IP...</p>');
   $('#temperatura-iniziale-options').empty();
@@ -190,7 +190,7 @@ export function caricaOpzioniIP(profiloId, voltaggio) {
   configurazione.temperaturaSelezionata = null;
   
   $.ajax({
-    url: `/get_opzioni_ip/${profiloId}/${voltaggio}`,
+    url: `/get_opzioni_ip/${profiloId}/${tensione}`,
     method: 'GET',
     success: function(data) {
       
@@ -223,7 +223,7 @@ export function caricaOpzioniIP(profiloId, voltaggio) {
         $(this).addClass('selected');
         configurazione.ipSelezionato = $(this).data('ip');
         
-        caricaOpzioniTemperaturaIniziale(profiloId, configurazione.voltaggioSelezionato, configurazione.ipSelezionato);
+        caricaOpzioniTemperaturaIniziale(profiloId, configurazione.tensioneSelezionato, configurazione.ipSelezionato);
         checkParametriCompletion();
       });
     },
@@ -235,19 +235,19 @@ export function caricaOpzioniIP(profiloId, voltaggio) {
 }
 
 /**
- * Carica le opzioni temperatura iniziale per il profilo, voltaggio e IP selezionati
+ * Carica le opzioni temperatura iniziale per il profilo, tensione e IP selezionati
  * @param {string} profiloId - ID del profilo
- * @param {string} voltaggio - Voltaggio selezionato
+ * @param {string} tensione - Tensione selezionato
  * @param {string} ip - IP selezionato
  */
-export function caricaOpzioniTemperaturaIniziale(profiloId, voltaggio, ip) {
+export function caricaOpzioniTemperaturaIniziale(profiloId, tensione, ip) {
   
   $('#temperatura-iniziale-options').empty().html('<div class="spinner-border" role="status"></div><p>Caricamento opzioni temperatura...</p>');
   
   configurazione.temperaturaSelezionata = null;
   
   $.ajax({
-    url: `/get_opzioni_temperatura_iniziale/${profiloId}/${voltaggio}/${ip}`,
+    url: `/get_opzioni_temperatura_iniziale/${profiloId}/${tensione}/${ip}`,
     method: 'GET',
     success: function(data) {
       
@@ -303,11 +303,11 @@ export function caricaOpzioniTemperaturaIniziale(profiloId, voltaggio, ip) {
 /**
  * Carica le strip LED filtrate in base ai parametri selezionati
  * @param {string} profiloId - ID del profilo
- * @param {string} voltaggio - Voltaggio selezionato
+ * @param {string} tensione - Tensione selezionato
  * @param {string} ip - IP selezionato
  * @param {string} temperatura - Temperatura selezionata
  */
-export function caricaStripLedFiltrate(profiloId, voltaggio, ip, temperatura) {
+export function caricaStripLedFiltrate(profiloId, tensione, ip, temperatura) {
   
   $('#strip-led-filtrate-options').empty().html('<div class="text-center mt-3"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni strip LED...</p></div>');
   
@@ -316,7 +316,7 @@ export function caricaStripLedFiltrate(profiloId, voltaggio, ip, temperatura) {
   $('#btn-continua-strip').prop('disabled', true);
   
   $.ajax({
-    url: `/get_strip_led_filtrate/${profiloId}/${voltaggio}/${ip}/${temperatura}`,
+    url: `/get_strip_led_filtrate/${profiloId}/${tensione}/${ip}/${temperatura}`,
     method: 'GET',
     success: function(data) {
       
@@ -340,7 +340,7 @@ export function caricaStripLedFiltrate(profiloId, voltaggio, ip, temperatura) {
                 <h5 class="card-title">${strip.nome}</h5>
                 <p class="card-text small text-muted">${strip.descrizione || ''}</p>
                 <p class="card-text small">
-                  Voltaggio: ${strip.voltaggio}, 
+                  Tensione: ${strip.tensione}, 
                   IP: ${strip.ip}, 
                   Temperatura: ${formatTemperatura(strip.temperatura)}
                 </p>
@@ -627,8 +627,8 @@ export function finalizzaConfigurazione() {
                         <td>${mappaTipologieVisualizzazione[riepilogo.tipologiaSelezionata] || riepilogo.tipologiaSelezionata}</td>
                       </tr>
                       <tr>
-                        <th scope="row">Voltaggio</th>
-                        <td>${mappaVoltaggioVisualizzazione[riepilogo.voltaggioSelezionato] || riepilogo.voltaggioSelezionato}</td>
+                        <th scope="row">Tensione</th>
+                        <td>${mappaTensioneVisualizzazione[riepilogo.tensioneSelezionato] || riepilogo.tensioneSelezionato}</td>
                       </tr>
                       <tr>
                         <th scope="row">Grado IP</th>

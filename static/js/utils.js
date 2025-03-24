@@ -42,7 +42,7 @@ export function getTemperaturaColor(temperatura) {
       return '#FFE9C0';
     case '3000K':
       return '#FFF1D9';
-    case '6500K':
+    case '6000K':
       return '#F5FBFF';
     case 'CCT':
       return 'linear-gradient(to right, #FFE9C0, #F5FBFF)';
@@ -70,7 +70,7 @@ export function checkStep2Completion() {
  * Controlla se la sezione parametri è completa
  */
 export function checkParametriCompletion() {
-  if (configurazione.voltaggioSelezionato && configurazione.ipSelezionato && configurazione.temperaturaSelezionata) {
+  if (configurazione.tensioneSelezionato && configurazione.ipSelezionato && configurazione.temperaturaSelezionata) {
     $('#btn-continua-parametri').prop('disabled', false);
   } else {
     $('#btn-continua-parametri').prop('disabled', true);

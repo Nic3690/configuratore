@@ -63,8 +63,8 @@ def get_opzioni_profilo(profilo_id):
         print(f"Profilo non trovato: {profilo_id}")
         return jsonify({'tipologie': []})
 
-@app.route('/get_opzioni_voltaggio/<profilo_id>')
-def get_opzioni_voltaggio(profilo_id):
+@app.route('/get_opzioni_tensione/<profilo_id>')
+def get_opzioni_tensione(profilo_id):
     profili = CONFIG_DATA.get('profili', [])
     
     profilo = next((p for p in profili if p.get('id') == profilo_id), None)
@@ -79,16 +79,16 @@ def get_opzioni_voltaggio(profilo_id):
     voltaggi_disponibili = set()
     for strip_id in stripLedCompatibili:
         strip_info = strip_led_data.get(strip_id, {})
-        for voltaggio in strip_info.get('voltaggio', []):
-            voltaggi_disponibili.add(voltaggio)
+        for tensione in strip_info.get('tensione', []):
+            voltaggi_disponibili.add(tensione)
     
     return jsonify({
         'success': True,
         'voltaggi': list(voltaggi_disponibili)
     })
 
-@app.route('/get_opzioni_ip/<profilo_id>/<voltaggio>')
-def get_opzioni_ip(profilo_id, voltaggio):
+@app.route('/get_opzioni_ip/<profilo_id>/<tensione>')
+def get_opzioni_ip(profilo_id, tensione):
     profili = CONFIG_DATA.get('profili', [])
     
     profilo = next((p for p in profili if p.get('id') == profilo_id), None)
@@ -103,7 +103,7 @@ def get_opzioni_ip(profilo_id, voltaggio):
     ip_disponibili = set()
     for strip_id in stripLedCompatibili:
         strip_info = strip_led_data.get(strip_id, {})
-        if voltaggio in strip_info.get('voltaggio', []):
+        if tensione in strip_info.get('tensione', []):
             for ip in strip_info.get('ip', []):
                 ip_disponibili.add(ip)
     
@@ -112,8 +112,8 @@ def get_opzioni_ip(profilo_id, voltaggio):
         'ip': list(ip_disponibili)
     })
 
-@app.route('/get_opzioni_temperatura_iniziale/<profilo_id>/<voltaggio>/<ip>')
-def get_opzioni_temperatura_iniziale(profilo_id, voltaggio, ip):
+@app.route('/get_opzioni_temperatura_iniziale/<profilo_id>/<tensione>/<ip>')
+def get_opzioni_temperatura_iniziale(profilo_id, tensione, ip):
     profili = CONFIG_DATA.get('profili', [])
     
     profilo = next((p for p in profili if p.get('id') == profilo_id), None)
@@ -128,7 +128,7 @@ def get_opzioni_temperatura_iniziale(profilo_id, voltaggio, ip):
     temperature_disponibili = list()
     for strip_id in stripLedCompatibili:
         strip_info = strip_led_data.get(strip_id, {})
-        if voltaggio in strip_info.get('voltaggio', []) and ip in strip_info.get('ip', []):
+        if tensione in strip_info.get('tensione', []) and ip in strip_info.get('ip', []):
             for temp in strip_info.get('temperaturaColoreDisponibili', []):
                 temperature_disponibili.append(temp)
     
@@ -137,8 +137,8 @@ def get_opzioni_temperatura_iniziale(profilo_id, voltaggio, ip):
         'temperature': list(temperature_disponibili)
     })
 
-@app.route('/get_strip_led_filtrate/<profilo_id>/<voltaggio>/<ip>/<temperatura>')
-def get_strip_led_filtrate(profilo_id, voltaggio, ip, temperatura):
+@app.route('/get_strip_led_filtrate/<profilo_id>/<tensione>/<ip>/<temperatura>')
+def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura):
     profili = CONFIG_DATA.get('profili', [])
     
     profilo = next((p for p in profili if p.get('id') == profilo_id), None)
@@ -155,7 +155,7 @@ def get_strip_led_filtrate(profilo_id, voltaggio, ip, temperatura):
     for strip_id in stripLedCompatibili:
         strip_info = strip_led_data.get(strip_id, {})
         
-        if (voltaggio in strip_info.get('voltaggio', []) and 
+        if (tensione in strip_info.get('tensione', []) and 
             ip in strip_info.get('ip', []) and 
             temperatura in strip_info.get('temperaturaColoreDisponibili', [])):
             
@@ -163,7 +163,7 @@ def get_strip_led_filtrate(profilo_id, voltaggio, ip, temperatura):
                 'id': strip_id,
                 'nome': strip_info.get('nome', strip_id),
                 'descrizione': strip_info.get('descrizione', ''),
-                'voltaggio': voltaggio,
+                'tensione': tensione,
                 'ip': ip,
                 'temperatura': temperatura
             })

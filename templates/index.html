@@ -11,7 +11,7 @@
   <div class="container-fluid">
     <header class="row bg-light py-3 mb-4 align-items-center">
       <div class="col-md-3 text-start">
-        <img src="{{ url_for('static', filename='img/logo-redo.png') }}" alt="Logo Redo" class="site-logo">
+        <img src="{{ url_for('static', filename='img/logo-redo-nero.png') }}" alt="Logo Redo" class="site-logo">
         <span class="beta-tag">beta</span>
       </div>
       <div class="col-md-6 text-center">
@@ -158,17 +158,17 @@
           </div>
           
           <p class="text-center mb-4 text-muted">
-            <small>Seleziona voltaggio, grado di protezione IP e temperatura colore per la tua strip LED</small>
+            <small>Seleziona tensione, grado di protezione IP e temperatura colore per la tua strip LED</small>
           </p>
         </div>
       </div>
       
       <div class="container mb-4">
-        <h3 class="mb-3">Voltaggio</h3>
-        <div class="row" id="voltaggio-options">
+        <h3 class="mb-3">Tensione</h3>
+        <div class="row" id="tensione-options">
           <div class="text-center">
             <div class="spinner-border" role="status"></div>
-            <p>Caricamento opzioni voltaggio...</p>
+            <p>Caricamento opzioni tensione...</p>
           </div>
         </div>
       </div>
@@ -201,7 +201,7 @@
           <div class="selection-badges">
             <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step2-strip">Profilo</span></span>
             <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step2-strip">Tipologia</span></span>
-            <span class="badge bg-info selection-badge">Voltaggio: <span id="voltaggio-nome-step2-strip">Voltaggio</span></span>
+            <span class="badge bg-info selection-badge">Tensione: <span id="tensione-nome-step2-strip">Tensione</span></span>
             <span class="badge bg-warning selection-badge">IP: <span id="ip-nome-step2-strip">IP</span></span>
             <span class="badge bg-secondary selection-badge">Temperatura: <span id="temperatura-nome-step2-strip">Temperatura</span></span>
           </div>

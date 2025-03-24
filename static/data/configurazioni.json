@@ -54,9 +54,9 @@
   "stripLed": {
     "RB27265Z": {
       "nome": "RB27265Z",
-      "voltaggio": ["24V", "48V"],
+      "tensione": ["24V", "48V"],
       "ip": ["IP65"],
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K"],
       "potenzeDisponibili": ["14W/m"]
     }
   },
