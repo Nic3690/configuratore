@@ -387,18 +387,6 @@ export function caricaStripLedFiltrate(profiloId, tensione, ip, temperatura) {
         `);
       });
       
-      if (data.strip_led_opzionale) {
-        $('#strip-led-filtrate-options').prepend(`
-          <div class="col-md-6 mb-3">
-            <div class="card option-card strip-led-filtrata-card" data-strip="NO_STRIP">
-              <div class="card-body text-center">
-                <h5 class="card-title">Senza Strip LED</h5>
-                <p class="card-text small text-muted">Configura il profilo senza illuminazione</p>
-              </div>
-            </div>
-          </div>
-        `);
-      }
       
       $('.strip-led-filtrata-card').on('click', function() {
         $('.strip-led-filtrata-card').removeClass('selected');
@@ -750,6 +738,11 @@ export function finalizzaConfigurazione() {
                         <th scope="row">Tipologia</th>
                         <td>${mappaTipologieVisualizzazione[riepilogo.tipologiaSelezionata] || riepilogo.tipologiaSelezionata}</td>
                       </tr>
+        `;
+        
+        // Verifica se è stata selezionata una strip LED
+        if (riepilogo.includeStripLed) {
+          riepilogoHtml += `
                       <tr>
                         <th scope="row">Tensione</th>
                         <td>${mappaTensioneVisualizzazione[riepilogo.tensioneSelezionato] || riepilogo.tensioneSelezionato}</td>
@@ -762,46 +755,64 @@ export function finalizzaConfigurazione() {
                         <th scope="row">Temperatura</th>
                         <td>${formatTemperatura(riepilogo.temperaturaSelezionata)}</td>
                       </tr>
-                      <tr>
-                        <th scope="row">Strip LED</th>
-                        <td>${riepilogo.stripLedSelezionata === 'NO_STRIP' ? 'Senza Strip LED' : 
-                             (riepilogo.nomeCommercialeStripLed || 
-                              mappaStripLedVisualizzazione[riepilogo.stripLedSelezionata] || 
-                              riepilogo.stripLedSelezionata)}</td>
-                      </tr>
-        `;
-        
-        if (riepilogo.stripLedSelezionata !== 'NO_STRIP' && riepilogo.stripLedSelezionata !== 'senza_strip') {
-          riepilogoHtml += `
-                      <tr>
-                        <th scope="row">Potenza</th>
-                        <td>${riepilogo.potenzaSelezionata} - ${riepilogo.codicePotenza}</td>
-                      </tr>
           `;
         }
         
-        riepilogoHtml += `
+        // Informazioni sulla strip LED
+        if (riepilogo.stripLedSelezionata === 'NO_STRIP' || !riepilogo.includeStripLed) {
+          riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Strip LED</th>
+                        <td>Senza Strip LED</td>
+                      </tr>
+          `;
+        } else {
+          const nomeStripLed = riepilogo.nomeCommercialeStripLed || 
+                             mappaStripLedVisualizzazione[riepilogo.stripLedSelezionata] || 
+                             riepilogo.stripLedSelezionata;
+          
+          riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Strip LED</th>
+                        <td>${nomeStripLed}</td>
+                      </tr>
+          `;
+          
+          if (riepilogo.potenzaSelezionata) {
+            riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Potenza</th>
+                        <td>${riepilogo.potenzaSelezionata}${riepilogo.codicePotenza ? ' - ' + riepilogo.codicePotenza : ''}</td>
+                      </tr>
+            `;
+          }
+        }
+        
+        // Informazioni sull'alimentazione
+        if (riepilogo.alimentazioneSelezionata) {
+          riepilogoHtml += `
                       <tr>
                         <th scope="row">Alimentazione</th>
                         <td>${riepilogo.alimentazioneSelezionata === 'SENZA_ALIMENTATORE' ? 'Senza alimentatore' : (riepilogo.alimentazioneSelezionata === 'ON-OFF' ? 'ON-OFF' : 'Dimmerabile TRIAC')}</td>
                       </tr>
-        `;
-        
-        if (riepilogo.alimentazioneSelezionata !== 'SENZA_ALIMENTATORE') {
-          riepilogoHtml += `
-                      <tr>
-                        <th scope="row">Alimentatore</th>
-                        <td>${riepilogo.tipologiaAlimentatoreSelezionata}</td>
-                      </tr>
           `;
           
-          if (riepilogo.potenzaConsigliataAlimentatore) {
+          if (riepilogo.alimentazioneSelezionata !== 'SENZA_ALIMENTATORE' && riepilogo.tipologiaAlimentatoreSelezionata) {
             riepilogoHtml += `
-                      <tr>
-                        <th scope="row">Potenza consigliata</th>
-                        <td>${riepilogo.potenzaConsigliataAlimentatore}W</td>
-                      </tr>
+                        <tr>
+                          <th scope="row">Alimentatore</th>
+                          <td>${riepilogo.tipologiaAlimentatoreSelezionata}</td>
+                        </tr>
             `;
+            
+            if (riepilogo.potenzaConsigliataAlimentatore) {
+              riepilogoHtml += `
+                        <tr>
+                          <th scope="row">Potenza consigliata</th>
+                          <td>${riepilogo.potenzaConsigliataAlimentatore}W</td>
+                        </tr>
+              `;
+            }
           }
         }
         
@@ -811,55 +822,82 @@ export function finalizzaConfigurazione() {
                 </div>
                 <div class="col-md-6">
                   <table class="table table-striped">
-                    <tbody>
-                      <tr>
-                        <th scope="row">Dimmer</th>
-                        <td>${riepilogo.dimmerSelezionato === 'NESSUN_DIMMER' ? 'Nessun dimmer' : riepilogo.dimmerSelezionato.replace(/_/g, ' ')}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Alimentazione cavo</th>
-                        <td>${riepilogo.tipoAlimentazioneCavo === 'ALIMENTAZIONE_UNICA' ? 'Alimentazione unica' : 'Alimentazione doppia'}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Lunghezza cavo ingresso</th>
-                        <td>${riepilogo.lunghezzaCavoIngresso}mm</td>
-                      </tr>
         `;
         
-        if (riepilogo.tipoAlimentazioneCavo === 'ALIMENTAZIONE_DOPPIA') {
+        // Dimmer e cavi
+        if (riepilogo.dimmerSelezionato) {
           riepilogoHtml += `
-                      <tr>
-                        <th scope="row">Lunghezza cavo uscita</th>
-                        <td>${riepilogo.lunghezzaCavoUscita}mm</td>
-                      </tr>
+                    <tr>
+                      <th scope="row">Dimmer</th>
+                      <td>${riepilogo.dimmerSelezionato === 'NESSUN_DIMMER' ? 'Nessun dimmer' : riepilogo.dimmerSelezionato.replace(/_/g, ' ')}</td>
+                    </tr>
           `;
         }
         
+        if (riepilogo.tipoAlimentazioneCavo) {
+          riepilogoHtml += `
+                    <tr>
+                      <th scope="row">Alimentazione cavo</th>
+                      <td>${riepilogo.tipoAlimentazioneCavo === 'ALIMENTAZIONE_UNICA' ? 'Alimentazione unica' : 'Alimentazione doppia'}</td>
+                    </tr>
+          `;
+          
+          if (riepilogo.lunghezzaCavoIngresso) {
+            riepilogoHtml += `
+                    <tr>
+                      <th scope="row">Lunghezza cavo ingresso</th>
+                      <td>${riepilogo.lunghezzaCavoIngresso}mm</td>
+                    </tr>
+            `;
+          }
+          
+          if (riepilogo.tipoAlimentazioneCavo === 'ALIMENTAZIONE_DOPPIA' && riepilogo.lunghezzaCavoUscita) {
+            riepilogoHtml += `
+                    <tr>
+                      <th scope="row">Lunghezza cavo uscita</th>
+                      <td>${riepilogo.lunghezzaCavoUscita}mm</td>
+                    </tr>
+            `;
+          }
+          
+          if (riepilogo.uscitaCavoSelezionata) {
+            riepilogoHtml += `
+                    <tr>
+                      <th scope="row">Uscita cavo</th>
+                      <td>${riepilogo.uscitaCavoSelezionata}</td>
+                    </tr>
+            `;
+          }
+        }
+        
+        // Forma, finitura e lunghezza
         riepilogoHtml += `
-                      <tr>
-                        <th scope="row">Uscita cavo</th>
-                        <td>${riepilogo.uscitaCavoSelezionata}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Forma di taglio</th>
-                        <td>${mappaFormeTaglio[riepilogo.formaDiTaglioSelezionata] || riepilogo.formaDiTaglioSelezionata}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Finitura</th>
-                        <td>${mappaFiniture[riepilogo.finituraSelezionata] || riepilogo.finituraSelezionata}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Lunghezza richiesta</th>
-                        <td>${riepilogo.lunghezzaRichiesta}mm</td>
-                      </tr>
+                    <tr>
+                      <th scope="row">Forma di taglio</th>
+                      <td>${mappaFormeTaglio[riepilogo.formaDiTaglioSelezionata] || riepilogo.formaDiTaglioSelezionata}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Finitura</th>
+                      <td>${mappaFiniture[riepilogo.finituraSelezionata] || riepilogo.finituraSelezionata}</td>
+                    </tr>
         `;
         
-        if (riepilogo.stripLedSelezionata !== 'NO_STRIP' && riepilogo.stripLedSelezionata !== 'senza_strip') {
+        if (riepilogo.lunghezzaRichiesta) {
           riepilogoHtml += `
-                      <tr>
-                        <th scope="row">Potenza totale</th>
-                        <td>${potenzaTotale}W</td>
-                      </tr>
+                    <tr>
+                      <th scope="row">Lunghezza richiesta</th>
+                      <td>${riepilogo.lunghezzaRichiesta}mm</td>
+                    </tr>
+          `;
+        }
+        
+        // Potenza totale (solo se c'è una strip LED)
+        if (riepilogo.stripLedSelezionata !== 'NO_STRIP' && riepilogo.includeStripLed && potenzaTotale) {
+          riepilogoHtml += `
+                    <tr>
+                      <th scope="row">Potenza totale</th>
+                      <td>${potenzaTotale}W</td>
+                    </tr>
           `;
         }
         

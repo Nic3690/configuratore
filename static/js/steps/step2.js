@@ -2,13 +2,15 @@ import { configurazione, mappaTipologieVisualizzazione, mappaTensioneVisualizzaz
 import { formatTemperatura, updateProgressBar } from '../utils.js';
 import { caricaOpzioniParametri, caricaStripLedFiltrate } from '../api.js';
 import { vaiAllaTemperaturaEPotenza } from './step3.js';
+import { vaiAllAlimentazione } from './step4.js';
+import { vaiAllaPersonalizzazione } from './step6.js';
 
 export function initStep2Listeners() {
   $('#btn-continua-step2').on('click', function(e) {
     e.preventDefault();
     
     if (configurazione.profiloSelezionato && configurazione.tipologiaSelezionata) {
-      vaiAiParametriStripLed();
+      vaiAlleOpzioniStripLed(); // Mostra prima le opzioni sì/no per la strip LED
     } else {
       let messaggi = [];
       if (!configurazione.profiloSelezionato) messaggi.push("un profilo");
@@ -22,7 +24,7 @@ export function initStep2Listeners() {
     e.preventDefault();
     
     $("#step2-parametri").fadeOut(300, function() {
-      $("#step2-modello").fadeIn(300);
+      $("#step2-option-strip").fadeIn(300); // Torna alle opzioni strip LED anziché al modello
       
       updateProgressBar(2);
     });
@@ -64,6 +66,45 @@ export function initStep2Listeners() {
       alert("Seleziona una strip LED prima di continuare");
     }
   });
+  
+  // Nuovi event listener per la sezione delle opzioni strip LED
+  $('#btn-torna-step2-option').on('click', function(e) {
+    e.preventDefault();
+    
+    $("#step2-option-strip").fadeOut(300, function() {
+      $("#step2-modello").fadeIn(300);
+    });
+  });
+  
+  // Utilizziamo document.on per assicurarci che l'evento funzioni anche se gli elementi vengono aggiunti dinamicamente
+  $(document).on('click', '.strip-option-card', function() {
+    $('.strip-option-card').removeClass('selected');
+    $(this).addClass('selected');
+    
+    const opzione = $(this).data('option');
+    configurazione.includeStripLed = opzione === 'si';
+    
+    $('#btn-continua-step2-option').prop('disabled', false);
+  });
+  
+  $('#btn-continua-step2-option').on('click', function(e) {
+    e.preventDefault();
+    
+    if (configurazione.includeStripLed === undefined) {
+      alert("Seleziona se includere o meno una strip LED prima di continuare");
+      return;
+    }
+    
+    if (configurazione.includeStripLed) {
+      // L'utente ha scelto di includere una strip LED, continua con il flusso normale
+      vaiAiParametriStripLed();
+    } else {
+      // L'utente ha scelto di non includere una strip LED, salta direttamente alla personalizzazione
+      configurazione.stripLedSelezionata = 'NO_STRIP';
+      updateProgressBar(6); // Aggiorna la barra di progresso allo step 6
+      vaiAllaPersonalizzazione();
+    }
+  });
 }
 
 /**
@@ -98,13 +139,28 @@ export function aggiungiCompatibilitaBadge(profilo, $cardBody) {
   }
 }
 
+// Nuova funzione per mostrare le opzioni sì/no per la strip LED
+export function vaiAlleOpzioniStripLed() {
+  $('#profilo-nome-step2-option').text(configurazione.nomeModello);
+  $('#tipologia-nome-step2-option').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
+  
+  $("#step2-modello").fadeOut(300, function() {
+    $("#step2-option-strip").fadeIn(300);
+    
+    // Reset dello stato delle card e del pulsante "Continua"
+    $('.strip-option-card').removeClass('selected');
+    $('#btn-continua-step2-option').prop('disabled', true);
+    configurazione.includeStripLed = undefined;
+  });
+}
+
 /* Selezione parametri Strip LED */
 export function vaiAiParametriStripLed() {
   
   $('#profilo-nome-step2-parametri').text(configurazione.nomeModello);
   $('#tipologia-nome-step2-parametri').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
   
-  $("#step2-modello").fadeOut(300, function() {
+  $("#step2-option-strip").fadeOut(300, function() { // Modifica qui: fadeOut da option-strip invece che da modello
     $("#step2-parametri").fadeIn(300);
     
     updateProgressBar(2);

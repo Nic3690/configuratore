@@ -7,9 +7,14 @@ export function initStep6Listeners() {
     e.preventDefault();
     
     $("#step6-personalizzazione").fadeOut(300, function() {
-      $("#step5-controllo").fadeIn(300);
-      
-      updateProgressBar(5);
+      // Se abbiamo saltato gli step della strip LED, torniamo alla scelta strip LED
+      if (configurazione.stripLedSelezionata === 'NO_STRIP') {
+        $("#step2-option-strip").fadeIn(300);
+        updateProgressBar(2);
+      } else {
+        $("#step5-controllo").fadeIn(300);
+        updateProgressBar(5);
+      }
     });
   });
   
@@ -40,13 +45,21 @@ export function vaiAllaPersonalizzazione() {
   $('#profilo-nome-step6').text(configurazione.nomeModello);
   $('#tipologia-nome-step6').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
   
-  updateProgressBar(6);
-  
-  $("#step5-controllo").fadeOut(300, function() {
-    $("#step6-personalizzazione").fadeIn(300);
-    
-    preparePersonalizzazioneListeners();
-  });
+  // Se stiamo arrivando direttamente dalla scelta "no strip LED"
+  if (configurazione.stripLedSelezionata === 'NO_STRIP') {
+    $("#step2-option-strip").fadeOut(300, function() {
+      $("#step6-personalizzazione").fadeIn(300);
+      
+      preparePersonalizzazioneListeners();
+    });
+  } else {
+    // Flusso normale
+    $("#step5-controllo").fadeOut(300, function() {
+      $("#step6-personalizzazione").fadeIn(300);
+      
+      preparePersonalizzazioneListeners();
+    });
+  }
 }
 
 /* Event Listener */
@@ -125,28 +138,28 @@ export function updateIstruzioniMisurazione(forma) {
     case 'FORMA_L_DX':
       istruzioniContainer.html(`
         <p>Inserisci la lunghezza desiderata in millimetri.</p>
-        <img src="/static/img/forma_a_l_dx.png" alt="Forma dritta" class="img-fluid mb-3" 
+        <img src="/static/img/forma_a_l_dx.png" alt="Forma a L destra" class="img-fluid mb-3" 
             style="width: 100%; max-width: 300px;">
       `);
       break;
     case 'FORMA_L_SX':
       istruzioniContainer.html(`
         <p>Inserisci la lunghezza desiderata in millimetri.</p>
-        <img src="/static/img/forma_a_l_sx.png" alt="Forma dritta" class="img-fluid mb-3" 
+        <img src="/static/img/forma_a_l_sx.png" alt="Forma a L sinistra" class="img-fluid mb-3" 
             style="width: 100%; max-width: 300px;">
       `);
       break;
     case 'FORMA_C':
       istruzioniContainer.html(`
         <p>Inserisci la lunghezza desiderata in millimetri.</p>
-        <img src="/static/img/forma_a_c.png" alt="Forma dritta" class="img-fluid mb-3" 
+        <img src="/static/img/forma_a_c.png" alt="Forma a C" class="img-fluid mb-3" 
             style="width: 100%; max-width: 300px;">
       `);
       break;
     case 'RETTANGOLO_QUADRATO':
       istruzioniContainer.html(`
         <p>Inserisci la lunghezza desiderata in millimetri.</p>
-        <img src="/static/img/forma_a_rettangolo.png" alt="Forma dritta" class="img-fluid mb-3" 
+        <img src="/static/img/forma_a_rettangolo.png" alt="Forma rettangolare" class="img-fluid mb-3" 
             style="width: 100%; max-width: 300px;">
       `);
       break;
