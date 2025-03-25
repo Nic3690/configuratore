@@ -306,7 +306,14 @@
         <div class="row" id="alimentatore-container">
         </div>
       </div>
-      
+
+      <div class="container mt-4" id="potenza-consigliata-section" style="display: none;">
+        <div class="alert alert-info">
+          <h5>Potenza alimentatore consigliata</h5>
+          <p>In base alla configurazione selezionata, la potenza consigliata per l'alimentatore è di <strong><span id="potenza-consigliata">100</span>W</strong>.</p>
+        </div>
+      </div>
+
       <div class="row mt-5">
         <div class="col-12 text-center">
           <button class="btn btn-secondary" id="btn-torna-step3">Indietro</button>
@@ -332,59 +339,11 @@
           </p>
         </div>
       </div>
-      
-      <div class="container mb-5">
-        <h3 class="mb-3">Dimmer</h3>
-        <div class="row" id="dimmer-container">
-          <div class="col-md-4 mb-3">
-            <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
-              <div class="card-body text-center">
-                <h5 class="card-title">Nessun dimmer</h5>
-                <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4 mb-3">
-            <div class="card option-card dimmer-card" data-dimmer="TOUCH_SU_PROFILO">
-              <div class="card-body text-center">
-                <h5 class="card-title">Touch su profilo</h5>
-                <p class="card-text small text-muted">Controllo touch direttamente sul profilo</p>
-                <p class="card-text small text-danger">Spazio non illuminato: 50mm</p>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4 mb-3">
-            <div class="card option-card dimmer-card" data-dimmer="CON_TELECOMANDO">
-              <div class="card-body text-center">
-                <h5 class="card-title">Con telecomando</h5>
-                <p class="card-text small text-muted">Controllo a distanza con telecomando dedicato</p>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4 mb-3">
-            <div class="card option-card dimmer-card" data-dimmer="CENTRALINA_TUYA">
-              <div class="card-body text-center">
-                <h5 class="card-title">Centralina TUYA</h5>
-                <p class="card-text small text-muted">Controllo smart tramite app mobile</p>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4 mb-3">
-            <div class="card option-card dimmer-card" data-dimmer="DIMMER_A_PULSANTE_SEMPLICE">
-              <div class="card-body text-center">
-                <h5 class="card-title">Dimmer a pulsante semplice</h5>
-                <p class="card-text small text-muted">Controllo con pulsante standard</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="dimmer-warning" class="alert alert-warning" style="display: none;">
-          <strong>Attenzione:</strong> Il dimmer touch comporta uno spazio non illuminato di <span id="dimmer-space">50</span>mm.
+
+      <div class="row" id="dimmer-container">
+        <div class="col-12 text-center" id="dimmer-loading">
+          <div class="spinner-border" role="status"></div>
+          <p class="mt-3">Caricamento opzioni dimmer compatibili...</p>
         </div>
       </div>
       

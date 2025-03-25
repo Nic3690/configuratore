@@ -44,7 +44,22 @@ def get_categorie():
 def get_profili(categoria):
     profili = CONFIG_DATA.get('profili', [])
     
-    profili_categoria = [p for p in profili if p.get('categoria') == categoria]
+    # Ottieni i profili per categoria o per categoria alternativa
+    profili_categoria = []
+    for p in profili:
+        if p.get('categoria') == categoria or (isinstance(p.get('categorie'), list) and categoria in p.get('categorie', [])):
+            # Aggiungiamo informazioni sui nomi commerciali delle strip LED compatibili
+            profilo = p.copy()
+            strip_compatibili_info = []
+            for strip_id in p.get('stripLedCompatibili', []):
+                strip_info = CONFIG_DATA.get('stripLed', {}).get(strip_id, {})
+                if strip_info:
+                    strip_compatibili_info.append({
+                        'id': strip_id,
+                        'nomeCommerciale': strip_info.get('nomeCommerciale', '')
+                    })
+            profilo['stripLedCompatibiliInfo'] = strip_compatibili_info
+            profili_categoria.append(profilo)
     
     print(f"Categoria: {categoria}, Profili trovati: {len(profili_categoria)}")
     return jsonify(profili_categoria)
@@ -66,21 +81,18 @@ def get_opzioni_profilo(profilo_id):
 @app.route('/get_opzioni_tensione/<profilo_id>')
 def get_opzioni_tensione(profilo_id):
     profili = CONFIG_DATA.get('profili', [])
-    
     profilo = next((p for p in profili if p.get('id') == profilo_id), None)
     
     if not profilo:
         return jsonify({'success': False, 'message': 'Profilo non trovato'})
-    
-    stripLedCompatibili = profilo.get('stripLedCompatibili', [])
-    
-    strip_led_data = CONFIG_DATA.get('stripLed', {})
-    
+
+    opzioni_strip_led = CONFIG_DATA.get('opzioniStripLed', {}).get('tipi', [])
+    opzioni_filtrate = [opt for opt in opzioni_strip_led if opt != 'NO_STRIP']
+
     voltaggi_disponibili = set()
-    for strip_id in stripLedCompatibili:
-        strip_info = strip_led_data.get(strip_id, {})
-        for tensione in strip_info.get('tensione', []):
-            voltaggi_disponibili.add(tensione)
+    for strip_id in opzioni_filtrate:
+        strip_info = CONFIG_DATA.get('stripLed', {}).get(strip_id, {})
+        voltaggi_disponibili.add(strip_info.get('tensione'))
     
     return jsonify({
         'success': True,
@@ -90,22 +102,19 @@ def get_opzioni_tensione(profilo_id):
 @app.route('/get_opzioni_ip/<profilo_id>/<tensione>')
 def get_opzioni_ip(profilo_id, tensione):
     profili = CONFIG_DATA.get('profili', [])
-    
     profilo = next((p for p in profili if p.get('id') == profilo_id), None)
     
     if not profilo:
         return jsonify({'success': False, 'message': 'Profilo non trovato'})
     
-    stripLedCompatibili = profilo.get('stripLedCompatibili', [])
-    
-    strip_led_data = CONFIG_DATA.get('stripLed', {})
+    # Trova strip LED con la tensione specificata
+    opzioni_strip_led = CONFIG_DATA.get('opzioniStripLed', {}).get('tipi', [])
     
     ip_disponibili = set()
-    for strip_id in stripLedCompatibili:
-        strip_info = strip_led_data.get(strip_id, {})
-        if tensione in strip_info.get('tensione', []):
-            for ip in strip_info.get('ip', []):
-                ip_disponibili.add(ip)
+    for strip_id in opzioni_strip_led:
+        strip_info = CONFIG_DATA.get('stripLed', {}).get(strip_id, {})
+        if strip_info.get('tensione') == tensione:
+            ip_disponibili.add(strip_info.get('ip'))
     
     return jsonify({
         'success': True,
@@ -115,22 +124,20 @@ def get_opzioni_ip(profilo_id, tensione):
 @app.route('/get_opzioni_temperatura_iniziale/<profilo_id>/<tensione>/<ip>')
 def get_opzioni_temperatura_iniziale(profilo_id, tensione, ip):
     profili = CONFIG_DATA.get('profili', [])
-    
     profilo = next((p for p in profili if p.get('id') == profilo_id), None)
     
     if not profilo:
         return jsonify({'success': False, 'message': 'Profilo non trovato'})
     
-    stripLedCompatibili = profilo.get('stripLedCompatibili', [])
+    # Trova strip LED con la tensione e IP specificati
+    opzioni_strip_led = CONFIG_DATA.get('opzioniStripLed', {}).get('tipi', [])
     
-    strip_led_data = CONFIG_DATA.get('stripLed', {})
-    
-    temperature_disponibili = list()
-    for strip_id in stripLedCompatibili:
-        strip_info = strip_led_data.get(strip_id, {})
-        if tensione in strip_info.get('tensione', []) and ip in strip_info.get('ip', []):
+    temperature_disponibili = set()
+    for strip_id in opzioni_strip_led:
+        strip_info = CONFIG_DATA.get('stripLed', {}).get(strip_id, {})
+        if strip_info.get('tensione') == tensione and strip_info.get('ip') == ip:
             for temp in strip_info.get('temperaturaColoreDisponibili', []):
-                temperature_disponibili.append(temp)
+                temperature_disponibili.add(temp)
     
     return jsonify({
         'success': True,
@@ -140,54 +147,93 @@ def get_opzioni_temperatura_iniziale(profilo_id, tensione, ip):
 @app.route('/get_strip_led_filtrate/<profilo_id>/<tensione>/<ip>/<temperatura>')
 def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura):
     profili = CONFIG_DATA.get('profili', [])
-    
     profilo = next((p for p in profili if p.get('id') == profilo_id), None)
     
     if not profilo:
         return jsonify({'success': False, 'message': 'Profilo non trovato'})
     
-    stripLedCompatibili = profilo.get('stripLedCompatibili', [])
-    
-    strip_led_data = CONFIG_DATA.get('stripLed', {})
+    # Trova strip LED con la tensione, IP e temperatura specificati
+    opzioni_strip_led = CONFIG_DATA.get('opzioniStripLed', {}).get('tipi', [])
+    strip_led_compatibili = profilo.get('stripLedCompatibili', [])
     
     strip_led_filtrate = []
-    
-    for strip_id in stripLedCompatibili:
-        strip_info = strip_led_data.get(strip_id, {})
-        
-        if (tensione in strip_info.get('tensione', []) and 
-            ip in strip_info.get('ip', []) and 
-            temperatura in strip_info.get('temperaturaColoreDisponibili', [])):
+    for strip_id in opzioni_strip_led:
+        if strip_id not in strip_led_compatibili and strip_id != 'NO_STRIP':
+            continue
             
-            strip_led_filtrate.append({
+        strip_info = CONFIG_DATA.get('stripLed', {}).get(strip_id, {})
+        
+        if (strip_info.get('tensione') == tensione and 
+            strip_info.get('ip') == ip and 
+            temperatura in strip_info.get('temperaturaColoreDisponibili', [])):
+                        strip_led_filtrate.append({
                 'id': strip_id,
                 'nome': strip_info.get('nome', strip_id),
+                'nomeCommerciale': strip_info.get('nomeCommerciale', ''),
                 'descrizione': strip_info.get('descrizione', ''),
                 'tensione': tensione,
                 'ip': ip,
-                'temperatura': temperatura
+                'temperatura': temperatura,
+                'codiciProdotto': strip_info.get('codiciProdotto', [])
             })
-    
-    strip_led_opzionale = False
-    if 'senza_strip' in stripLedCompatibili:
-        strip_led_opzionale = True
     
     return jsonify({
         'success': True,
         'strip_led': strip_led_filtrate,
-        'strip_led_opzionale': strip_led_opzionale
+        'strip_led_opzionale': 'NO_STRIP' in opzioni_strip_led
     })
 
-'''@app.route('/get_opzioni_temperatura/<strip_id>')
-def get_opzioni_temperatura(strip_id):
+@app.route('/get_nomi_commerciali/<strip_id>')
+def get_nomi_commerciali(strip_id):
     strip_led_data = CONFIG_DATA.get('stripLed', {})
-    
     strip_info = strip_led_data.get(strip_id, {})
     
     return jsonify({
         'success': True,
-        'temperature': strip_info.get('temperaturaColoreDisponibili', [])
-    })'''
+        'nomeCommerciale': strip_info.get('nomeCommerciale', strip_info.get('nome', strip_id)),
+        'codiciProdotto': strip_info.get('codiciProdotto', [])
+    })
+
+@app.route('/get_dimmer_compatibili/<strip_id>')
+def get_dimmer_compatibili(strip_id):
+    dimmerazione = CONFIG_DATA.get('dimmerazione', {})
+    compatibilita = dimmerazione.get('compatibilitaDimmer', {})
+    
+    dimmer_compatibili = []
+    for dimmer, strip_compatibili in compatibilita.items():
+        if strip_id in strip_compatibili:
+            dimmer_compatibili.append(dimmer)
+    
+    return jsonify({
+        'success': True,
+        'dimmer_compatibili': dimmer_compatibili
+    })
+
+@app.route('/get_opzioni_dimmerazione/<strip_id>')
+def get_opzioni_dimmerazione(strip_id):
+    dimmerazione = CONFIG_DATA.get('dimmerazione', {})
+    opzioni_base = dimmerazione.get('opzioni', [])
+    
+    # Ottieni la lista di dimmer compatibili con questa strip
+    compatibilita = dimmerazione.get('compatibilitaDimmer', {})
+    
+    dimmer_compatibili = []
+    for dimmer, strip_compatibili in compatibilita.items():
+        if strip_id in strip_compatibili:
+            dimmer_compatibili.append(dimmer)
+    
+    # Se non ci sono dimmer compatibili, include solo l'opzione NESSUN_DIMMER
+    if not dimmer_compatibili and "NESSUN_DIMMER" in opzioni_base:
+        opzioni_filtrate = ["NESSUN_DIMMER"]
+    else:
+        # Altrimenti include tutti i dimmer compatibili più NESSUN_DIMMER
+        opzioni_filtrate = ["NESSUN_DIMMER"] + dimmer_compatibili
+    
+    return jsonify({
+        'success': True,
+        'opzioni': opzioni_filtrate,
+        'spaziNonIlluminati': dimmerazione.get('spaziNonIlluminati', {})
+    })
 
 @app.route('/get_opzioni_potenza/<strip_id>/<temperatura>')
 def get_opzioni_potenza(strip_id, temperatura):
@@ -243,6 +289,52 @@ def get_opzioni_alimentatore(tipo_alimentazione):
     return jsonify({
         'success': True,
         'alimentatori': alimentatori_completi
+    })
+
+@app.route('/calcola_potenza_alimentatore', methods=['POST'])
+def calcola_potenza_alimentatore():
+    data = request.json
+    potenza_per_metro = data.get('potenzaPerMetro', 0)
+    lunghezza_metri = data.get('lunghezzaMetri', 0)
+    
+    # Calcola la potenza totale con un margine di sicurezza del 20%
+    potenza_totale = potenza_per_metro * lunghezza_metri * 1.2
+    
+    # Trova la potenza standard di alimentatore immediatamente superiore
+    potenze_standard = [30, 60, 100, 150, 200, 320]
+    potenza_consigliata = next((p for p in potenze_standard if p >= potenza_totale), potenze_standard[-1])
+    
+    return jsonify({
+        'success': True,
+        'potenzaTotale': round(potenza_totale, 2),
+        'potenzaConsigliata': potenza_consigliata
+    })
+
+@app.route('/get_strip_led_by_nome_commerciale/<nome_commerciale>')
+def get_strip_led_by_nome_commerciale(nome_commerciale):
+    mappatura = CONFIG_DATA.get('mappaturaCommerciale', {})
+    strip_id = mappatura.get(nome_commerciale, None)
+    
+    if not strip_id:
+        return jsonify({
+            'success': False,
+            'message': f'Strip LED non trovata con nome commerciale: {nome_commerciale}'
+        })
+    
+    strip_info = CONFIG_DATA.get('stripLed', {}).get(strip_id, {})
+    
+    return jsonify({
+        'success': True,
+        'strip_led': {
+            'id': strip_id,
+            'nome': strip_info.get('nome', ''),
+            'nomeCommerciale': strip_info.get('nomeCommerciale', ''),
+            'tensione': strip_info.get('tensione', ''),
+            'ip': strip_info.get('ip', ''),
+            'temperaturaColoreDisponibili': strip_info.get('temperaturaColoreDisponibili', []),
+            'potenzeDisponibili': strip_info.get('potenzeDisponibili', []),
+            'codiciProdotto': strip_info.get('codiciProdotto', [])
+        }
     })
 
 @app.route('/calcola_lunghezze', methods=['POST'])

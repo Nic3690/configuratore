@@ -55,7 +55,7 @@ export function initStep2Listeners() {
     e.preventDefault();
     
     if (configurazione.stripLedSelezionata) {
-      if (configurazione.stripLedSelezionata === 'senza_strip') {
+      if (configurazione.stripLedSelezionata === 'senza_strip' || configurazione.stripLedSelezionata === 'NO_STRIP') {
         vaiAllAlimentazione();
       } else {
         vaiAllaTemperaturaEPotenza();
@@ -64,6 +64,38 @@ export function initStep2Listeners() {
       alert("Seleziona una strip LED prima di continuare");
     }
   });
+}
+
+/**
+ * Aggiunge i badge di compatibilità alle card dei profili
+ * @param {Object} profilo - Oggetto profilo da visualizzare
+ * @param {jQuery} $cardBody - Elemento jQuery del corpo della card
+ */
+export function aggiungiCompatibilitaBadge(profilo, $cardBody) {
+  // Aggiungi il badge di compatibilità con le strip LED
+  if (profilo.stripLedCompatibiliInfo && profilo.stripLedCompatibiliInfo.length > 0) {
+    const stripCount = profilo.stripLedCompatibiliInfo.length;
+    
+    // Crea il badge di compatibilità
+    const $compatibilityBadge = $('<div class="compatibility-badge mt-2">')
+      .append($('<span class="badge bg-success">').text(`Strip LED compatibili: ${stripCount}`));
+    
+    // Aggiungi tooltip con informazioni sulle strip compatibili
+    let tooltipContent = "Strip LED compatibili: ";
+    const stripNomi = profilo.stripLedCompatibiliInfo
+      .filter(s => s.nomeCommerciale)
+      .map(s => s.nomeCommerciale)
+      .filter((v, i, a) => a.indexOf(v) === i); // Rimuovi duplicati
+    
+    if (stripNomi.length > 0) {
+      tooltipContent += stripNomi.join(", ");
+      $compatibilityBadge.attr('title', tooltipContent)
+        .attr('data-bs-toggle', 'tooltip')
+        .attr('data-bs-placement', 'top');
+    }
+    
+    $cardBody.append($compatibilityBadge);
+  }
 }
 
 /* Selezione parametri Strip LED */
@@ -98,5 +130,26 @@ export function vaiAllaSelezioneDiStripLed() {
       configurazione.ipSelezionato, 
       configurazione.temperaturaSelezionata
     );
+  });
+}
+
+// Funzione che memorizza il nome commerciale della strip LED selezionata
+export function memorizzaNomeCommercialeStripLed(stripId) {
+  // Chiamata al server per ottenere il nome commerciale
+  $.ajax({
+    url: `/get_nomi_commerciali/${stripId}`,
+    method: 'GET',
+    success: function(response) {
+      if (response.success) {
+        configurazione.nomeCommercialeStripLed = response.nomeCommerciale;
+        configurazione.codiciProdottoStripLed = response.codiciProdotto;
+        
+        // Aggiorna l'etichetta nella UI se necessario
+        $('.strip-led-nome-commerciale').text(configurazione.nomeCommercialeStripLed);
+      }
+    },
+    error: function(error) {
+      console.error("Errore nel recupero del nome commerciale:", error);
+    }
   });
 }

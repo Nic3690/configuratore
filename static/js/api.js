@@ -36,6 +36,32 @@ export function caricaProfili(categoria) {
           </div>
         `);
         
+        // Aggiungi badge di compatibilità con strip LED se disponibile
+        if (profilo.stripLedCompatibiliInfo && profilo.stripLedCompatibiliInfo.length > 0) {
+          const stripCount = profilo.stripLedCompatibiliInfo.length;
+          const $cardBody = profiloCard.find('.card-body');
+          
+          // Crea badge di compatibilità
+          const $badge = $('<div class="compatibility-badge mt-2">')
+            .append($('<span class="badge bg-success">').text(`Strip LED compatibili: ${stripCount}`));
+          
+          // Aggiungi tooltip con informazioni sulle strip compatibili
+          let tooltipContent = "Strip LED compatibili: ";
+          const stripNomi = profilo.stripLedCompatibiliInfo
+            .filter(s => s.nomeCommerciale)
+            .map(s => s.nomeCommerciale)
+            .filter((v, i, a) => a.indexOf(v) === i); // Rimuovi duplicati
+          
+          if (stripNomi.length > 0) {
+            tooltipContent += stripNomi.join(", ");
+            $badge.attr('title', tooltipContent)
+              .attr('data-bs-toggle', 'tooltip')
+              .attr('data-bs-placement', 'top');
+          }
+          
+          $cardBody.append($badge);
+        }
+        
         grid.append(profiloCard);
       });
       
@@ -48,6 +74,9 @@ export function caricaProfili(categoria) {
         
         caricaOpzioniProfilo(configurazione.profiloSelezionato);
       });
+      
+      // Inizializza i tooltip Bootstrap
+      $('[data-bs-toggle="tooltip"]').tooltip();
     },
     error: function(error) {
       console.error("Errore nel caricamento dei profili:", error);
@@ -312,6 +341,8 @@ export function caricaStripLedFiltrate(profiloId, tensione, ip, temperatura) {
   $('#strip-led-filtrate-options').empty().html('<div class="text-center mt-3"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni strip LED...</p></div>');
   
   configurazione.stripLedSelezionata = null;
+  configurazione.nomeCommercialeStripLed = null;
+  configurazione.codiciProdottoStripLed = null;
   
   $('#btn-continua-strip').prop('disabled', true);
   
@@ -333,17 +364,23 @@ export function caricaStripLedFiltrate(profiloId, tensione, ip, temperatura) {
       }
       
       data.strip_led.forEach(function(strip) {
+        // Usa il nome commerciale se disponibile
+        const nomeVisualizzato = strip.nomeCommerciale || strip.nome;
+        
         $('#strip-led-filtrate-options').append(`
           <div class="col-md-6 mb-3">
-            <div class="card option-card strip-led-filtrata-card" data-strip="${strip.id}">
+            <div class="card option-card strip-led-filtrata-card" data-strip="${strip.id}" data-nome-commerciale="${strip.nomeCommerciale || ''}">
               <div class="card-body">
-                <h5 class="card-title">${strip.nome}</h5>
+                <h5 class="card-title">${nomeVisualizzato}</h5>
+                ${strip.nomeCommerciale ? `<p class="card-subtitle mb-2 text-muted strip-led-nome-tecnico">${strip.nome}</p>` : ''}
                 <p class="card-text small text-muted">${strip.descrizione || ''}</p>
                 <p class="card-text small">
                   Tensione: ${strip.tensione}, 
                   IP: ${strip.ip}, 
                   Temperatura: ${formatTemperatura(strip.temperatura)}
                 </p>
+                ${strip.codiciProdotto && strip.codiciProdotto.length > 0 ? 
+                  `<p class="card-text small">Codici prodotto: ${strip.codiciProdotto.join(', ')}</p>` : ''}
               </div>
             </div>
           </div>
@@ -353,7 +390,7 @@ export function caricaStripLedFiltrate(profiloId, tensione, ip, temperatura) {
       if (data.strip_led_opzionale) {
         $('#strip-led-filtrate-options').prepend(`
           <div class="col-md-6 mb-3">
-            <div class="card option-card strip-led-filtrata-card" data-strip="senza_strip">
+            <div class="card option-card strip-led-filtrata-card" data-strip="NO_STRIP">
               <div class="card-body text-center">
                 <h5 class="card-title">Senza Strip LED</h5>
                 <p class="card-text small text-muted">Configura il profilo senza illuminazione</p>
@@ -367,6 +404,23 @@ export function caricaStripLedFiltrate(profiloId, tensione, ip, temperatura) {
         $('.strip-led-filtrata-card').removeClass('selected');
         $(this).addClass('selected');
         configurazione.stripLedSelezionata = $(this).data('strip');
+        
+        // Memorizza il nome commerciale se disponibile
+        const nomeCommerciale = $(this).data('nome-commerciale');
+        if (nomeCommerciale) {
+          configurazione.nomeCommercialeStripLed = nomeCommerciale;
+          
+          // Chiama l'API per ottenere i codici prodotto
+          $.ajax({
+            url: `/get_nomi_commerciali/${configurazione.stripLedSelezionata}`,
+            method: 'GET',
+            success: function(response) {
+              if (response.success) {
+                configurazione.codiciProdottoStripLed = response.codiciProdotto;
+              }
+            }
+          });
+        }
         
         $('#btn-continua-strip').prop('disabled', false);
       });
@@ -429,6 +483,11 @@ export function caricaOpzioniPotenza(stripId, temperatura) {
         configurazione.codicePotenza = $(this).data('codice');
         
         $('#btn-continua-step3').prop('disabled', false);
+        
+        // Calcola potenza consigliata per l'alimentatore
+        if (configurazione.lunghezzaRichiesta || configurazione.lunghezzaSelezionata) {
+          calcolaPotenzaAlimentatoreConsigliata();
+        }
       });
     },
     error: function(error) {
@@ -436,6 +495,54 @@ export function caricaOpzioniPotenza(stripId, temperatura) {
       $('#potenza-container').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle opzioni potenza. Riprova più tardi.</p></div>');
     }
   });
+}
+
+/**
+ * Calcola la potenza dell'alimentatore consigliata
+ */
+function calcolaPotenzaAlimentatoreConsigliata() {
+  // Se non c'è una strip LED o non c'è una potenza selezionata, non fare nulla
+  if (configurazione.stripLedSelezionata === 'NO_STRIP' || 
+      !configurazione.potenzaSelezionata) {
+    return;
+  }
+
+  // Estrai il valore numerico della potenza dalla stringa (es. "14W/m" -> 14)
+  let potenzaPerMetro = 0;
+  const potenzaMatch = configurazione.potenzaSelezionata.match(/(\d+(\.\d+)?)/);
+  if (potenzaMatch && potenzaMatch[1]) {
+    potenzaPerMetro = parseFloat(potenzaMatch[1]);
+  }
+
+  // Calcola la lunghezza in metri
+  let lunghezzaMetri = 0;
+  if (configurazione.lunghezzaRichiesta) {
+    lunghezzaMetri = parseFloat(configurazione.lunghezzaRichiesta) / 1000;
+  } else if (configurazione.lunghezzaSelezionata) {
+    lunghezzaMetri = parseFloat(configurazione.lunghezzaSelezionata) / 1000;
+  }
+
+  // Se abbiamo sia potenza che lunghezza, chiamiamo l'API
+  if (potenzaPerMetro > 0 && lunghezzaMetri > 0) {
+    $.ajax({
+      url: '/calcola_potenza_alimentatore',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        potenzaPerMetro: potenzaPerMetro,
+        lunghezzaMetri: lunghezzaMetri
+      }),
+      success: function(response) {
+        if (response.success) {
+          // Memorizza la potenza consigliata nella configurazione
+          configurazione.potenzaConsigliataAlimentatore = response.potenzaConsigliata;
+        }
+      },
+      error: function(error) {
+        console.error("Errore nel calcolo della potenza dell'alimentatore:", error);
+      }
+    });
+  }
 }
 
 /**
@@ -469,7 +576,20 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
         return;
       }
       
+      // Mostra la potenza consigliata
+      if (configurazione.potenzaConsigliataAlimentatore) {
+        $('#potenza-consigliata').text(configurazione.potenzaConsigliataAlimentatore);
+        $('#potenza-consigliata-section').show();
+      }
+      
       alimentatori.forEach(function(alimentatore) {
+        // Evidenzia gli alimentatori che supportano la potenza consigliata
+        let supportaPotenzaConsigliata = '';
+        if (configurazione.potenzaConsigliataAlimentatore && 
+            alimentatore.potenze.includes(configurazione.potenzaConsigliataAlimentatore)) {
+          supportaPotenzaConsigliata = '<div class="alert alert-success mt-2">Supporta la potenza consigliata</div>';
+        }
+        
         $('#alimentatore-container').append(`
           <div class="col-md-4 mb-3">
             <div class="card option-card alimentatore-card" data-alimentatore="${alimentatore.id}">
@@ -477,6 +597,7 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
                 <h5 class="card-title">${alimentatore.nome}</h5>
                 <p class="card-text small text-muted">${alimentatore.descrizione}</p>
                 <p class="card-text small">Potenze disponibili: ${alimentatore.potenze.join(', ')}W</p>
+                ${supportaPotenzaConsigliata}
               </div>
             </div>
           </div>
@@ -567,6 +688,9 @@ export function calcolaProposte(lunghezzaRichiesta) {
       $('.btn-seleziona-proposta[data-proposta="2"]').data('valore', data.proposte.proposta2);
       
       $('#proposte-container').show();
+      
+      // Ricalcola la potenza consigliata dell'alimentatore quando la lunghezza cambia
+      calcolaPotenzaAlimentatoreConsigliata();
     },
     error: function(error) {
       console.error("Errore nel calcolo delle proposte:", error);
@@ -640,11 +764,14 @@ export function finalizzaConfigurazione() {
                       </tr>
                       <tr>
                         <th scope="row">Strip LED</th>
-                        <td>${riepilogo.stripLedSelezionata === 'senza_strip' ? 'Senza Strip LED' : (mappaStripLedVisualizzazione[riepilogo.stripLedSelezionata] || riepilogo.stripLedSelezionata)}</td>
+                        <td>${riepilogo.stripLedSelezionata === 'NO_STRIP' ? 'Senza Strip LED' : 
+                             (riepilogo.nomeCommercialeStripLed || 
+                              mappaStripLedVisualizzazione[riepilogo.stripLedSelezionata] || 
+                              riepilogo.stripLedSelezionata)}</td>
                       </tr>
         `;
         
-        if (riepilogo.stripLedSelezionata !== 'senza_strip') {
+        if (riepilogo.stripLedSelezionata !== 'NO_STRIP' && riepilogo.stripLedSelezionata !== 'senza_strip') {
           riepilogoHtml += `
                       <tr>
                         <th scope="row">Potenza</th>
@@ -667,6 +794,15 @@ export function finalizzaConfigurazione() {
                         <td>${riepilogo.tipologiaAlimentatoreSelezionata}</td>
                       </tr>
           `;
+          
+          if (riepilogo.potenzaConsigliataAlimentatore) {
+            riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Potenza consigliata</th>
+                        <td>${riepilogo.potenzaConsigliataAlimentatore}W</td>
+                      </tr>
+            `;
+          }
         }
         
         riepilogoHtml += `
@@ -718,7 +854,7 @@ export function finalizzaConfigurazione() {
                       </tr>
         `;
         
-        if (riepilogo.stripLedSelezionata !== 'senza_strip') {
+        if (riepilogo.stripLedSelezionata !== 'NO_STRIP' && riepilogo.stripLedSelezionata !== 'senza_strip') {
           riepilogoHtml += `
                       <tr>
                         <th scope="row">Potenza totale</th>
