@@ -6,7 +6,6 @@ import { initStep3Listeners } from './steps/step3.js';
 import { initStep4Listeners } from './steps/step4.js';
 import { initStep5Listeners } from './steps/step5.js';
 import { initStep6Listeners } from './steps/step6.js';
-import { initStep7Listeners } from './steps/step7.js';
 import { caricaProfili } from './api.js';
 
 $(document).ready(function() {
@@ -20,7 +19,6 @@ $(document).ready(function() {
   initStep4Listeners();
   initStep5Listeners();
   initStep6Listeners();
-  initStep7Listeners();
 
   updateProgressBar(1);
 

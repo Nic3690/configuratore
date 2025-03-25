@@ -1,169 +1,32 @@
-import { configurazione, mappaTipologieVisualizzazione } from '../config.js';
-import { updateProgressBar, checkStep6Completion } from '../utils.js';
-import { caricaFinitureDisponibili, calcolaProposte, finalizzaConfigurazione } from '../api.js';
+import { salvaConfigurazione, richiedPreventivo } from '../api.js';
+import { updateProgressBar } from '../utils.js';
 
+// Questo file ora gestisce solo la funzionalità di riepilogo (ex step7)
 export function initStep6Listeners() {
+  // Pulsante torna indietro dal riepilogo allo step 5
   $('#btn-torna-step5').on('click', function(e) {
     e.preventDefault();
     
-    $("#step6-personalizzazione").fadeOut(300, function() {
-      // Se abbiamo saltato gli step della strip LED, torniamo alla scelta strip LED
-      if (configurazione.stripLedSelezionata === 'NO_STRIP') {
-        $("#step2-option-strip").fadeIn(300);
-        updateProgressBar(2);
-      } else {
-        $("#step5-controllo").fadeIn(300);
-        updateProgressBar(5);
-      }
+    $("#step6-riepilogo").fadeOut(300, function() {
+      $("#step5-controllo").fadeIn(300);
+      updateProgressBar(5);
     });
   });
-  
-  $('#btn-finalizza').on('click', function(e) {
-    e.preventDefault();
-    
-    if (!configurazione.formaDiTaglioSelezionata) {
-      alert("Seleziona una forma di taglio prima di continuare");
-      return;
-    }
-    
-    if (!configurazione.finituraSelezionata) {
-      alert("Seleziona una finitura prima di continuare");
-      return;
-    }
-    
-    if (!configurazione.lunghezzaRichiesta && configurazione.tipologiaSelezionata === 'taglio_misura') {
-      alert("Inserisci una lunghezza prima di continuare");
-      return;
-    }
-    
-    finalizzaConfigurazione();
-  });
-}
 
-export function vaiAllaPersonalizzazione() {
-  
-  $('#profilo-nome-step6').text(configurazione.nomeModello);
-  $('#tipologia-nome-step6').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
-  
-  // Se stiamo arrivando direttamente dalla scelta "no strip LED"
-  if (configurazione.stripLedSelezionata === 'NO_STRIP') {
-    $("#step2-option-strip").fadeOut(300, function() {
-      $("#step6-personalizzazione").fadeIn(300);
-      
-      preparePersonalizzazioneListeners();
-    });
-  } else {
-    // Flusso normale
-    $("#step5-controllo").fadeOut(300, function() {
-      $("#step6-personalizzazione").fadeIn(300);
-      
-      preparePersonalizzazioneListeners();
-    });
-  }
-}
-
-/* Event Listener */
-export function preparePersonalizzazioneListeners() {
-  configurazione.formaDiTaglioSelezionata = "DRITTO_SEMPLICE";
-  caricaFinitureDisponibili(configurazione.profiloSelezionato);
-  $('.forma-taglio-card[data-forma="DRITTO_SEMPLICE"]').addClass('selected');
-  
-  $('.forma-taglio-card').on('click', function() {
-    $('.forma-taglio-card').removeClass('selected');
-    $(this).addClass('selected');
-    
-    configurazione.formaDiTaglioSelezionata = $(this).data('forma');
-    
-    updateIstruzioniMisurazione(configurazione.formaDiTaglioSelezionata);
-    checkStep6Completion();
-  });
-  
-  $('.finitura-card').on('click', function() {
-    $('.finitura-card').removeClass('selected');
-    $(this).addClass('selected');
-    
-    configurazione.finituraSelezionata = $(this).data('finitura');
-    
-    checkStep6Completion();
-  });
-
-  $('#lunghezza-personalizzata').on('input', function() {
-    configurazione.lunghezzaRichiesta = parseInt($(this).val(), 10) || null;
-    
-    if (configurazione.lunghezzaRichiesta && configurazione.lunghezzaRichiesta > 0) {
-      calcolaProposte(configurazione.lunghezzaRichiesta);
-    } else {
-      $('#proposte-container').hide();
-    }
-    
-    checkStep6Completion();
-  });
-  
-  $('.btn-seleziona-proposta').on('click', function() {
-    const proposta = $(this).data('proposta');
-    const valore = parseInt($(this).data('valore'), 10);
-    
-    if (proposta === 1) {
-      configurazione.lunghezzaRichiesta = valore;
-      $('#lunghezza-personalizzata').val(valore);
-    } else if (proposta === 2) {
-      configurazione.lunghezzaRichiesta = valore;
-      $('#lunghezza-personalizzata').val(valore);
-    }
-    
-    checkStep6Completion();
-  });
-  
-  updateIstruzioniMisurazione('DRITTO_SEMPLICE');
-  
-  checkStep6Completion();
+  // Questi listener vengono inizializzati dinamicamente quando viene creato il riepilogo
+  // poiché i pulsanti non esistono fino a quel momento
 }
 
 /**
- * Aggiorna le istruzioni di misurazione in base alla forma selezionata
- * @param {string} forma - Forma di taglio selezionata 
+ * Inizializza gli event listener per le operazioni finali
+ * @param {string} codiceProdotto - Codice prodotto finale
  */
-export function updateIstruzioniMisurazione(forma) {
-  const istruzioniContainer = $('#istruzioni-misurazione');
-  istruzioniContainer.empty();
-
-  switch(forma) {
-    case 'DRITTO_SEMPLICE':
-      istruzioniContainer.html(`
-        <p>Inserisci la lunghezza desiderata in millimetri.</p>
-        <img src="/static/img/dritto_semplice.png" alt="Forma dritta" class="img-fluid mb-3" 
-             style="width: 100%; max-width: 300px;">
-      `);
-      break;
-    case 'FORMA_L_DX':
-      istruzioniContainer.html(`
-        <p>Inserisci la lunghezza desiderata in millimetri.</p>
-        <img src="/static/img/forma_a_l_dx.png" alt="Forma a L destra" class="img-fluid mb-3" 
-            style="width: 100%; max-width: 300px;">
-      `);
-      break;
-    case 'FORMA_L_SX':
-      istruzioniContainer.html(`
-        <p>Inserisci la lunghezza desiderata in millimetri.</p>
-        <img src="/static/img/forma_a_l_sx.png" alt="Forma a L sinistra" class="img-fluid mb-3" 
-            style="width: 100%; max-width: 300px;">
-      `);
-      break;
-    case 'FORMA_C':
-      istruzioniContainer.html(`
-        <p>Inserisci la lunghezza desiderata in millimetri.</p>
-        <img src="/static/img/forma_a_c.png" alt="Forma a C" class="img-fluid mb-3" 
-            style="width: 100%; max-width: 300px;">
-      `);
-      break;
-    case 'RETTANGOLO_QUADRATO':
-      istruzioniContainer.html(`
-        <p>Inserisci la lunghezza desiderata in millimetri.</p>
-        <img src="/static/img/forma_a_rettangolo.png" alt="Forma rettangolare" class="img-fluid mb-3" 
-            style="width: 100%; max-width: 300px;">
-      `);
-      break;
-    default:
-      istruzioniContainer.html(`<p>Seleziona una forma di taglio per visualizzare le istruzioni.</p>`);
-  }
+export function initRiepilogoOperationsListeners(codiceProdotto) {
+  $('#btn-salva-configurazione').on('click', function() {
+    salvaConfigurazione(codiceProdotto);
+  });
+  
+  $('#btn-preventivo').on('click', function() {
+    richiedPreventivo(codiceProdotto);
+  });
 }

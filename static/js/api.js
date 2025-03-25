@@ -1,5 +1,6 @@
 import { configurazione, mappaTipologieVisualizzazione, mappaTensioneVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione, mappaFormeTaglio, mappaFiniture, mappaCategorieVisualizzazione } from './config.js';
 import { formatTemperatura, getTemperaturaColor, checkParametriCompletion, checkStep2Completion, updateProgressBar } from './utils.js';
+import { initRiepilogoOperationsListeners } from './steps/step6.js';
 
 /**
  * Carica i profili per la categoria selezionata
@@ -694,10 +695,11 @@ export function finalizzaConfigurazione() {
   
   $('#riepilogo-container').html('<div class="text-center my-5"><div class="spinner-border" role="status"></div><p class="mt-3">Generazione riepilogo...</p></div>');
   
-  $("#step6-personalizzazione").fadeOut(300, function() {
-    $("#step7-riepilogo").fadeIn(300);
+  // MODIFICATO: Ora va da step5-controllo a step6-riepilogo invece che da step6-personalizzazione a step7-riepilogo
+  $("#step5-controllo").fadeOut(300, function() {
+    $("#step6-riepilogo").fadeIn(300);
     
-    updateProgressBar(7);
+    updateProgressBar(6);
     
     $.ajax({
       url: '/finalizza_configurazione',
@@ -920,13 +922,9 @@ export function finalizzaConfigurazione() {
         
         $('#riepilogo-container').html(riepilogoHtml);
         
-        $('#btn-salva-configurazione').on('click', function() {
-          salvaConfigurazione(codiceProdotto);
-        });
-        
-        $('#btn-preventivo').on('click', function() {
-          richiedPreventivo(codiceProdotto);
-        });
+        // Inizializza i listener per i pulsanti delle operazioni finali
+        // Importato da step6.js (ex step7.js)
+        initRiepilogoOperationsListeners(codiceProdotto);
       },
       error: function(error) {
         console.error("Errore nella finalizzazione della configurazione:", error);

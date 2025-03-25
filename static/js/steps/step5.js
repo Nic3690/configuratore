@@ -1,6 +1,6 @@
 import { configurazione, mappaTipologieVisualizzazione, mappaStripLedVisualizzazione } from '../config.js';
 import { updateProgressBar, checkStep5Completion } from '../utils.js';
-import { vaiAllaPersonalizzazione } from './step6.js';
+import { finalizzaConfigurazione } from '../api.js';
 
 export function initStep5Listeners() {
   $('#btn-torna-step4').on('click', function(e) {
@@ -31,7 +31,8 @@ export function initStep5Listeners() {
       return;
     }
     
-    vaiAllaPersonalizzazione();
+    // MODIFICATO: Ora va direttamente al riepilogo (finalizzazione) invece che alla personalizzazione
+    finalizzaConfigurazione();
   });
 }
 

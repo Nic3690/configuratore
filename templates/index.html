@@ -21,6 +21,7 @@
       <div class="col-md-3"></div>
     </header>
     
+    <!-- MODIFICA: Rimosso step 7 dalla barra di progresso -->
     <div class="step-progress mb-4">
       <div class="step-item active" id="progress-step1">
         <div class="step-number">1</div>
@@ -44,10 +45,6 @@
       </div>
       <div class="step-item" id="progress-step6">
         <div class="step-number">6</div>
-        <div class="step-title">Personalizzazione</div>
-      </div>
-      <div class="step-item" id="progress-step7">
-        <div class="step-number">7</div>
         <div class="step-title">Riepilogo</div>
       </div>
     </div>
@@ -147,6 +144,187 @@
       </div>
     </div>
 
+    <!-- MODIFICA: Spostato la sezione di personalizzazione qui - rinominata da step6 a step2-personalizzazione -->
+    <div class="step-section" id="step2-personalizzazione">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="text-center mb-3">Personalizzazione del profilo</h2>
+          
+          <div class="selection-badges">
+            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step2-personalizzazione">Profilo</span></span>
+            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step2-personalizzazione">Tipologia</span></span>
+          </div>
+          
+          <p class="text-center mb-4 text-muted">
+            <small>Personalizza la forma, la finitura e la lunghezza del tuo profilo</small>
+          </p>
+        </div>
+      </div>
+      
+      <div class="container mb-5">
+        <h3 class="mb-3">Forma di taglio</h3>
+        <div class="row" id="forma-taglio-container">
+          <div class="col-md-4 mb-3">
+            <div class="card option-card forma-taglio-card selected" data-forma="DRITTO_SEMPLICE">
+              <div class="card-body text-center">
+                <h5 class="card-title">Dritto semplice</h5>
+                <img src="/static/img/dritto_semplice.png" alt="Dritto semplice" class="img-fluid mb-2" style="height: 60px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='60px'">
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card option-card forma-taglio-card" data-forma="FORMA_L_DX">
+              <div class="card-body text-center">
+                <h5 class="card-title">Forma a L DX</h5>
+                <img src="/static/img/forma_a_l_dx.png" alt="Forma a L DX" class="img-fluid mb-2" style="height: 60px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='60px'">
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card option-card forma-taglio-card" data-forma="FORMA_L_SX">
+              <div class="card-body text-center">
+                <h5 class="card-title">Forma a L SX</h5>
+                <img src="/static/img/forma_a_l_sx.png" alt="Forma a L SX" class="img-fluid mb-2" style="height: 60px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='60px'">
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card option-card forma-taglio-card" data-forma="FORMA_C">
+              <div class="card-body text-center">
+                <h5 class="card-title">Forma a C</h5>
+                <img src="/static/img/forma_a_c.png" alt="Forma a C" class="img-fluid mb-2" style="height: 60px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='60px'">
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card option-card forma-taglio-card" data-forma="RETTANGOLO_QUADRATO">
+              <div class="card-body text-center">
+                <h5 class="card-title">Rettangolo/Quadrato</h5>
+                <img src="/static/img/forma_a_rettangolo.png" alt="Rettangolo/Quadrato" class="img-fluid mb-2" style="height: 60px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='60px'">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="container mb-5">
+        <h3 class="mb-3">Finitura</h3>
+        <div class="row" id="finitura-container">
+          <div class="col-md-3 mb-3">
+            <div class="card option-card finitura-card" data-finitura="ALLUMINIO_ANODIZZATO">
+              <div class="card-body text-center">
+                <h5 class="card-title">Alluminio anodizzato</h5>
+                <div class="finitura-preview alluminio-anodizzato mb-2"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <div class="card option-card finitura-card" data-finitura="BIANCO">
+              <div class="card-body text-center">
+                <h5 class="card-title">Bianco</h5>
+                <div class="finitura-preview bianco mb-2"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <div class="card option-card finitura-card" data-finitura="NERO">
+              <div class="card-body text-center">
+                <h5 class="card-title">Nero</h5>
+                <div class="finitura-preview nero mb-2"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <div class="card option-card finitura-card" data-finitura="ALLUMINIO">
+              <div class="card-body text-center">
+                <h5 class="card-title">Alluminio</h5>
+                <div class="finitura-preview alluminio mb-2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <style>
+          .finitura-preview {
+            width: 100%;
+            height: 40px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+          }
+          .alluminio-anodizzato {
+            background: linear-gradient(135deg, #e1e1e1 0%, #b3b3b3 50%, #e1e1e1 100%);
+          }
+          .bianco {
+            background-color: #ffffff;
+          }
+          .nero {
+            background-color: #000000;
+          }
+          .alluminio {
+            background: linear-gradient(135deg, #f5f5f5 0%, #c4c4c4 50%, #f5f5f5 100%);
+          }
+        </style>
+      </div>
+      
+      <div class="container mb-5">
+        <h3 class="mb-3">Personalizzazione lunghezza</h3>
+        
+        <div id="istruzioni-misurazione" class="mb-4">
+        </div>
+        
+        <div class="form-group mb-4">
+          <label for="lunghezza-personalizzata">Lunghezza richiesta (mm):</label>
+          <input type="number" class="form-control" id="lunghezza-personalizzata" placeholder="Inserisci la lunghezza in millimetri" min="100">
+          <div class="form-text text-muted">
+            Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
+          </div>
+        </div>
+        
+        <div id="proposte-container" class="alert alert-info" style="display: none;">
+          <h5>Proposte di lunghezza standard</h5>
+          <p>Il sistema ha calcolato delle proposte di lunghezza standard più adatte per la tua installazione.</p>
+          <p><strong>ATTENZIONE:</strong> se viene utilizzata la lunghezza personalizzata si verificherà uno spazio buio di <span id="spazio-produzione">5</span>mm.</p>
+          
+          <div class="row mt-3">
+            <div class="col-md-6 mb-2">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Proposta 1</h5>
+                  <p class="card-text"><span id="proposta1-valore">1771mm</span></p>
+                  <button class="btn btn-sm btn-outline-primary btn-seleziona-proposta" data-proposta="1" data-valore="1771">Seleziona</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6 mb-2">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Proposta 2</h5>
+                  <p class="card-text"><span id="proposta2-valore">1804mm</span></p>
+                  <button class="btn btn-sm btn-outline-primary btn-seleziona-proposta" data-proposta="2" data-valore="1804">Seleziona</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- MODIFICA: Modificati i pulsanti per il flusso aggiornato -->
+      <div class="row mt-4">
+        <div class="col-12 text-center">
+          <button class="btn btn-secondary" id="btn-torna-step2-modello">Indietro</button>
+          <button class="btn btn-success ms-2" id="btn-continua-personalizzazione" disabled>Continua</button>
+        </div>
+      </div>
+    </div>
+
     <div class="step-section" id="step2-option-strip">
       <div class="row">
         <div class="col-12">
@@ -187,7 +365,8 @@
       
       <div class="row mt-4">
         <div class="col-12 text-center">
-          <button class="btn btn-secondary" id="btn-torna-step2-option">Indietro</button>
+          <!-- MODIFICA: L'indietro ora torna alla personalizzazione invece che al modello -->
+          <button class="btn btn-secondary" id="btn-torna-step2-personalizzazione">Indietro</button>
           <button class="btn btn-primary ms-2" id="btn-continua-step2-option" disabled>Continua</button>
         </div>
       </div>
@@ -478,186 +657,8 @@
       </div>
     </div>
 
-    <div class="step-section" id="step6-personalizzazione">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="text-center mb-3">Personalizzazione del profilo</h2>
-          
-          <div class="selection-badges">
-            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step6">Profilo</span></span>
-            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step6">Tipologia</span></span>
-          </div>
-          
-          <p class="text-center mb-4 text-muted">
-            <small>Personalizza la forma, la finitura e la lunghezza del tuo profilo</small>
-          </p>
-        </div>
-      </div>
-      
-      <div class="container mb-5">
-        <h3 class="mb-3">Forma di taglio</h3>
-        <div class="row" id="forma-taglio-container">
-          <div class="col-md-4 mb-3">
-            <div class="card option-card forma-taglio-card selected" data-forma="DRITTO_SEMPLICE">
-              <div class="card-body text-center">
-                <h5 class="card-title">Dritto semplice</h5>
-                <img src="/static/img/dritto_semplice.png" alt="Dritto semplice" class="img-fluid mb-2" style="height: 60px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='60px'">
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4 mb-3">
-            <div class="card option-card forma-taglio-card" data-forma="FORMA_L_DX">
-              <div class="card-body text-center">
-                <h5 class="card-title">Forma a L DX</h5>
-                <img src="/static/img/forma_a_l_dx.png" alt="Forma a L DX" class="img-fluid mb-2" style="height: 60px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='60px'">
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4 mb-3">
-            <div class="card option-card forma-taglio-card" data-forma="FORMA_L_SX">
-              <div class="card-body text-center">
-                <h5 class="card-title">Forma a L SX</h5>
-                <img src="/static/img/forma_a_l_sx.png" alt="Forma a L SX" class="img-fluid mb-2" style="height: 60px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='60px'">
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4 mb-3">
-            <div class="card option-card forma-taglio-card" data-forma="FORMA_C">
-              <div class="card-body text-center">
-                <h5 class="card-title">Forma a C</h5>
-                <img src="/static/img/forma_a_c.png" alt="Forma a C" class="img-fluid mb-2" style="height: 60px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='60px'">
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-4 mb-3">
-            <div class="card option-card forma-taglio-card" data-forma="RETTANGOLO_QUADRATO">
-              <div class="card-body text-center">
-                <h5 class="card-title">Rettangolo/Quadrato</h5>
-                <img src="/static/img/forma_a_rettangolo.png" alt="Rettangolo/Quadrato" class="img-fluid mb-2" style="height: 60px;" onerror="this.src='/static/img/placeholder.jpg'; this.style.height='60px'">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="container mb-5">
-        <h3 class="mb-3">Finitura</h3>
-        <div class="row" id="finitura-container">
-          <div class="col-md-3 mb-3">
-            <div class="card option-card finitura-card" data-finitura="ALLUMINIO_ANODIZZATO">
-              <div class="card-body text-center">
-                <h5 class="card-title">Alluminio anodizzato</h5>
-                <div class="finitura-preview alluminio-anodizzato mb-2"></div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-3 mb-3">
-            <div class="card option-card finitura-card" data-finitura="BIANCO">
-              <div class="card-body text-center">
-                <h5 class="card-title">Bianco</h5>
-                <div class="finitura-preview bianco mb-2"></div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-3 mb-3">
-            <div class="card option-card finitura-card" data-finitura="NERO">
-              <div class="card-body text-center">
-                <h5 class="card-title">Nero</h5>
-                <div class="finitura-preview nero mb-2"></div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-3 mb-3">
-            <div class="card option-card finitura-card" data-finitura="ALLUMINIO">
-              <div class="card-body text-center">
-                <h5 class="card-title">Alluminio</h5>
-                <div class="finitura-preview alluminio mb-2"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <style>
-          .finitura-preview {
-            width: 100%;
-            height: 40px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-          }
-          .alluminio-anodizzato {
-            background: linear-gradient(135deg, #e1e1e1 0%, #b3b3b3 50%, #e1e1e1 100%);
-          }
-          .bianco {
-            background-color: #ffffff;
-          }
-          .nero {
-            background-color: #000000;
-          }
-          .alluminio {
-            background: linear-gradient(135deg, #f5f5f5 0%, #c4c4c4 50%, #f5f5f5 100%);
-          }
-        </style>
-      </div>
-      
-      <div class="container mb-5">
-        <h3 class="mb-3">Personalizzazione lunghezza</h3>
-        
-        <div id="istruzioni-misurazione" class="mb-4">
-        </div>
-        
-        <div class="form-group mb-4">
-          <label for="lunghezza-personalizzata">Lunghezza richiesta (mm):</label>
-          <input type="number" class="form-control" id="lunghezza-personalizzata" placeholder="Inserisci la lunghezza in millimetri" min="100">
-          <div class="form-text text-muted">
-            Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
-          </div>
-        </div>
-        
-        <div id="proposte-container" class="alert alert-info" style="display: none;">
-          <h5>Proposte di lunghezza standard</h5>
-          <p>Il sistema ha calcolato delle proposte di lunghezza standard più adatte per la tua installazione.</p>
-          <p><strong>ATTENZIONE:</strong> se viene utilizzata la lunghezza personalizzata si verificherà uno spazio buio di <span id="spazio-produzione">5</span>mm.</p>
-          
-          <div class="row mt-3">
-            <div class="col-md-6 mb-2">
-              <div class="card">
-                <div class="card-body text-center">
-                  <h5 class="card-title">Proposta 1</h5>
-                  <p class="card-text"><span id="proposta1-valore">1771mm</span></p>
-                  <button class="btn btn-sm btn-outline-primary btn-seleziona-proposta" data-proposta="1" data-valore="1771">Seleziona</button>
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6 mb-2">
-              <div class="card">
-                <div class="card-body text-center">
-                  <h5 class="card-title">Proposta 2</h5>
-                  <p class="card-text"><span id="proposta2-valore">1804mm</span></p>
-                  <button class="btn btn-sm btn-outline-primary btn-seleziona-proposta" data-proposta="2" data-valore="1804">Seleziona</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="row mt-4">
-        <div class="col-12 text-center">
-          <button class="btn btn-secondary" id="btn-torna-step5">Indietro</button>
-          <button class="btn btn-success ms-2" id="btn-finalizza" disabled>Finalizza configurazione</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="step-section" id="step7-riepilogo">
+    <!-- MODIFICA: Rinominato da step7-riepilogo a step6-riepilogo -->
+    <div class="step-section" id="step6-riepilogo">
       <div class="row">
         <div class="col-12">
           <h2 class="text-center mb-3">Riepilogo configurazione</h2>
@@ -672,7 +673,8 @@
       
       <div class="row mt-4">
         <div class="col-12 text-center">
-          <button class="btn btn-secondary" id="btn-torna-step6">Modifica configurazione</button>
+          <!-- MODIFICA: Ora torna allo step 5 invece dello step 6 -->
+          <button class="btn btn-secondary" id="btn-torna-step5">Modifica configurazione</button>
         </div>
       </div>
     </div>

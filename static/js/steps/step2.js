@@ -1,16 +1,16 @@
-import { configurazione, mappaTipologieVisualizzazione, mappaTensioneVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione } from '../config.js';
-import { formatTemperatura, updateProgressBar } from '../utils.js';
-import { caricaOpzioniParametri, caricaStripLedFiltrate } from '../api.js';
+import { configurazione, mappaTipologieVisualizzazione, mappaFormeTaglio, mappaFiniture, mappaTensioneVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione } from '../config.js';
+import { updateProgressBar, checkStep2Completion, checkPersonalizzazioneCompletion, formatTemperatura } from '../utils.js';
+import { caricaOpzioniParametri, caricaStripLedFiltrate, caricaFinitureDisponibili, calcolaProposte, finalizzaConfigurazione } from '../api.js';
 import { vaiAllaTemperaturaEPotenza } from './step3.js';
 import { vaiAllAlimentazione } from './step4.js';
-import { vaiAllaPersonalizzazione } from './step6.js';
 
 export function initStep2Listeners() {
+  // Primo pulsante continua - dopo selezione profilo/tipologia
   $('#btn-continua-step2').on('click', function(e) {
     e.preventDefault();
     
     if (configurazione.profiloSelezionato && configurazione.tipologiaSelezionata) {
-      vaiAlleOpzioniStripLed(); // Mostra prima le opzioni sì/no per la strip LED
+      vaiAllaPersonalizzazione(); // Ora va prima alla personalizzazione
     } else {
       let messaggi = [];
       if (!configurazione.profiloSelezionato) messaggi.push("un profilo");
@@ -20,13 +20,52 @@ export function initStep2Listeners() {
     }
   });
   
+  // NUOVO: Button torna dalla personalizzazione al modello
+  $('#btn-torna-step2-modello').on('click', function(e) {
+    e.preventDefault();
+    
+    $("#step2-personalizzazione").fadeOut(300, function() {
+      $("#step2-modello").fadeIn(300);
+    });
+  });
+  
+  // NUOVO: Button continua dalla personalizzazione alle opzioni strip
+  $('#btn-continua-personalizzazione').on('click', function(e) {
+    e.preventDefault();
+    
+    if (!configurazione.formaDiTaglioSelezionata) {
+      alert("Seleziona una forma di taglio prima di continuare");
+      return;
+    }
+    
+    if (!configurazione.finituraSelezionata) {
+      alert("Seleziona una finitura prima di continuare");
+      return;
+    }
+    
+    if (!configurazione.lunghezzaRichiesta && configurazione.tipologiaSelezionata === 'taglio_misura') {
+      alert("Inserisci una lunghezza prima di continuare");
+      return;
+    }
+    
+    vaiAlleOpzioniStripLed(); // Dopo personalizzazione, va alle opzioni strip
+  });
+  
+  // MODIFICATO: Pulsante torna dalle opzioni strip alla personalizzazione
+  $('#btn-torna-step2-personalizzazione').on('click', function(e) {
+    e.preventDefault();
+    
+    $("#step2-option-strip").fadeOut(300, function() {
+      $("#step2-personalizzazione").fadeIn(300);
+    });
+  });
+  
+  // Resto dell'initStep2Listeners rimane invariato
   $('#btn-torna-step2-parametri').on('click', function(e) {
     e.preventDefault();
     
     $("#step2-parametri").fadeOut(300, function() {
       $("#step2-option-strip").fadeIn(300); // Torna alle opzioni strip LED anziché al modello
-      
-      updateProgressBar(2);
     });
   });
   
@@ -67,15 +106,6 @@ export function initStep2Listeners() {
     }
   });
   
-  // Nuovi event listener per la sezione delle opzioni strip LED
-  $('#btn-torna-step2-option').on('click', function(e) {
-    e.preventDefault();
-    
-    $("#step2-option-strip").fadeOut(300, function() {
-      $("#step2-modello").fadeIn(300);
-    });
-  });
-  
   // Utilizziamo document.on per assicurarci che l'evento funzioni anche se gli elementi vengono aggiunti dinamicamente
   $(document).on('click', '.strip-option-card', function() {
     $('.strip-option-card').removeClass('selected');
@@ -99,10 +129,12 @@ export function initStep2Listeners() {
       // L'utente ha scelto di includere una strip LED, continua con il flusso normale
       vaiAiParametriStripLed();
     } else {
-      // L'utente ha scelto di non includere una strip LED, salta direttamente alla personalizzazione
+      // L'utente ha scelto di non includere una strip LED
       configurazione.stripLedSelezionata = 'NO_STRIP';
-      updateProgressBar(6); // Aggiorna la barra di progresso allo step 6
-      vaiAllaPersonalizzazione();
+      $("#step2-option-strip").fadeOut(300, function() {
+        updateProgressBar(6); // Aggiorniamo la barra di progresso
+        finalizzaConfigurazione(); // Ora questa funzione si occuperà solo di mostrare il riepilogo
+      });
     }
   });
 }
@@ -139,12 +171,127 @@ export function aggiungiCompatibilitaBadge(profilo, $cardBody) {
   }
 }
 
-// Nuova funzione per mostrare le opzioni sì/no per la strip LED
+// NUOVO: Funzione per andare alla personalizzazione 
+export function vaiAllaPersonalizzazione() {
+  $('#profilo-nome-step2-personalizzazione').text(configurazione.nomeModello);
+  $('#tipologia-nome-step2-personalizzazione').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
+  
+  $("#step2-modello").fadeOut(300, function() {
+    $("#step2-personalizzazione").fadeIn(300);
+    
+    preparePersonalizzazioneListeners();
+  });
+}
+
+// NUOVO: Funzione di preparazione della personalizzazione (spostata da step6.js)
+export function preparePersonalizzazioneListeners() {
+  configurazione.formaDiTaglioSelezionata = "DRITTO_SEMPLICE";
+  caricaFinitureDisponibili(configurazione.profiloSelezionato);
+  $('.forma-taglio-card[data-forma="DRITTO_SEMPLICE"]').addClass('selected');
+  
+  $('.forma-taglio-card').on('click', function() {
+    $('.forma-taglio-card').removeClass('selected');
+    $(this).addClass('selected');
+    
+    configurazione.formaDiTaglioSelezionata = $(this).data('forma');
+    
+    updateIstruzioniMisurazione(configurazione.formaDiTaglioSelezionata);
+    checkPersonalizzazioneCompletion();
+  });
+  
+  $('.finitura-card').on('click', function() {
+    $('.finitura-card').removeClass('selected');
+    $(this).addClass('selected');
+    
+    configurazione.finituraSelezionata = $(this).data('finitura');
+    
+    checkPersonalizzazioneCompletion();
+  });
+
+  $('#lunghezza-personalizzata').on('input', function() {
+    configurazione.lunghezzaRichiesta = parseInt($(this).val(), 10) || null;
+    
+    if (configurazione.lunghezzaRichiesta && configurazione.lunghezzaRichiesta > 0) {
+      calcolaProposte(configurazione.lunghezzaRichiesta);
+    } else {
+      $('#proposte-container').hide();
+    }
+    
+    checkPersonalizzazioneCompletion();
+  });
+  
+  $('.btn-seleziona-proposta').on('click', function() {
+    const proposta = $(this).data('proposta');
+    const valore = parseInt($(this).data('valore'), 10);
+    
+    if (proposta === 1) {
+      configurazione.lunghezzaRichiesta = valore;
+      $('#lunghezza-personalizzata').val(valore);
+    } else if (proposta === 2) {
+      configurazione.lunghezzaRichiesta = valore;
+      $('#lunghezza-personalizzata').val(valore);
+    }
+    
+    checkPersonalizzazioneCompletion();
+  });
+  
+  updateIstruzioniMisurazione('DRITTO_SEMPLICE');
+  
+  checkPersonalizzazioneCompletion();
+}
+
+// NUOVO: Funzione per aggiornare le istruzioni di misurazione (spostata da step6.js)
+export function updateIstruzioniMisurazione(forma) {
+  const istruzioniContainer = $('#istruzioni-misurazione');
+  istruzioniContainer.empty();
+
+  switch(forma) {
+    case 'DRITTO_SEMPLICE':
+      istruzioniContainer.html(`
+        <p>Inserisci la lunghezza desiderata in millimetri.</p>
+        <img src="/static/img/dritto_semplice.png" alt="Forma dritta" class="img-fluid mb-3" 
+             style="width: 100%; max-width: 300px;">
+      `);
+      break;
+    case 'FORMA_L_DX':
+      istruzioniContainer.html(`
+        <p>Inserisci la lunghezza desiderata in millimetri.</p>
+        <img src="/static/img/forma_a_l_dx.png" alt="Forma a L destra" class="img-fluid mb-3" 
+            style="width: 100%; max-width: 300px;">
+      `);
+      break;
+    case 'FORMA_L_SX':
+      istruzioniContainer.html(`
+        <p>Inserisci la lunghezza desiderata in millimetri.</p>
+        <img src="/static/img/forma_a_l_sx.png" alt="Forma a L sinistra" class="img-fluid mb-3" 
+            style="width: 100%; max-width: 300px;">
+      `);
+      break;
+    case 'FORMA_C':
+      istruzioniContainer.html(`
+        <p>Inserisci la lunghezza desiderata in millimetri.</p>
+        <img src="/static/img/forma_a_c.png" alt="Forma a C" class="img-fluid mb-3" 
+            style="width: 100%; max-width: 300px;">
+      `);
+      break;
+    case 'RETTANGOLO_QUADRATO':
+      istruzioniContainer.html(`
+        <p>Inserisci la lunghezza desiderata in millimetri.</p>
+        <img src="/static/img/forma_a_rettangolo.png" alt="Forma rettangolare" class="img-fluid mb-3" 
+            style="width: 100%; max-width: 300px;">
+      `);
+      break;
+    default:
+      istruzioniContainer.html(`<p>Seleziona una forma di taglio per visualizzare le istruzioni.</p>`);
+  }
+}
+
+// Funzione per mostrare le opzioni sì/no per la strip LED
 export function vaiAlleOpzioniStripLed() {
   $('#profilo-nome-step2-option').text(configurazione.nomeModello);
   $('#tipologia-nome-step2-option').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
   
-  $("#step2-modello").fadeOut(300, function() {
+  $("#step2-personalizzazione").fadeOut(300, function() {
     $("#step2-option-strip").fadeIn(300);
     
     // Reset dello stato delle card e del pulsante "Continua"
@@ -160,7 +307,7 @@ export function vaiAiParametriStripLed() {
   $('#profilo-nome-step2-parametri').text(configurazione.nomeModello);
   $('#tipologia-nome-step2-parametri').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
   
-  $("#step2-option-strip").fadeOut(300, function() { // Modifica qui: fadeOut da option-strip invece che da modello
+  $("#step2-option-strip").fadeOut(300, function() { 
     $("#step2-parametri").fadeIn(300);
     
     updateProgressBar(2);

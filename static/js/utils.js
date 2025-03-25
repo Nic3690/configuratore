@@ -118,3 +118,24 @@ export function checkStep6Completion() {
   
   $('#btn-finalizza').prop('disabled', !isComplete);
 }
+
+/**
+ * Controlla se la personalizzazione è completa
+ */
+export function checkPersonalizzazioneCompletion() {
+  let isComplete = true;
+  
+  if (!configurazione.formaDiTaglioSelezionata) {
+    isComplete = false;
+  }
+  
+  if (!configurazione.finituraSelezionata) {
+    isComplete = false;
+  }
+  
+  if (configurazione.tipologiaSelezionata === 'taglio_misura' && !configurazione.lunghezzaRichiesta) {
+    isComplete = false;
+  }
+  
+  $('#btn-continua-personalizzazione').prop('disabled', !isComplete);
+}
