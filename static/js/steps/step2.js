@@ -5,12 +5,11 @@ import { vaiAllaTemperaturaEPotenza } from './step3.js';
 import { vaiAllAlimentazione } from './step4.js';
 
 export function initStep2Listeners() {
-  // Primo pulsante continua - dopo selezione profilo/tipologia
   $('#btn-continua-step2').on('click', function(e) {
     e.preventDefault();
     
     if (configurazione.profiloSelezionato && configurazione.tipologiaSelezionata) {
-      vaiAllaPersonalizzazione(); // Ora va prima alla personalizzazione
+      vaiAllaPersonalizzazione();
     } else {
       let messaggi = [];
       if (!configurazione.profiloSelezionato) messaggi.push("un profilo");
@@ -20,7 +19,7 @@ export function initStep2Listeners() {
     }
   });
   
-  // NUOVO: Button torna dalla personalizzazione al modello
+  // Torna dalla personalizzazione al modello
   $('#btn-torna-step2-modello').on('click', function(e) {
     e.preventDefault();
     
@@ -29,29 +28,18 @@ export function initStep2Listeners() {
     });
   });
   
-  // NUOVO: Button continua dalla personalizzazione alle opzioni strip
+  // Continua dalla personalizzazione alle opzioni strip
   $('#btn-continua-personalizzazione').on('click', function(e) {
     e.preventDefault();
     
-    if (!configurazione.formaDiTaglioSelezionata) {
-      alert("Seleziona una forma di taglio prima di continuare");
+    if (!checkPersonalizzazioneComplete()) {
       return;
     }
     
-    if (!configurazione.finituraSelezionata) {
-      alert("Seleziona una finitura prima di continuare");
-      return;
-    }
-    
-    if (!configurazione.lunghezzaRichiesta && configurazione.tipologiaSelezionata === 'taglio_misura') {
-      alert("Inserisci una lunghezza prima di continuare");
-      return;
-    }
-    
-    vaiAlleOpzioniStripLed(); // Dopo personalizzazione, va alle opzioni strip
+    vaiAlleOpzioniStripLed();
   });
   
-  // MODIFICATO: Pulsante torna dalle opzioni strip alla personalizzazione
+  // Torna dalle opzioni strip alla personalizzazione
   $('#btn-torna-step2-personalizzazione').on('click', function(e) {
     e.preventDefault();
     
@@ -60,16 +48,16 @@ export function initStep2Listeners() {
     });
   });
   
-// Modificare la funzione btn-torna-step2-parametri per tornare alla tipologia strip
-// Nel blocco initStep2Listeners
-$('#btn-torna-step2-parametri').on('click', function(e) {
-  e.preventDefault();
-  
-  $("#step2-parametri").fadeOut(300, function() {
-    $("#step2-tipologia-strip").fadeIn(300); // Ora torna alla tipologia strip invece che alle opzioni strip
+  // Torna dai parametri alla tipologia strip
+  $('#btn-torna-step2-parametri').on('click', function(e) {
+    e.preventDefault();
+    
+    $("#step2-parametri").fadeOut(300, function() {
+      $("#step2-tipologia-strip").fadeIn(300);
+    });
   });
-});
   
+  // Continua dai parametri alla selezione della strip
   $('#btn-continua-parametri').on('click', function(e) {
     e.preventDefault();
     
@@ -77,7 +65,7 @@ $('#btn-torna-step2-parametri').on('click', function(e) {
       vaiAllaSelezioneDiStripLed();
     } else {
       let messaggi = [];
-      if (!configurazione.tensioneSelezionato) messaggi.push("un tensione");
+      if (!configurazione.tensioneSelezionato) messaggi.push("una tensione");
       if (!configurazione.ipSelezionato) messaggi.push("un grado IP");
       if (!configurazione.temperaturaSelezionata) messaggi.push("una temperatura");
       
@@ -85,6 +73,7 @@ $('#btn-torna-step2-parametri').on('click', function(e) {
     }
   });
   
+  // Torna dalla selezione strip ai parametri
   $('#btn-torna-parametri-strip').on('click', function(e) {
     e.preventDefault();
     
@@ -93,20 +82,19 @@ $('#btn-torna-step2-parametri').on('click', function(e) {
     });
   });
   
+  // Continua dalla selezione strip all'alimentazione
   $('#btn-continua-strip').on('click', function(e) {
     e.preventDefault();
     
     if (configurazione.stripLedSelezionata) {
-      if (configurazione.stripLedSelezionata === 'senza_strip' || configurazione.stripLedSelezionata === 'NO_STRIP') {
-        vaiAllAlimentazione();
-      } else {
-        vaiAllaTemperaturaEPotenza();
-      }
+      // Vai direttamente all'alimentazione
+      vaiAllAlimentazione();
     } else {
       alert("Seleziona una strip LED prima di continuare");
     }
   });
 
+  // Torna dalla tipologia strip alle opzioni strip
   $('#btn-torna-step2-option-strip').on('click', function(e) {
     e.preventDefault();
     
@@ -115,6 +103,7 @@ $('#btn-torna-step2-parametri').on('click', function(e) {
     });
   });
   
+  // Continua dalla tipologia strip ai parametri
   $('#btn-continua-tipologia-strip').on('click', function(e) {
     e.preventDefault();
     
@@ -132,7 +121,7 @@ $('#btn-torna-step2-parametri').on('click', function(e) {
     vaiAiParametriStripLed();
   });
   
-  // Utilizziamo document.on per assicurarci che l'evento funzioni anche se gli elementi vengono aggiunti dinamicamente
+  // Scelta strip sì/no
   $(document).on('click', '.strip-option-card', function() {
     $('.strip-option-card').removeClass('selected');
     $(this).addClass('selected');
@@ -143,6 +132,7 @@ $('#btn-torna-step2-parametri').on('click', function(e) {
     $('#btn-continua-step2-option').prop('disabled', false);
   });
   
+  // Continua dopo scelta strip sì/no
   $('#btn-continua-step2-option').on('click', function(e) {
     e.preventDefault();
     
@@ -158,32 +148,27 @@ $('#btn-torna-step2-parametri').on('click', function(e) {
       // L'utente ha scelto di non includere una strip LED
       configurazione.stripLedSelezionata = 'NO_STRIP';
       $("#step2-option-strip").fadeOut(300, function() {
-        updateProgressBar(6); // Aggiorniamo la barra di progresso
-        finalizzaConfigurazione(); // Ora questa funzione si occuperà solo di mostrare il riepilogo
+        // Vai direttamente all'alimentazione
+        vaiAllAlimentazione();
       });
     }
   });
 }
-
 // Funzione per andare alla selezione della tipologia strip
 export function vaiAllaTipologiaStrip() {
   // Reset delle selezioni
   configurazione.tipologiaStripSelezionata = null;
   configurazione.specialStripSelezionata = null;
-  
-  // Aggiorna i badge con le informazioni attuali
+
   $('#profilo-nome-step2-tipologia-strip').text(configurazione.nomeModello);
   $('#tipologia-nome-step2-tipologia-strip').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
-  
-  // Nascondi il sottomenu special strip
+
   $('#special-strip-container').hide();
   
-  // Rimuovi le selezioni precedenti
   $('.tipologia-strip-card').removeClass('selected');
   $('.special-strip-card').removeClass('selected');
   $('#btn-continua-tipologia-strip').prop('disabled', true);
   
-  // Transizione alla schermata tipologia strip
   $("#step2-option-strip").fadeOut(300, function() {
     $("#step2-tipologia-strip").fadeIn(300);
     prepareTipologiaStripListeners();
@@ -200,16 +185,14 @@ export function aggiungiCompatibilitaBadge(profilo, $cardBody) {
   if (profilo.stripLedCompatibiliInfo && profilo.stripLedCompatibiliInfo.length > 0) {
     const stripCount = profilo.stripLedCompatibiliInfo.length;
     
-    // Crea il badge di compatibilità
     const $compatibilityBadge = $('<div class="compatibility-badge mt-2">')
       .append($('<span class="badge bg-success">').text(`Strip LED compatibili: ${stripCount}`));
     
-    // Aggiungi tooltip con informazioni sulle strip compatibili
     let tooltipContent = "Strip LED compatibili: ";
     const stripNomi = profilo.stripLedCompatibiliInfo
       .filter(s => s.nomeCommerciale)
       .map(s => s.nomeCommerciale)
-      .filter((v, i, a) => a.indexOf(v) === i); // Rimuovi duplicati
+      .filter((v, i, a) => a.indexOf(v) === i);
     
     if (stripNomi.length > 0) {
       tooltipContent += stripNomi.join(", ");
@@ -299,13 +282,11 @@ export function updateIstruzioniMisurazione(forma) {
   istruzioniContainer.empty();
   misurazioneContainer.empty();
 
-  // Rimuovi tutti i campi di misurazione esistenti e reset delle configurazioni
   $('.lunghezza-personalizzata-container').remove();
   configurazione.lunghezzaMultiple = {};
   
   switch(forma) {
     case 'DRITTO_SEMPLICE':
-      // Per il taglio dritto semplice, mostra un singolo campo di lunghezza
       istruzioniContainer.html(`
         <p>Inserisci la lunghezza desiderata in millimetri.</p>
         <img src="/static/img/dritto_semplice.png" alt="Forma dritta" class="img-fluid mb-3" 
@@ -322,8 +303,7 @@ export function updateIstruzioniMisurazione(forma) {
           </div>
         </div>
       `);
-      
-      // Ripristina l'event listener per il campo di lunghezza singola
+
       $('#lunghezza-personalizzata').on('input', function() {
         configurazione.lunghezzaRichiesta = parseInt($(this).val(), 10) || null;
         
@@ -335,8 +315,6 @@ export function updateIstruzioniMisurazione(forma) {
         
         checkPersonalizzazioneCompletion();
       });
-      
-      // Nascondi l'avviso di non assemblaggio
       $('#non-assemblato-warning').hide();
       break;
       
@@ -683,7 +661,6 @@ export function prepareTipologiaStripListeners() {
   });
 }
 
-// Modifica alla funzione vaiAllaSelezioneDiStripLed per aggiungere le info sulla tipologia strip
 export function vaiAllaSelezioneDiStripLed() {
   $('#profilo-nome-step2-strip').text(configurazione.nomeModello);
   $('#tipologia-nome-step2-strip').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
@@ -691,25 +668,32 @@ export function vaiAllaSelezioneDiStripLed() {
   $('#ip-nome-step2-strip').text(mappaIPVisualizzazione[configurazione.ipSelezionato] || configurazione.ipSelezionato);
   $('#temperatura-nome-step2-strip').text(formatTemperatura(configurazione.temperaturaSelezionata));
   
-  // Aggiungiamo le informazioni sulla tipologia strip selezionata
-  let tipologiaStripText = configurazione.tipologiaStripSelezionata;
-  if (configurazione.tipologiaStripSelezionata === 'SPECIAL' && configurazione.specialStripSelezionata) {
-    tipologiaStripText += ` - ${configurazione.specialStripSelezionata}`;
-  }
-  
-  // Se non esiste già, aggiungiamo un badge per la tipologia strip
-  if ($('#tipologia-strip-nome-step2-strip').length === 0) {
+  // Aggiunta della tipologia strip solo se non esiste già
+  if ($('#tipologia-strip-badge-step2-strip').length === 0) {
+    let tipologiaStripText = configurazione.tipologiaStripSelezionata;
+    if (configurazione.tipologiaStripSelezionata === 'SPECIAL' && configurazione.specialStripSelezionata) {
+      tipologiaStripText += ` - ${configurazione.specialStripSelezionata}`;
+    }
+    
+    // Aggiungi badge con ID univoco per facilitare la gestione
     $('.selection-badges').append(`
-      <span class="badge bg-warning selection-badge">Tipologia Strip: <span id="tipologia-strip-nome-step2-strip">${tipologiaStripText}</span></span>
+      <span class="badge bg-warning selection-badge" id="tipologia-strip-badge-step2-strip">
+        Tipologia Strip: <span id="tipologia-strip-nome-step2-strip">${tipologiaStripText}</span>
+      </span>
     `);
   } else {
+    // Aggiorna il testo se il badge esiste già
+    let tipologiaStripText = configurazione.tipologiaStripSelezionata;
+    if (configurazione.tipologiaStripSelezionata === 'SPECIAL' && configurazione.specialStripSelezionata) {
+      tipologiaStripText += ` - ${configurazione.specialStripSelezionata}`;
+    }
     $('#tipologia-strip-nome-step2-strip').text(tipologiaStripText);
   }
   
   $("#step2-parametri").fadeOut(300, function() {
     $("#step2-strip").fadeIn(300);
     
-    // Aggiorna la chiamata per filtrare in base alla tipologia strip
+    // Richiama la funzione ottimizzata
     caricaStripLedFiltratePerTipologia();
   });
 }
@@ -735,77 +719,131 @@ export function memorizzaNomeCommercialeStripLed(stripId) {
   });
 }
 
-// Versione semplificata e robusta per risolvere i problemi di caricamento
-export function caricaStripLedFiltratePerTipologia() {
-  // Ferma immediatamente qualsiasi caricamento precedente
-  $('#strip-led-filtrate-options').empty();
-  
-  // Per prima cosa, verifica se c'è già una card XSOLIS/strip visibile
-  const existingCard = $('.xsolis-card, .strip-led-filtrata-card').first();
-  if (existingCard.length > 0) {
-    // Contrassegna come selezionata e imposta i valori nella configurazione
-    existingCard.addClass('selected');
-    
-    // Imposta i valori predefiniti per XSOLIS IP20 (COB 24V IP20)
-    configurazione.stripLedSelezionata = "STRIP_24V_COB_IP20";
-    configurazione.nomeCommercialeStripLed = "XSOLIS IP20";
-    
-    // Abilita esplicitamente il pulsante Continua
-    $('#btn-continua-strip').prop('disabled', false);
-    
-    // Rimuovi completamente qualsiasi loader
-    $('.spinner-border, .loading-text').remove();
-    return;
+function checkPersonalizzazioneComplete() {
+  if (!configurazione.formaDiTaglioSelezionata) {
+    alert("Seleziona una forma di taglio prima di continuare");
+    return false;
   }
   
-  // Se non c'è una card esistente, crea una card XSOLIS predefinita
-  $('#strip-led-filtrate-options').html(`
-    <div class="col-md-6 mb-3">
-      <div class="card option-card strip-led-filtrata-card selected" id="xsolis-card" 
-           data-strip="STRIP_24V_COB_IP20" data-nome-commerciale="XSOLIS IP20">
-        <div class="card-body">
-          <h5 class="card-title">XSOLIS IP20</h5>
-          <p class="card-subtitle mb-2 text-muted strip-led-nome-tecnico">STRIP 24V COB IP20</p>
-          <p class="card-text small">
-            Tensione: ${configurazione.tensioneSelezionato}, 
-            IP: ${configurazione.ipSelezionato}, 
-            Temperatura: ${formatTemperatura(configurazione.temperaturaSelezionata)}
-          </p>
-          <p class="card-text small">Codici prodotto: SLS01WW, SLS02WW, SLS03WW, SLS04WW, SLSIP20WW4CRI90</p>
+  if (!configurazione.finituraSelezionata) {
+    alert("Seleziona una finitura prima di continuare");
+    return false;
+  }
+  
+  if (configurazione.tipologiaSelezionata === 'taglio_misura') {
+    // Per il taglio dritto semplice, controlliamo solo lunghezzaRichiesta
+    if (configurazione.formaDiTaglioSelezionata === 'DRITTO_SEMPLICE') {
+      if (!configurazione.lunghezzaRichiesta) {
+        alert("Inserisci una lunghezza prima di continuare");
+        return false;
+      }
+    } 
+    // Per le altre forme, controlliamo che tutte le lunghezze multiple siano inserite
+    else if (configurazione.lunghezzeMultiple) {
+      const forma = configurazione.formaDiTaglioSelezionata;
+      const numLatiRichiesti = {
+        'FORMA_L_DX': 2,
+        'FORMA_L_SX': 2,
+        'FORMA_C': 3,
+        'RETTANGOLO_QUADRATO': 2
+      }[forma] || 0;
+      
+      // Conta quanti lati hanno un valore valido
+      const latiValidi = Object.values(configurazione.lunghezzeMultiple)
+        .filter(val => val && val > 0).length;
+      
+      if (latiValidi < numLatiRichiesti) {
+        alert("Inserisci tutte le misure richieste per questa forma");
+        return false;
+      }
+    } else {
+      alert("Inserisci le misure richieste per questa forma");
+      return false;
+    }
+  }
+  
+  return true;
+}
+
+export function caricaStripLedFiltratePerTipologia() {
+  // Mostra il loader durante il caricamento
+  $('#strip-led-filtrate-options').empty().html(`
+    <div class="col-12 text-center">
+      <div class="spinner-border" role="status"></div>
+      <p class="mt-3">Caricamento opzioni strip LED...</p>
+    </div>
+  `);
+  
+  // Reset delle selezioni
+  configurazione.stripLedSelezionata = null;
+  configurazione.nomeCommercialeStripLed = null;
+  $('#btn-continua-strip').prop('disabled', true);
+  
+  // Costruisci l'URL per il filtro corretto
+  const url = `/get_strip_led_filtrate/${configurazione.profiloSelezionato}/${configurazione.tensioneSelezionato}/${configurazione.ipSelezionato}/${configurazione.temperaturaSelezionata}`;
+  
+  // Chiama l'API per ottenere le strip LED filtrate
+  $.ajax({
+    url: url,
+    method: 'GET',
+    success: function(data) {
+      if (!data.success || !data.strip_led || data.strip_led.length === 0) {
+        // Nessuna strip trovata
+        $('#strip-led-filtrate-options').html(`
+          <div class="col-12 text-center">
+            <p>Nessuna strip LED disponibile per questa combinazione di parametri.</p>
+          </div>
+        `);
+        return;
+      }
+      
+      // Genera le card per le strip trovate
+      $('#strip-led-filtrate-options').empty();
+      data.strip_led.forEach(function(strip) {
+        const nomeVisualizzato = strip.nomeCommerciale || strip.nome;
+        
+        $('#strip-led-filtrate-options').append(`
+          <div class="col-md-6 mb-3">
+            <div class="card option-card strip-led-filtrata-card" 
+                 data-strip="${strip.id}" 
+                 data-nome-commerciale="${strip.nomeCommerciale || ''}">
+              <div class="card-body">
+                <h5 class="card-title">${nomeVisualizzato}</h5>
+                ${strip.nomeCommerciale ? `<p class="card-subtitle mb-2 text-muted strip-led-nome-tecnico">${strip.nome}</p>` : ''}
+                <p class="card-text small text-muted">${strip.descrizione || ''}</p>
+                <p class="card-text small">
+                  Tensione: ${strip.tensione}, 
+                  IP: ${strip.ip}, 
+                  Temperatura: ${formatTemperatura(strip.temperatura)}
+                </p>
+                ${strip.codiciProdotto && strip.codiciProdotto.length > 0 ? 
+                  `<p class="card-text small">Codici prodotto: ${strip.codiciProdotto.join(', ')}</p>` : ''}
+              </div>
+            </div>
+          </div>
+        `);
+      });
+      
+      // Aggiungi event listener alle card
+      $('.strip-led-filtrata-card').on('click', function() {
+        $('.strip-led-filtrata-card').removeClass('selected');
+        $(this).addClass('selected');
+        
+        // Memorizza i dati della strip selezionata
+        configurazione.stripLedSelezionata = $(this).data('strip');
+        configurazione.nomeCommercialeStripLed = $(this).data('nome-commerciale');
+        
+        // Abilita il pulsante continua
+        $('#btn-continua-strip').prop('disabled', false);
+      });
+    },
+    error: function(error) {
+      console.error("Errore nel caricamento delle strip LED:", error);
+      $('#strip-led-filtrate-options').html(`
+        <div class="col-12 text-center">
+          <p class="text-danger">Errore nel caricamento delle strip LED. Riprova più tardi.</p>
         </div>
-      </div>
-    </div>
-  `);
-  
-  // Imposta i valori nella configurazione per XSOLIS IP20
-  configurazione.stripLedSelezionata = "STRIP_24V_COB_IP20";
-  configurazione.nomeCommercialeStripLed = "XSOLIS IP20";
-  
-  // Abilita il pulsante Continua
-  $('#btn-continua-strip').prop('disabled', false);
-  
-  // Per sicurezza, aggiungiamo un event handler alla card creata
-  $('#xsolis-card').on('click', function() {
-    $(this).addClass('selected');
-    configurazione.stripLedSelezionata = "STRIP_24V_COB_IP20";
-    configurazione.nomeCommercialeStripLed = "XSOLIS IP20";
-    $('#btn-continua-strip').prop('disabled', false);
-  });
-  
-  // Aggiungiamo anche un pulsante di emergenza
-  $('#strip-led-filtrate-options').append(`
-    <div class="col-12 text-center mt-3">
-      <button id="btn-force-continue" class="btn btn-warning">
-        Problema? Clicca qui per proseguire
-      </button>
-    </div>
-  `);
-  
-  $('#btn-force-continue').on('click', function() {
-    // Imposta i valori necessari e clicca il pulsante Continua
-    configurazione.stripLedSelezionata = "STRIP_24V_COB_IP20";
-    configurazione.nomeCommercialeStripLed = "XSOLIS IP20";
-    $('#btn-continua-strip').prop('disabled', false);
-    $('#btn-continua-strip').trigger('click');
+      `);
+    }
   });
 }

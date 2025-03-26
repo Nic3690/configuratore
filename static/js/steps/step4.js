@@ -90,7 +90,6 @@ function calcolaPotenzaAlimentatoreConsigliata() {
   }
 }
 
-/* Passa all'alimentazione */
 export function vaiAllAlimentazione() {
   
   $('#profilo-nome-step4').text(configurazione.nomeModello);
@@ -104,6 +103,7 @@ export function vaiAllAlimentazione() {
     
     $('#strip-nome-step4').text(nomeStripLed);
     
+    // Aggiungi il badge della potenza solo se abbiamo una potenza selezionata
     if (configurazione.potenzaSelezionata) {
       $('#potenza-nome-step4').text(configurazione.potenzaSelezionata);
       $('#badge-potenza-step4').show();
@@ -112,31 +112,29 @@ export function vaiAllAlimentazione() {
     }
   } else {
     $('#strip-nome-step4').text('Senza Strip LED');
-    $('#badge-temperatura-step4').hide();
     $('#badge-potenza-step4').hide();
   }
   
   updateProgressBar(4);
   
-  if (configurazione.stripLedSelezionata !== 'senza_strip' && configurazione.stripLedSelezionata !== 'NO_STRIP') {
-    $("#step3-temperatura-potenza").fadeOut(300, function() {
-      $("#step4-alimentazione").fadeIn(300);
-      
-      prepareAlimentazioneListeners();
-      calcolaPotenzaAlimentatoreConsigliata();
-    });
-  } else {
-    $("#step2-strip").fadeOut(300, function() {
-      $("#step4-alimentazione").fadeIn(300);
-      
-      prepareAlimentazioneListeners();
-      // Nasconde la sezione della potenza consigliata se non c'è strip LED
+  // Transizione dallo step di strip direttamente all'alimentazione
+  $("#step2-strip").fadeOut(300, function() {
+    $("#step4-alimentazione").fadeIn(300);
+    
+    prepareAlimentazioneListeners();
+    
+    // Nascondi la sezione della potenza consigliata se non c'è strip LED o non abbiamo una potenza
+    if (configurazione.stripLedSelezionata === 'senza_strip' || 
+        configurazione.stripLedSelezionata === 'NO_STRIP' ||
+        !configurazione.potenzaSelezionata) {
       $('#potenza-consigliata-section').hide();
-    });
-  }
+    } else {
+      // Altrimenti calcola la potenza consigliata
+      calcolaPotenzaAlimentatoreConsigliata();
+    }
+  });
 }
 
-/* Event listener per l'alimentazione */
 export function prepareAlimentazioneListeners() {
   configurazione.alimentazioneSelezionata = null;
   configurazione.tipologiaAlimentatoreSelezionata = null;
