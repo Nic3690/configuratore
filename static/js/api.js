@@ -1,4 +1,4 @@
-import { configurazione, mappaTipologieVisualizzazione, mappaTensioneVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione, mappaFormeTaglio, mappaFiniture, mappaCategorieVisualizzazione } from './config.js';
+import { configurazione, mappaTipologieVisualizzazione, mappaTensioneVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione, mappaFormeTaglio, mappaFiniture, mappaCategorieVisualizzazione, mappaTipologiaStripVisualizzazione, mappaSpecialStripVisualizzazione } from './config.js';
 import { formatTemperatura, getTemperaturaColor, checkParametriCompletion, checkStep2Completion, updateProgressBar } from './utils.js';
 import { initRiepilogoOperationsListeners } from './steps/step6.js';
 
@@ -867,16 +867,16 @@ export function finalizzaConfigurazione() {
           if (riepilogo.tipologiaStripSelezionata) {
             let tipologiaStripText = mappaTipologiaStripVisualizzazione[riepilogo.tipologiaStripSelezionata] || riepilogo.tipologiaStripSelezionata;
             if (riepilogo.tipologiaStripSelezionata === 'SPECIAL' && riepilogo.specialStripSelezionata) {
-              tipologiaStripText += ` - ${mappaSpecialStripVisualizzazione[riepilogo.specialStripSelezionata] || riepilogo.specialStripSelezionata}`;
+            tipologiaStripText += ` - ${mappaSpecialStripVisualizzazione[riepilogo.specialStripSelezionata] || riepilogo.specialStripSelezionata}`;
             }
             
             riepilogoHtml += `
-                        <tr>
-                          <th scope="row">Tipologia Strip</th>
-                          <td>${tipologiaStripText}</td>
-                        </tr>
+            <tr>
+            <th scope="row">Tipologia Strip</th>
+            <td>${tipologiaStripText}</td>
+            </tr>
             `;
-          }
+            }
           
           if (riepilogo.potenzaSelezionata) {
             riepilogoHtml += `
