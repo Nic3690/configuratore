@@ -2,6 +2,8 @@ const configurazione = {
 	categoriaSelezionata: null,
 	profiloSelezionato: null,
 	tipologiaSelezionata: null,
+	tipologiaStripSelezionata: null,
+ 	specialStripSelezionata: null, 
 	tensioneSelezionato: null,
 	ipSelezionato: null,
 	temperaturaSelezionata: null,
@@ -18,6 +20,7 @@ const configurazione = {
 	formaDiTaglioSelezionata: "DRITTO_SEMPLICE",
 	finituraSelezionata: null,
 	lunghezzaRichiesta: null,
+	lunghezzeMultiple: {},
 	proposta1: null,
 	proposta2: null,
 	codiceModello: null,
@@ -81,6 +84,20 @@ const configurazione = {
 	'IP66': 'IP66 (Resistente all\'acqua)'
   };
 
+  const mappaTipologiaStripVisualizzazione = {
+	'COB': 'COB (Chip On Board)',
+	'SMD': 'SMD (Surface Mount Device)',
+	'SPECIAL': 'Special Strip'
+  };
+
+  const mappaSpecialStripVisualizzazione = {
+	'XFLEX': 'XFLEX',
+	'RUNNING': 'RUNNING',
+	'ZIG_ZAG': 'ZIG ZAG',
+	'XNAKE': 'XNAKE',
+	'XMAGIS': 'XMAGIS'
+  };
+
   export {
 	configurazione,
 	mappaCategorieVisualizzazione,
@@ -89,5 +106,7 @@ const configurazione = {
 	mappaFormeTaglio,
 	mappaFiniture,
 	mappaTensioneVisualizzazione,
-	mappaIPVisualizzazione
+	mappaIPVisualizzazione,
+	mappaTipologiaStripVisualizzazione,
+	mappaSpecialStripVisualizzazione
   };

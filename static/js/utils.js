@@ -119,9 +119,7 @@ export function checkStep6Completion() {
   $('#btn-finalizza').prop('disabled', !isComplete);
 }
 
-/**
- * Controlla se la personalizzazione è completa
- */
+// Modifica della funzione checkPersonalizzazioneCompletion in utils.js
 export function checkPersonalizzazioneCompletion() {
   let isComplete = true;
   
@@ -133,8 +131,33 @@ export function checkPersonalizzazioneCompletion() {
     isComplete = false;
   }
   
-  if (configurazione.tipologiaSelezionata === 'taglio_misura' && !configurazione.lunghezzaRichiesta) {
-    isComplete = false;
+  if (configurazione.tipologiaSelezionata === 'taglio_misura') {
+    // Per il taglio dritto semplice, controlliamo solo lunghezzaRichiesta
+    if (configurazione.formaDiTaglioSelezionata === 'DRITTO_SEMPLICE') {
+      if (!configurazione.lunghezzaRichiesta) {
+        isComplete = false;
+      }
+    } 
+    // Per le altre forme, controlliamo che tutte le lunghezze multiple siano inserite
+    else if (configurazione.lunghezzeMultiple) {
+      const forma = configurazione.formaDiTaglioSelezionata;
+      const numLatiRichiesti = {
+        'FORMA_L_DX': 2,
+        'FORMA_L_SX': 2,
+        'FORMA_C': 3,
+        'RETTANGOLO_QUADRATO': 2
+      }[forma] || 0;
+      
+      // Conta quanti lati hanno un valore valido
+      const latiValidi = Object.values(configurazione.lunghezzeMultiple)
+        .filter(val => val && val > 0).length;
+      
+      if (latiValidi < numLatiRichiesti) {
+        isComplete = false;
+      }
+    } else {
+      isComplete = false;
+    }
   }
   
   $('#btn-continua-personalizzazione').prop('disabled', !isComplete);

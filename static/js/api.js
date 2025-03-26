@@ -364,7 +364,19 @@ export function caricaStripLedFiltrate(profiloId, tensione, ip, temperatura) {
         return;
       }
       
-      data.strip_led.forEach(function(strip) {
+      // Filtra le strip in base alla tipologia selezionata
+      let stripFiltrate = data.strip_led;
+      
+      if (configurazione.tipologiaStripSelezionata) {
+        stripFiltrate = filterStripsByType(data.strip_led);
+      }
+      
+      if (stripFiltrate.length === 0) {
+        $('#strip-led-filtrate-options').html('<div class="col-12 text-center"><p>Nessuna strip LED disponibile con la tipologia selezionata.</p></div>');
+        return;
+      }
+      
+      stripFiltrate.forEach(function(strip) {
         // Usa il nome commerciale se disponibile
         const nomeVisualizzato = strip.nomeCommerciale || strip.nome;
         
@@ -387,7 +399,6 @@ export function caricaStripLedFiltrate(profiloId, tensione, ip, temperatura) {
           </div>
         `);
       });
-      
       
       $('.strip-led-filtrata-card').on('click', function() {
         $('.strip-led-filtrata-card').removeClass('selected');
@@ -418,6 +429,41 @@ export function caricaStripLedFiltrate(profiloId, tensione, ip, temperatura) {
       console.error("Errore nel caricamento delle strip LED filtrate:", error);
       $('#strip-led-filtrate-options').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle strip LED filtrate. Riprova più tardi.</p></div>');
     }
+  });
+}
+
+// Aggiungere questa funzione helper per filtrare le strip per tipo
+function filterStripsByType(strips) {
+  return strips.filter(strip => {
+    // Per le strip COB
+    if (configurazione.tipologiaStripSelezionata === 'COB') {
+      return strip.id.includes('COB');
+    }
+    // Per le strip SMD
+    else if (configurazione.tipologiaStripSelezionata === 'SMD') {
+      return strip.id.includes('SMD');
+    }
+    // Per le special strip
+    else if (configurazione.tipologiaStripSelezionata === 'SPECIAL') {
+      // Mappa delle special strip ai rispettivi ID o nomi commerciali
+      const specialStripMap = {
+        'XFLEX': ['XFLEX'],
+        'RUNNING': ['RUNNING'],
+        'ZIG_ZAG': ['ZIG_ZAG'],
+        'XNAKE': ['XNAKE', 'XSNAKE'],
+        'XMAGIS': ['XMAGIS']
+      };
+      
+      const specialStripIds = specialStripMap[configurazione.specialStripSelezionata] || [];
+      
+      // Controlla se il nome commerciale della strip contiene uno degli ID corrispondenti
+      return specialStripIds.some(id => 
+        (strip.nomeCommerciale && strip.nomeCommerciale.toUpperCase().includes(id)) ||
+        (strip.id && strip.id.toUpperCase().includes(id))
+      );
+    }
+    
+    return true; // Se non c'è filtro di tipologia, mostra tutte
   });
 }
 
@@ -741,21 +787,59 @@ export function finalizzaConfigurazione() {
                         <td>${mappaTipologieVisualizzazione[riepilogo.tipologiaSelezionata] || riepilogo.tipologiaSelezionata}</td>
                       </tr>
         `;
-        
-        // Verifica se è stata selezionata una strip LED
-        if (riepilogo.includeStripLed) {
+
+        if (riepilogo.formaDiTaglioSelezionata === 'DRITTO_SEMPLICE') {
+          if (riepilogo.lunghezzaRichiesta) {
+            riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Lunghezza richiesta</th>
+                        <td>${riepilogo.lunghezzaRichiesta}mm</td>
+                      </tr>
+            `;
+          }
+        } else {
+          // Per forme diverse dal taglio dritto, mostriamo le lunghezze multiple
+          const etichetteLati = {
+            'FORMA_L_DX': {
+              'lato1': 'Lato orizzontale',
+              'lato2': 'Lato verticale'
+            },
+            'FORMA_L_SX': {
+              'lato1': 'Lato orizzontale',
+              'lato2': 'Lato verticale'
+            },
+            'FORMA_C': {
+              'lato1': 'Lato orizzontale superiore',
+              'lato2': 'Lato verticale',
+              'lato3': 'Lato orizzontale inferiore'
+            },
+            'RETTANGOLO_QUADRATO': {
+              'lato1': 'Lunghezza',
+              'lato2': 'Larghezza'
+            }
+          };
+          
+          const etichette = etichetteLati[riepilogo.formaDiTaglioSelezionata] || {};
+          
+          if (riepilogo.lunghezzeMultiple) {
+            Object.entries(riepilogo.lunghezzeMultiple).forEach(([lato, valore]) => {
+              if (valore) {
+                const etichetta = etichette[lato] || `Lato ${lato.replace('lato', '')}`;
+                riepilogoHtml += `
+                        <tr>
+                          <th scope="row">${etichetta}</th>
+                          <td>${valore}mm</td>
+                        </tr>
+                `;
+              }
+            });
+          }
+          
+          // Aggiungi una nota sul non-assemblaggio nel riepilogo
           riepilogoHtml += `
                       <tr>
-                        <th scope="row">Tensione</th>
-                        <td>${mappaTensioneVisualizzazione[riepilogo.tensioneSelezionato] || riepilogo.tensioneSelezionato}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Grado IP</th>
-                        <td>${mappaIPVisualizzazione[riepilogo.ipSelezionato] || riepilogo.ipSelezionato}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Temperatura</th>
-                        <td>${formatTemperatura(riepilogo.temperaturaSelezionata)}</td>
+                        <th scope="row">Nota</th>
+                        <td class="text-danger">I profili verranno consegnati non assemblati tra di loro e la strip verrà consegnata non installata.</td>
                       </tr>
           `;
         }
@@ -779,6 +863,20 @@ export function finalizzaConfigurazione() {
                         <td>${nomeStripLed}</td>
                       </tr>
           `;
+
+          if (riepilogo.tipologiaStripSelezionata) {
+            let tipologiaStripText = mappaTipologiaStripVisualizzazione[riepilogo.tipologiaStripSelezionata] || riepilogo.tipologiaStripSelezionata;
+            if (riepilogo.tipologiaStripSelezionata === 'SPECIAL' && riepilogo.specialStripSelezionata) {
+              tipologiaStripText += ` - ${mappaSpecialStripVisualizzazione[riepilogo.specialStripSelezionata] || riepilogo.specialStripSelezionata}`;
+            }
+            
+            riepilogoHtml += `
+                        <tr>
+                          <th scope="row">Tipologia Strip</th>
+                          <td>${tipologiaStripText}</td>
+                        </tr>
+            `;
+          }
           
           if (riepilogo.potenzaSelezionata) {
             riepilogoHtml += `

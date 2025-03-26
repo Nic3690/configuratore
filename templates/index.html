@@ -273,19 +273,28 @@
         </style>
       </div>
       
+      <!-- Modifiche da apportare al file templates/index.html -->
+      <!-- Sostituire la sezione di personalizzazione lunghezza con questa versione aggiornata -->
+
       <div class="container mb-5">
         <h3 class="mb-3">Personalizzazione lunghezza</h3>
         
         <div id="istruzioni-misurazione" class="mb-4">
+          <!-- Qui verranno inserite le istruzioni specifiche per ogni forma -->
         </div>
         
-        <div class="form-group mb-4">
-          <label for="lunghezza-personalizzata">Lunghezza richiesta (mm):</label>
-          <input type="number" class="form-control" id="lunghezza-personalizzata" placeholder="Inserisci la lunghezza in millimetri" min="100">
-          <div class="form-text text-muted">
-            Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
+        <div id="misurazione-container">
+          <!-- Qui verranno inseriti i campi di misurazione in base alla forma selezionata -->
+          <div class="form-group mb-4 lunghezza-personalizzata-container">
+            <label for="lunghezza-personalizzata">Lunghezza richiesta (mm):</label>
+            <input type="number" class="form-control" id="lunghezza-personalizzata" placeholder="Inserisci la lunghezza in millimetri" min="100">
+            <div class="form-text text-muted">
+              Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
+            </div>
           </div>
         </div>
+        
+        <!-- L'avviso di non assemblaggio verrà inserito qui dinamicamente quando necessario -->
         
         <div id="proposte-container" class="alert alert-info" style="display: none;">
           <h5>Proposte di lunghezza standard</h5>
@@ -372,6 +381,119 @@
       </div>
     </div>
     
+    <!-- Nuova sezione da aggiungere in templates/index.html -->
+    <!-- Inserire questa sezione dopo step2-option-strip e prima di step2-parametri -->
+
+    <div class="step-section" id="step2-tipologia-strip">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="text-center mb-3">Seleziona la tipologia di strip LED</h2>
+          
+          <div class="selection-badges">
+            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step2-tipologia-strip">Profilo</span></span>
+            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step2-tipologia-strip">Tipologia</span></span>
+          </div>
+          
+          <p class="text-center mb-4 text-muted">
+            <small>Seleziona prima la tipologia di strip LED da utilizzare</small>
+          </p>
+        </div>
+      </div>
+      
+      <div class="container mb-5">
+        <h3 class="mb-3">Tipologia Strip LED</h3>
+        <div class="row" id="tipologia-strip-container">
+          <div class="col-md-4 mb-3">
+            <div class="card option-card tipologia-strip-card" data-tipologia-strip="COB">
+              <div class="card-body text-center">
+                <h5 class="card-title">COB</h5>
+                <p class="card-text small text-muted">Strip LED con tecnologia Chip On Board</p>
+                <img src="/static/img/strip-cob.jpg" alt="Strip COB" class="img-fluid mb-2" style="height: 80px;" onerror="this.style.display='none'">
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card option-card tipologia-strip-card" data-tipologia-strip="SMD">
+              <div class="card-body text-center">
+                <h5 class="card-title">SMD</h5>
+                <p class="card-text small text-muted">Strip LED con tecnologia Surface Mount Device</p>
+                <img src="/static/img/strip-smd.jpg" alt="Strip SMD" class="img-fluid mb-2" style="height: 80px;" onerror="this.style.display='none'">
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card option-card tipologia-strip-card" data-tipologia-strip="SPECIAL">
+              <div class="card-body text-center">
+                <h5 class="card-title">SPECIAL STRIP</h5>
+                <p class="card-text small text-muted">Strip LED con caratteristiche speciali</p>
+                <img src="/static/img/strip-special.jpg" alt="Special Strip" class="img-fluid mb-2" style="height: 80px;" onerror="this.style.display='none'">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sottomenu per Special Strip, inizialmente nascosto -->
+      <div class="container mb-5" id="special-strip-container" style="display: none;">
+        <h3 class="mb-3">Tipo di Special Strip</h3>
+        <div class="row" id="special-strip-options">
+          <div class="col-md-4 mb-3">
+            <div class="card option-card special-strip-card" data-special-strip="XFLEX">
+              <div class="card-body text-center">
+                <h5 class="card-title">XFLEX</h5>
+                <p class="card-text small text-muted">Strip LED flessibile</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card option-card special-strip-card" data-special-strip="RUNNING">
+              <div class="card-body text-center">
+                <h5 class="card-title">RUNNING</h5>
+                <p class="card-text small text-muted">Strip LED con effetto di movimento</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card option-card special-strip-card" data-special-strip="ZIG_ZAG">
+              <div class="card-body text-center">
+                <h5 class="card-title">ZIG ZAG</h5>
+                <p class="card-text small text-muted">Strip LED con configurazione a zig zag</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card option-card special-strip-card" data-special-strip="XNAKE">
+              <div class="card-body text-center">
+                <h5 class="card-title">XNAKE</h5>
+                <p class="card-text small text-muted">Strip LED con design a serpente</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card option-card special-strip-card" data-special-strip="XMAGIS">
+              <div class="card-body text-center">
+                <h5 class="card-title">XMAGIS</h5>
+                <p class="card-text small text-muted">Strip LED premium</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row mt-4">
+        <div class="col-12 text-center">
+          <button class="btn btn-secondary" id="btn-torna-step2-option-strip">Indietro</button>
+          <button class="btn btn-primary ms-2" id="btn-continua-tipologia-strip" disabled>Continua</button>
+        </div>
+      </div>
+    </div>
+
     <div class="step-section" id="step2-parametri">
       <div class="row">
         <div class="col-12">
