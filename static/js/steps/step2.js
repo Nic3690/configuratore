@@ -57,12 +57,13 @@ export function initStep2Listeners() {
     });
   });
   
-  // Continua dai parametri alla selezione della strip
+  // Continua dai parametri alla potenza
   $('#btn-continua-parametri').on('click', function(e) {
     e.preventDefault();
     
     if (configurazione.tensioneSelezionato && configurazione.ipSelezionato && configurazione.temperaturaSelezionata) {
-      vaiAllaSelezioneDiStripLed();
+      // MODIFICATO: Vai direttamente alla selezione della potenza invece della selezione strip
+      vaiAllaTemperaturaEPotenza();
     } else {
       let messaggi = [];
       if (!configurazione.tensioneSelezionato) messaggi.push("una tensione");
@@ -73,27 +74,6 @@ export function initStep2Listeners() {
     }
   });
   
-  // Torna dalla selezione strip ai parametri
-  $('#btn-torna-parametri-strip').on('click', function(e) {
-    e.preventDefault();
-    
-    $("#step2-strip").fadeOut(300, function() {
-      $("#step2-parametri").fadeIn(300);
-    });
-  });
-  
-  // Continua dalla selezione strip all'alimentazione
-  $('#btn-continua-strip').on('click', function(e) {
-    e.preventDefault();
-    
-    if (configurazione.stripLedSelezionata) {
-      // Vai direttamente all'alimentazione
-      vaiAllAlimentazione();
-    } else {
-      alert("Seleziona una strip LED prima di continuare");
-    }
-  });
-
   // Torna dalla tipologia strip alle opzioni strip
   $('#btn-torna-step2-option-strip').on('click', function(e) {
     e.preventDefault();
@@ -154,6 +134,7 @@ export function initStep2Listeners() {
     }
   });
 }
+
 // Funzione per andare alla selezione della tipologia strip
 export function vaiAllaTipologiaStrip() {
   // Reset delle selezioni
@@ -525,7 +506,8 @@ export function vaiAiParametriStripLed() {
   $("#step2-tipologia-strip").fadeOut(300, function() { 
     $("#step2-parametri").fadeIn(300);
     
-    updateProgressBar(2);
+    // MODIFICATO: Aggiorna la barra di progresso a 3 (invece di 2)
+    updateProgressBar(3);
     caricaOpzioniParametriFiltrate();
   });
 }
@@ -661,64 +643,6 @@ export function prepareTipologiaStripListeners() {
   });
 }
 
-export function vaiAllaSelezioneDiStripLed() {
-  $('#profilo-nome-step2-strip').text(configurazione.nomeModello);
-  $('#tipologia-nome-step2-strip').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
-  $('#tensione-nome-step2-strip').text(mappaTensioneVisualizzazione[configurazione.tensioneSelezionato] || configurazione.tensioneSelezionato);
-  $('#ip-nome-step2-strip').text(mappaIPVisualizzazione[configurazione.ipSelezionato] || configurazione.ipSelezionato);
-  $('#temperatura-nome-step2-strip').text(formatTemperatura(configurazione.temperaturaSelezionata));
-  
-  // Aggiunta della tipologia strip solo se non esiste già
-  if ($('#tipologia-strip-badge-step2-strip').length === 0) {
-    let tipologiaStripText = configurazione.tipologiaStripSelezionata;
-    if (configurazione.tipologiaStripSelezionata === 'SPECIAL' && configurazione.specialStripSelezionata) {
-      tipologiaStripText += ` - ${configurazione.specialStripSelezionata}`;
-    }
-    
-    // Aggiungi badge con ID univoco per facilitare la gestione
-    $('.selection-badges').append(`
-      <span class="badge bg-warning selection-badge" id="tipologia-strip-badge-step2-strip">
-        Tipologia Strip: <span id="tipologia-strip-nome-step2-strip">${tipologiaStripText}</span>
-      </span>
-    `);
-  } else {
-    // Aggiorna il testo se il badge esiste già
-    let tipologiaStripText = configurazione.tipologiaStripSelezionata;
-    if (configurazione.tipologiaStripSelezionata === 'SPECIAL' && configurazione.specialStripSelezionata) {
-      tipologiaStripText += ` - ${configurazione.specialStripSelezionata}`;
-    }
-    $('#tipologia-strip-nome-step2-strip').text(tipologiaStripText);
-  }
-  
-  $("#step2-parametri").fadeOut(300, function() {
-    $("#step2-strip").fadeIn(300);
-    
-    // Richiama la funzione ottimizzata
-    caricaStripLedFiltratePerTipologia();
-  });
-}
-
-// Funzione che memorizza il nome commerciale della strip LED selezionata
-export function memorizzaNomeCommercialeStripLed(stripId) {
-  // Chiamata al server per ottenere il nome commerciale
-  $.ajax({
-    url: `/get_nomi_commerciali/${stripId}`,
-    method: 'GET',
-    success: function(response) {
-      if (response.success) {
-        configurazione.nomeCommercialeStripLed = response.nomeCommerciale;
-        configurazione.codiciProdottoStripLed = response.codiciProdotto;
-        
-        // Aggiorna l'etichetta nella UI se necessario
-        $('.strip-led-nome-commerciale').text(configurazione.nomeCommercialeStripLed);
-      }
-    },
-    error: function(error) {
-      console.error("Errore nel recupero del nome commerciale:", error);
-    }
-  });
-}
-
 function checkPersonalizzazioneComplete() {
   if (!configurazione.formaDiTaglioSelezionata) {
     alert("Seleziona una forma di taglio prima di continuare");
@@ -763,87 +687,4 @@ function checkPersonalizzazioneComplete() {
   }
   
   return true;
-}
-
-export function caricaStripLedFiltratePerTipologia() {
-  // Mostra il loader durante il caricamento
-  $('#strip-led-filtrate-options').empty().html(`
-    <div class="col-12 text-center">
-      <div class="spinner-border" role="status"></div>
-      <p class="mt-3">Caricamento opzioni strip LED...</p>
-    </div>
-  `);
-  
-  // Reset delle selezioni
-  configurazione.stripLedSelezionata = null;
-  configurazione.nomeCommercialeStripLed = null;
-  $('#btn-continua-strip').prop('disabled', true);
-  
-  // Costruisci l'URL per il filtro corretto
-  const url = `/get_strip_led_filtrate/${configurazione.profiloSelezionato}/${configurazione.tensioneSelezionato}/${configurazione.ipSelezionato}/${configurazione.temperaturaSelezionata}`;
-  
-  // Chiama l'API per ottenere le strip LED filtrate
-  $.ajax({
-    url: url,
-    method: 'GET',
-    success: function(data) {
-      if (!data.success || !data.strip_led || data.strip_led.length === 0) {
-        // Nessuna strip trovata
-        $('#strip-led-filtrate-options').html(`
-          <div class="col-12 text-center">
-            <p>Nessuna strip LED disponibile per questa combinazione di parametri.</p>
-          </div>
-        `);
-        return;
-      }
-      
-      // Genera le card per le strip trovate
-      $('#strip-led-filtrate-options').empty();
-      data.strip_led.forEach(function(strip) {
-        const nomeVisualizzato = strip.nomeCommerciale || strip.nome;
-        
-        $('#strip-led-filtrate-options').append(`
-          <div class="col-md-6 mb-3">
-            <div class="card option-card strip-led-filtrata-card" 
-                 data-strip="${strip.id}" 
-                 data-nome-commerciale="${strip.nomeCommerciale || ''}">
-              <div class="card-body">
-                <h5 class="card-title">${nomeVisualizzato}</h5>
-                ${strip.nomeCommerciale ? `<p class="card-subtitle mb-2 text-muted strip-led-nome-tecnico">${strip.nome}</p>` : ''}
-                <p class="card-text small text-muted">${strip.descrizione || ''}</p>
-                <p class="card-text small">
-                  Tensione: ${strip.tensione}, 
-                  IP: ${strip.ip}, 
-                  Temperatura: ${formatTemperatura(strip.temperatura)}
-                </p>
-                ${strip.codiciProdotto && strip.codiciProdotto.length > 0 ? 
-                  `<p class="card-text small">Codici prodotto: ${strip.codiciProdotto.join(', ')}</p>` : ''}
-              </div>
-            </div>
-          </div>
-        `);
-      });
-      
-      // Aggiungi event listener alle card
-      $('.strip-led-filtrata-card').on('click', function() {
-        $('.strip-led-filtrata-card').removeClass('selected');
-        $(this).addClass('selected');
-        
-        // Memorizza i dati della strip selezionata
-        configurazione.stripLedSelezionata = $(this).data('strip');
-        configurazione.nomeCommercialeStripLed = $(this).data('nome-commerciale');
-        
-        // Abilita il pulsante continua
-        $('#btn-continua-strip').prop('disabled', false);
-      });
-    },
-    error: function(error) {
-      console.error("Errore nel caricamento delle strip LED:", error);
-      $('#strip-led-filtrate-options').html(`
-        <div class="col-12 text-center">
-          <p class="text-danger">Errore nel caricamento delle strip LED. Riprova più tardi.</p>
-        </div>
-      `);
-    }
-  });
 }

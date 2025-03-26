@@ -1,14 +1,17 @@
 import { configurazione } from './config.js';
 
 /**
- * Aggiorna la barra di progresso
+ * Aggiorna la barra di progresso in base allo step corrente effettivo
  * @param {number} step - Il numero dello step corrente
  */
 export function updateProgressBar(step) {
+  // Reset di tutti gli elementi della barra di progresso
   $('.step-item').removeClass('active completed');
   
+  // Seleziona lo step corrente come attivo
   $(`#progress-step${step}`).addClass('active');
   
+  // Imposta tutti gli step precedenti come completati
   for (let i = 1; i < step; i++) {
     $(`#progress-step${i}`).addClass('completed');
   }
@@ -43,6 +46,7 @@ export function getTemperaturaColor(temperatura) {
     case '3000K':
       return '#FFF1D9';
     case '6000K':
+    case '6500K':
       return '#F5FBFF';
     case 'CCT':
       return 'linear-gradient(to right, #FFE9C0, #F5FBFF)';
@@ -119,7 +123,9 @@ export function checkStep6Completion() {
   $('#btn-finalizza').prop('disabled', !isComplete);
 }
 
-// Modifica della funzione checkPersonalizzazioneCompletion in utils.js
+/**
+ * Controlla se la personalizzazione è completa
+ */
 export function checkPersonalizzazioneCompletion() {
   let isComplete = true;
   

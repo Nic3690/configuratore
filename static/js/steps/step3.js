@@ -8,9 +8,9 @@ export function initStep3Listeners() {
     e.preventDefault();
     
     $("#step3-temperatura-potenza").fadeOut(300, function() {
-      $("#step2-strip").fadeIn(300);
+      $("#step2-parametri").fadeIn(300);
       
-      updateProgressBar(2);
+      updateProgressBar(3);
     });
   });
   
@@ -18,7 +18,11 @@ export function initStep3Listeners() {
     e.preventDefault();
     
     if (configurazione.potenzaSelezionata) {
-      vaiAllAlimentazione();
+      // Nascondi completamente questa sezione prima di procedere
+      $("#step3-temperatura-potenza").fadeOut(300, function() {
+        // Solo dopo che è completamente nascosta, vai alla sezione alimentazione
+        vaiAllAlimentazione();
+      });
     } else {
       alert("Seleziona temperatura e potenza prima di continuare");
     }
@@ -27,16 +31,54 @@ export function initStep3Listeners() {
 
 /* Selezione temperatura e potenza */
 export function vaiAllaTemperaturaEPotenza() {
+  // Seleziona automaticamente una strip LED basata sui parametri
+  selezionaStripLedAutomaticamente();
   
   $('#profilo-nome-step3').text(configurazione.nomeModello);
   $('#tipologia-nome-step3').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
   $('#strip-nome-step3').text(mappaStripLedVisualizzazione[configurazione.stripLedSelezionata] || configurazione.stripLedSelezionata);
   
+  // Aggiorna la barra di progresso a 3
   updateProgressBar(3);
   
-  $("#step2-strip").fadeOut(300, function() {
-    $("#step3-temperatura-potenza").fadeIn(300);
-    
-    caricaOpzioniPotenza(configurazione.stripLedSelezionata, "3000K");
-  });
+  // Assicurati che tutte le altre sezioni siano nascoste
+  $(".step-section").hide();
+  
+  // Poi mostra solo la sezione corrente
+  $("#step3-temperatura-potenza").fadeIn(300);
+  
+  caricaOpzioniPotenza(configurazione.stripLedSelezionata, configurazione.temperaturaSelezionata);
+}
+
+// Seleziona automaticamente una strip LED basata sui parametri scelti
+function selezionaStripLedAutomaticamente() {
+  // Costruiamo l'ID della strip LED basato sui parametri selezionati
+  let stripId = '';
+  
+  // Se è SMD
+  if (configurazione.tipologiaStripSelezionata === 'SMD') {
+    stripId = `STRIP_${configurazione.tensioneSelezionato}_SMD_${configurazione.ipSelezionato}`;
+  }
+  // Se è COB
+  else if (configurazione.tipologiaStripSelezionata === 'COB') {
+    stripId = `STRIP_${configurazione.tensioneSelezionato}_COB_${configurazione.ipSelezionato}`;
+  }
+  // Se è RGB
+  else if (configurazione.temperaturaSelezionata === 'RGB') {
+    if (configurazione.tipologiaStripSelezionata === 'SMD') {
+      stripId = `STRIP_${configurazione.tensioneSelezionato}_RGB_SMD_${configurazione.ipSelezionato}`;
+    } else if (configurazione.tipologiaStripSelezionata === 'COB') {
+      stripId = `STRIP_${configurazione.tensioneSelezionato}_RGB_COB_${configurazione.ipSelezionato}`;
+    }
+  }
+  // Special strips (per semplicità, usano lo stesso pattern come SMD)
+  else if (configurazione.tipologiaStripSelezionata === 'SPECIAL') {
+    stripId = `STRIP_${configurazione.tensioneSelezionato}_SMD_${configurazione.ipSelezionato}`;
+  }
+  
+  // Impostazione della stripLedSelezionata nella configurazione
+  configurazione.stripLedSelezionata = stripId;
+  
+  // Memorizza anche la temperatura selezionata
+  configurazione.temperaturaColoreSelezionata = configurazione.temperaturaSelezionata;
 }

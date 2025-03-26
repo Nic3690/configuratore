@@ -31,7 +31,11 @@ export function initStep4Listeners() {
       return;
     }
     
-    vaiAlControllo();
+    // Nascondi completamente questa sezione prima di procedere
+    $("#step4-alimentazione").fadeOut(300, function() {
+      // Solo dopo che è completamente nascosta, vai alla sezione controllo
+      vaiAlControllo();
+    });
   });
 }
 
@@ -91,6 +95,8 @@ function calcolaPotenzaAlimentatoreConsigliata() {
 }
 
 export function vaiAllAlimentazione() {
+  // Assicurati che tutte le altre sezioni siano nascoste
+  $(".step-section").hide();
   
   $('#profilo-nome-step4').text(configurazione.nomeModello);
   $('#tipologia-nome-step4').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
@@ -117,22 +123,20 @@ export function vaiAllAlimentazione() {
   
   updateProgressBar(4);
   
-  // Transizione dallo step di strip direttamente all'alimentazione
-  $("#step2-strip").fadeOut(300, function() {
-    $("#step4-alimentazione").fadeIn(300);
-    
-    prepareAlimentazioneListeners();
-    
-    // Nascondi la sezione della potenza consigliata se non c'è strip LED o non abbiamo una potenza
-    if (configurazione.stripLedSelezionata === 'senza_strip' || 
-        configurazione.stripLedSelezionata === 'NO_STRIP' ||
-        !configurazione.potenzaSelezionata) {
-      $('#potenza-consigliata-section').hide();
-    } else {
-      // Altrimenti calcola la potenza consigliata
-      calcolaPotenzaAlimentatoreConsigliata();
-    }
-  });
+  // Mostra la sezione di alimentazione
+  $("#step4-alimentazione").fadeIn(300);
+  
+  prepareAlimentazioneListeners();
+  
+  // Nascondi la sezione della potenza consigliata se non c'è strip LED o non abbiamo una potenza
+  if (configurazione.stripLedSelezionata === 'senza_strip' || 
+      configurazione.stripLedSelezionata === 'NO_STRIP' ||
+      !configurazione.potenzaSelezionata) {
+    $('#potenza-consigliata-section').hide();
+  } else {
+    // Altrimenti calcola la potenza consigliata
+    calcolaPotenzaAlimentatoreConsigliata();
+  }
 }
 
 export function prepareAlimentazioneListeners() {
