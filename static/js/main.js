@@ -3,6 +3,7 @@ import { updateProgressBar } from './utils.js';
 import { initStep1Listeners } from './steps/step1.js';
 import { initStep2Listeners } from './steps/step2.js';
 import { initStep3Listeners } from './steps/step3.js';
+import { initStripSelectionListeners } from './steps/step3_strip.js'; // Nuova importazione
 import { initStep4Listeners } from './steps/step4.js';
 import { initStep5Listeners } from './steps/step5.js';
 import { initStep6Listeners } from './steps/step6.js';
@@ -16,6 +17,7 @@ $(document).ready(function() {
   initStep1Listeners();
   initStep2Listeners();
   initStep3Listeners();
+  initStripSelectionListeners(); // Inizializza i listener per il nuovo step
   initStep4Listeners();
   initStep5Listeners();
   initStep6Listeners();

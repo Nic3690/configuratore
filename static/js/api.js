@@ -553,6 +553,193 @@ export function caricaOpzioniPotenza(stripId, temperatura) {
 }
 
 /**
+ * Carica le strip LED compatibili con i parametri selezionati
+ * @param {string} profiloId - ID del profilo
+ * @param {string} tensione - Tensione selezionata
+ * @param {string} ip - IP selezionato
+ * @param {string} temperatura - Temperatura selezionata
+ * @param {string} potenza - Potenza selezionata
+ */
+export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, potenza) {
+  $('#strip-led-compatibili-container').empty().html('<div class="text-center"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento modelli di strip LED compatibili...</p></div>');
+  
+  configurazione.stripLedSceltaFinale = null;
+  $('#btn-continua-step3-strip').prop('disabled', true);
+  
+  // Estraiamo il valore numerico dalla potenza (es. "8W/m" -> 8)
+  let potenzaValue = 0;
+  const potenzaMatch = potenza.match(/^(\d+)/);
+  if (potenzaMatch && potenzaMatch[1]) {
+    potenzaValue = parseInt(potenzaMatch[1]);
+  }
+  console.log("Potenza selezionata:", potenza, "Valore numerico:", potenzaValue);
+  
+  // Definiamo la mappatura dei pattern di codici prodotto per potenza
+  // Importante: deve essere definito qui per essere accessibile in tutto il corpo della funzione
+  const matchPattern = {
+    '8': /SLS01/i,
+    '10': /SLS02|MINI/i,
+    '12': /SLS03/i,
+    '14': /SLS04/i,
+    '6': /RB2642/i,
+    '12': /RB1282/i,
+    '18': /RB21922/i,
+    '22': /RB2402/i
+  };
+  
+  $.ajax({
+    url: `/get_strip_led_filtrate/${profiloId}/${tensione}/${ip}/${temperatura}`,
+    method: 'GET',
+    success: function(data) {
+      if (!data.success) {
+        $('#strip-led-compatibili-container').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle strip LED compatibili.</p></div>');
+        return;
+      }
+      
+      if (!data.strip_led || data.strip_led.length === 0) {
+        $('#strip-led-compatibili-container').html('<div class="col-12 text-center"><p>Nessuna strip LED disponibile per questa combinazione di parametri.</p></div>');
+        return;
+      }
+      
+      // Filtriamo le strip LED basandoci sui codici prodotto e sulla potenza
+      let stripCompatibili = data.strip_led.filter(strip => {
+        // Se la strip non ha codici prodotto, non possiamo filtrarla
+        if (!strip.codiciProdotto || strip.codiciProdotto.length === 0) {
+          return true; // Includiamo comunque questa strip
+        }
+        
+        // Se abbiamo un pattern per questa potenza, lo usiamo per filtrare
+        const pattern = matchPattern[potenzaValue];
+        if (pattern) {
+          return strip.codiciProdotto.some(codice => pattern.test(codice));
+        }
+        
+        // Se non abbiamo un pattern specifico, includiamo la strip
+        return true;
+      });
+      
+      // Se non ci sono strip compatibili con la potenza selezionata, mostriamo tutte le strip
+      if (stripCompatibili.length === 0) {
+        $('#strip-led-compatibili-container').html(`
+          <div class="col-12 text-center mb-3">
+            <div class="alert alert-warning">
+              Nessuna strip LED trovata che corrisponda esattamente alla potenza ${potenza}. 
+              Visualizzazione di tutte le strip LED compatibili con gli altri parametri.
+            </div>
+          </div>
+        `);
+        stripCompatibili = data.strip_led;
+      }
+      
+      let stripHtml = '<div class="row">';
+      
+      stripCompatibili.forEach(function(strip, index) {
+        // Usa il nome commerciale se disponibile
+        const nomeVisualizzato = strip.nomeCommerciale || strip.nome;
+        
+        // Percorso immagine per il modello di strip LED
+        const imgPath = `/static/img/strip/${strip.id.toLowerCase()}.jpg`;
+        
+        // Verifica se questa strip è stata preselezionata automaticamente
+        const isPreselected = strip.id === configurazione.stripLedSelezionata;
+        
+        // Filtriamo i codici prodotto per mostrare solo quelli compatibili con la potenza selezionata
+        let codiciProdottoFiltrati = strip.codiciProdotto || [];
+        const pattern = matchPattern[potenzaValue];
+        if (pattern && codiciProdottoFiltrati.length > 0) {
+          codiciProdottoFiltrati = codiciProdottoFiltrati.filter(codice => pattern.test(codice));
+          // Se non ci sono corrispondenze, mostriamo tutti i codici
+          if (codiciProdottoFiltrati.length === 0) {
+            codiciProdottoFiltrati = strip.codiciProdotto || [];
+          }
+        }
+        
+        stripHtml += `
+          <div class="col-md-4 mb-3">
+            <div class="card option-card strip-led-compatibile-card ${isPreselected ? 'selected' : ''}" 
+                 data-strip-id="${strip.id}" 
+                 data-nome-commerciale="${strip.nomeCommerciale || ''}">
+              <img src="${imgPath}" class="card-img-top" alt="${nomeVisualizzato}" 
+                   style="height: 180px; object-fit: cover;" 
+                   onerror="this.src='/static/img/placeholder.jpg'; this.style.height='180px';">
+              <div class="card-body">
+                <h5 class="card-title">${nomeVisualizzato}</h5>
+                ${strip.nomeCommerciale ? `<p class="card-subtitle mb-2 text-muted">${strip.nome}</p>` : ''}
+                <p class="card-text small">
+                  Tensione: ${strip.tensione}, 
+                  IP: ${strip.ip}, 
+                  Temperatura: ${formatTemperatura(strip.temperatura)}
+                </p>
+                <p class="card-text small">Potenza: ${potenza}</p>
+                ${codiciProdottoFiltrati.length > 0 ? 
+                  `<p class="card-text small">Codici prodotto: ${codiciProdottoFiltrati.join(', ')}</p>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      stripHtml += '</div>';
+      
+      $('#strip-led-compatibili-container').html(stripHtml);
+      
+      // Se c'è una sola strip compatibile, selezionala automaticamente
+      if (stripCompatibili.length === 1) {
+        const stripId = stripCompatibili[0].id;
+        const nomeCommerciale = stripCompatibili[0].nomeCommerciale || '';
+        configurazione.stripLedSceltaFinale = stripId;
+        configurazione.nomeCommercialeStripLed = nomeCommerciale;
+        
+        $('.strip-led-compatibile-card').addClass('selected');
+        $('#btn-continua-step3-strip').prop('disabled', false);
+      }
+      // Se c'è già una strip preselezionata (quella scelta automaticamente prima)
+      else if (configurazione.stripLedSelezionata) {
+        const stripCard = $(`.strip-led-compatibile-card[data-strip-id="${configurazione.stripLedSelezionata}"]`);
+        if (stripCard.length > 0) {
+          stripCard.addClass('selected');
+          configurazione.stripLedSceltaFinale = configurazione.stripLedSelezionata;
+          configurazione.nomeCommercialeStripLed = stripCard.data('nome-commerciale') || '';
+          $('#btn-continua-step3-strip').prop('disabled', false);
+        }
+      }
+      
+      // Aggiunge i listener per la selezione delle card
+      $('.strip-led-compatibile-card').on('click', function() {
+        $('.strip-led-compatibile-card').removeClass('selected');
+        $(this).addClass('selected');
+        
+        const stripId = $(this).data('strip-id');
+        const nomeCommerciale = $(this).data('nome-commerciale') || '';
+        
+        configurazione.stripLedSceltaFinale = stripId;
+        configurazione.nomeCommercialeStripLed = nomeCommerciale;
+        
+        // Aggiorna anche stripLedSelezionata per mantenere coerenza
+        configurazione.stripLedSelezionata = stripId;
+        
+        $('#btn-continua-step3-strip').prop('disabled', false);
+        
+        // Chiama l'API per ottenere i codici prodotto
+        $.ajax({
+          url: `/get_nomi_commerciali/${stripId}`,
+          method: 'GET',
+          success: function(response) {
+            if (response.success) {
+              configurazione.codiciProdottoStripLed = response.codiciProdotto;
+            }
+          }
+        });
+      });
+    },
+    error: function(error) {
+      console.error("Errore nel caricamento delle strip LED compatibili:", error);
+      $('#strip-led-compatibili-container').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle strip LED compatibili. Riprova più tardi.</p></div>');
+    }
+  });
+}
+
+/**
  * Calcola la potenza dell'alimentatore consigliata
  */
 function calcolaPotenzaAlimentatoreConsigliata() {

@@ -609,6 +609,44 @@
       </div>
     </div>
 
+    <!-- Nuovo step per la selezione del modello specifico di strip LED -->
+    <div class="step-section" id="step3-strip-selection">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="text-center mb-3">Seleziona il modello di strip LED</h2>
+          
+          <div class="selection-badges">
+            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step3-strip">Profilo</span></span>
+            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step3-strip">Tipologia</span></span>
+            <span class="badge bg-info selection-badge">Tensione: <span id="tensione-nome-step3-strip">24V</span></span>
+            <span class="badge bg-warning selection-badge">IP: <span id="ip-nome-step3-strip">IP20</span></span>
+            <span class="badge bg-secondary selection-badge">Temperatura: <span id="temperatura-nome-step3-strip">3000K</span></span>
+            <span class="badge bg-dark selection-badge">Potenza: <span id="potenza-nome-step3-strip">14W/m</span></span>
+          </div>
+          
+          <p class="text-center mb-4 text-muted">
+            <small>Seleziona il modello specifico di strip LED da utilizzare</small>
+          </p>
+        </div>
+      </div>
+      
+      <div class="container mb-5">
+        <div class="row" id="strip-led-compatibili-container">
+          <div class="col-12 text-center">
+            <div class="spinner-border" role="status"></div>
+            <p class="mt-3">Caricamento modelli di strip LED compatibili...</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row mt-4">
+        <div class="col-12 text-center">
+          <button class="btn btn-secondary" id="btn-torna-step3-potenza">Indietro</button>
+          <button class="btn btn-primary ms-2" id="btn-continua-step3-strip" disabled>Continua</button>
+        </div>
+      </div>
+    </div>
+
     <div class="step-section" id="step4-alimentazione">
       <div class="row">
         <div class="col-12">

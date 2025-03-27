@@ -1,7 +1,8 @@
 import { configurazione, mappaTipologieVisualizzazione, mappaStripLedVisualizzazione } from '../config.js';
 import { updateProgressBar } from '../utils.js';
-import { caricaOpzioniPotenza } from '../api.js';
+import { caricaOpzioniPotenza, caricaStripLedCompatibili } from '../api.js';
 import { vaiAllAlimentazione } from './step4.js';
+import { vaiAllaSelezioneLedStrip } from './step3_strip.js';
 
 export function initStep3Listeners() {
   $('#btn-torna-step2').on('click', function(e) {
@@ -18,10 +19,9 @@ export function initStep3Listeners() {
     e.preventDefault();
     
     if (configurazione.potenzaSelezionata) {
-      // Nascondi completamente questa sezione prima di procedere
+      // Modificato: Ora va al nuovo step di selezione strip LED
       $("#step3-temperatura-potenza").fadeOut(300, function() {
-        // Solo dopo che è completamente nascosta, vai alla sezione alimentazione
-        vaiAllAlimentazione();
+        vaiAllaSelezioneLedStrip();
       });
     } else {
       alert("Seleziona temperatura e potenza prima di continuare");
@@ -31,7 +31,7 @@ export function initStep3Listeners() {
 
 /* Selezione temperatura e potenza */
 export function vaiAllaTemperaturaEPotenza() {
-  // Seleziona automaticamente una strip LED basata sui parametri
+  // Seleziona automaticamente una strip LED basata sui parametri (questa servirà come default)
   selezionaStripLedAutomaticamente();
   
   $('#profilo-nome-step3').text(configurazione.nomeModello);
