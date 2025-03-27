@@ -40,32 +40,40 @@ export function initStep5Listeners() {
  * Carica i dimmer compatibili con la strip LED selezionata
  */
 function caricaDimmerCompatibili() {
+  // Contenitore iniziale per il dimmer
+  // Importante: Iniziamo con un container vuoto ma con la struttura corretta
+  $('#dimmer-container').empty().html(`
+    <div class="text-center" id="dimmer-loading">
+      <div class="spinner-border" role="status"></div>
+      <p class="mt-3">Caricamento opzioni dimmer compatibili...</p>
+    </div>
+  `);
+  
   // Se non c'è strip LED selezionata o è "senza strip", mostriamo solo l'opzione "nessun dimmer"
   if (!configurazione.stripLedSelezionata || 
       configurazione.stripLedSelezionata === 'senza_strip' || 
       configurazione.stripLedSelezionata === 'NO_STRIP') {
     
-    // Creiamo la card per "nessun dimmer"
+    // Creiamo la card per "nessun dimmer" mantenendo la struttura corretta
     const dimmerHtml = `
-      <div class="container mb-5">
-        <h3 class="mb-3">Dimmer</h3>
-        <div class="row">
-          <div class="col-md-4 mb-3">
-            <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
-              <div class="card-body text-center">
-                <h5 class="card-title">Nessun dimmer</h5>
-                <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
-              </div>
+      <h3 class="mb-3">Dimmer</h3>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
+            <div class="card-body text-center">
+              <h5 class="card-title">Nessun dimmer</h5>
+              <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
             </div>
           </div>
         </div>
-      </div>`;
+      </div>
+    `;
     
     $('#dimmer-container').html(dimmerHtml);
     return;
   }
 
-  // Mostria un loader mentre carichiamo i dimmer compatibili
+  // Mostriamo un loader mentre carichiamo i dimmer compatibili
   $('#dimmer-loading').show();
   
   // Chiamiamo l'API per ottenere i dimmer compatibili
@@ -74,8 +82,8 @@ function caricaDimmerCompatibili() {
     method: 'GET',
     success: function(response) {
       if (response.success) {
-        // Creiamo l'HTML per le opzioni di dimmer
-        let dimmerHtml = `<div class="container mb-5"><h3 class="mb-3">Dimmer</h3><div class="row">`;
+        // Creiamo l'HTML per le opzioni di dimmer - con la struttura corretta
+        let dimmerHtml = `<h3 class="mb-3">Dimmer</h3><div class="row">`;
         
         // Mappatura tra codici dimmer e testi visualizzati
         const dimmerLabel = {
@@ -117,7 +125,7 @@ function caricaDimmerCompatibili() {
             </div>`;
         });
         
-        dimmerHtml += `</div></div>`;
+        dimmerHtml += `</div>`;
         
         // Aggiorniamo il contenitore con le opzioni di dimmer
         $('#dimmer-container').html(dimmerHtml);
@@ -128,15 +136,13 @@ function caricaDimmerCompatibili() {
         // In caso di errore, mostriamo solo l'opzione "nessun dimmer"
         console.error("Errore nel caricamento dei dimmer compatibili:", response.message);
         const dimmerHtml = `
-          <div class="container mb-5">
-            <h3 class="mb-3">Dimmer</h3>
-            <div class="row">
-              <div class="col-md-4 mb-3">
-                <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
-                  <div class="card-body text-center">
-                    <h5 class="card-title">Nessun dimmer</h5>
-                    <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
-                  </div>
+          <h3 class="mb-3">Dimmer</h3>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Nessun dimmer</h5>
+                  <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
                 </div>
               </div>
             </div>
@@ -152,15 +158,13 @@ function caricaDimmerCompatibili() {
       // In caso di errore, mostriamo solo l'opzione "nessun dimmer"
       console.error("Errore nella chiamata API dei dimmer:", error);
       const dimmerHtml = `
-        <div class="container mb-5">
-          <h3 class="mb-3">Dimmer</h3>
-          <div class="row">
-            <div class="col-md-4 mb-3">
-              <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
-                <div class="card-body text-center">
-                  <h5 class="card-title">Nessun dimmer</h5>
-                  <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
-                </div>
+        <h3 class="mb-3">Dimmer</h3>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
+              <div class="card-body text-center">
+                <h5 class="card-title">Nessun dimmer</h5>
+                <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
               </div>
             </div>
           </div>

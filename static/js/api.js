@@ -270,6 +270,7 @@ export function caricaOpzioniIP(profiloId, tensione) {
  * @param {string} tensione - Tensione selezionato
  * @param {string} ip - IP selezionato
  */
+// Sostituire la funzione caricaOpzioniTemperaturaIniziale con questa versione aggiornata:
 export function caricaOpzioniTemperaturaIniziale(profiloId, tensione, ip) {
   
   $('#temperatura-iniziale-options').empty().html('<div class="spinner-border" role="status"></div><p>Caricamento opzioni temperatura...</p>');
@@ -292,6 +293,25 @@ export function caricaOpzioniTemperaturaIniziale(profiloId, tensione, ip) {
         $('#temperatura-iniziale-options').html('<p>Nessuna opzione di temperatura disponibile per questa combinazione.</p>');
         return;
       }
+      
+      // Ordina le temperature: prima i valori numerici (in ordine crescente), poi CCT, poi RGB e RGBW
+      data.temperature.sort((a, b) => {
+        // Funzione helper per ottenere un valore numerico per ordinamento
+        const getOrderValue = (temp) => {
+          if (temp.includes('K')) {
+            return parseInt(temp.replace('K', ''));
+          } else if (temp === 'CCT') {
+            return 10000; // CCT dopo tutte le temperature fisse
+          } else if (temp === 'RGB') {
+            return 20000; // RGB dopo CCT
+          } else if (temp === 'RGBW') {
+            return 30000; // RGBW alla fine
+          }
+          return 0;
+        };
+        
+        return getOrderValue(a) - getOrderValue(b);
+      });
       
       data.temperature.forEach(function(temperatura) {
         $('#temperatura-iniziale-options').append(`
@@ -625,9 +645,15 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
           supportaPotenzaConsigliata = '<div class="alert alert-success mt-2">Supporta la potenza consigliata</div>';
         }
         
+        // Percorso immagine per il tipo di alimentatore (usa placeholder se non disponibile)
+        const imgPath = `/static/img/alimentatori/${alimentatore.id.toLowerCase()}.jpg`;
+        
         $('#alimentatore-container').append(`
           <div class="col-md-4 mb-3">
             <div class="card option-card alimentatore-card" data-alimentatore="${alimentatore.id}">
+              <img src="${imgPath}" class="card-img-top" alt="${alimentatore.nome}" 
+                   style="height: 180px; object-fit: cover;" 
+                   onerror="this.src='/static/img/placeholder.jpg'; this.style.height='180px';">
               <div class="card-body">
                 <h5 class="card-title">${alimentatore.nome}</h5>
                 <p class="card-text small text-muted">${alimentatore.descrizione}</p>

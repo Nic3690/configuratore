@@ -39,11 +39,11 @@
   ],
   "profili": [
     {
-      "id": "PRF014",
-      "nome": "PRF014",
+      "id": "PRF014_200SET",
+      "nome": "PRF014_200SET",
       "categoria": "plafone",
       "note": "NANO PROFILI",
-      "immagine": "/static/img/prf014.jpg",
+      "immagine": "/static/img/prf014_200set.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -54,11 +54,11 @@
       ]
     },
     {
-      "id": "PRF017",
-      "nome": "PRF017",
+      "id": "PRF017_200SET",
+      "nome": "PRF017_200SET",
       "categoria": "plafone",
       "note": "ANGOLARE",
-      "immagine": "/static/img/prf017.jpg",
+      "immagine": "/static/img/prf017_200set.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -69,11 +69,11 @@
       ]
     },
     {
-      "id": "PRF005",
-      "nome": "PRF005",
+      "id": "PRF005_200SET",
+      "nome": "PRF005_200SET",
       "categoria": "incasso",
       "note": "PLAFONE+INCASSO",
-      "immagine": "/static/img/prf005.jpg",
+      "immagine": "/static/img/prf005_200set.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -84,11 +84,11 @@
       ]
     },
     {
-      "id": "PRF051",
-      "nome": "PRF051",
+      "id": "PRF051_300",
+      "nome": "PRF051_300",
       "categoria": "plafone",
       "note": "",
-      "immagine": "/static/img/prf051.jpg",
+      "immagine": "/static/img/prf051_300.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -99,11 +99,11 @@
       ]
     },
     {
-      "id": "PRF011",
-      "nome": "PRF011",
+      "id": "PRF011_300",
+      "nome": "PRF011_300",
       "categoria": "plafone",
       "note": "",
-      "immagine": "/static/img/prf011.jpg",
+      "immagine": "/static/img/prf011_300.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -114,11 +114,11 @@
       ]
     },
     {
-      "id": "PRF040",
-      "nome": "PRF040",
+      "id": "PRF040_300",
+      "nome": "PRF040_300",
       "categoria": "plafone",
       "note": "",
-      "immagine": "/static/img/prf040.jpg",
+      "immagine": "/static/img/prf040_300.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -129,11 +129,11 @@
       ]
     },
     {
-      "id": "PRF004",
-      "nome": "PRF004",
+      "id": "PRF004_200SET",
+      "nome": "PRF004_200SET",
       "categoria": "plafone",
       "note": "",
-      "immagine": "/static/img/prf004.jpg",
+      "immagine": "/static/img/prf004_200set.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -144,11 +144,11 @@
       ]
     },
     {
-      "id": "PRF007",
-      "nome": "PRF007",
+      "id": "PRF007_200SET",
+      "nome": "PRF007_200SET",
       "categoria": "plafone",
       "note": "ANGOLARE",
-      "immagine": "/static/img/prf007.jpg",
+      "immagine": "/static/img/prf007_200set.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -159,11 +159,11 @@
       ]
     },
     {
-      "id": "PRF008",
-      "nome": "PRF008",
+      "id": "PRF008_200",
+      "nome": "PRF008_200",
       "categoria": "plafone",
       "note": "",
-      "immagine": "/static/img/prf008.jpg",
+      "immagine": "/static/img/prf008_200.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -174,11 +174,11 @@
       ]
     },
     {
-      "id": "PRF009",
-      "nome": "PRF009",
+      "id": "PRF009_200",
+      "nome": "PRF009_200",
       "categoria": "plafone",
       "note": "",
-      "immagine": "/static/img/prf009.jpg",
+      "immagine": "/static/img/prf009_200.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -189,11 +189,11 @@
       ]
     },
     {
-      "id": "PRF010",
-      "nome": "PRF010",
+      "id": "PRF010_200",
+      "nome": "PRF010_200",
       "categoria": "plafone",
       "note": "",
-      "immagine": "/static/img/prf010.jpg",
+      "immagine": "/static/img/prf010_200.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -204,11 +204,11 @@
       ]
     },
     {
-      "id": "PRF080",
-      "nome": "PRF080",
+      "id": "PRF080_200",
+      "nome": "PRF080_200",
       "categoria": "sospensione",
       "note": "",
-      "immagine": "/static/img/prf080.jpg",
+      "immagine": "/static/img/prf080_200.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -264,11 +264,11 @@
       ]
     },
     {
-      "id": "PRF015",
-      "nome": "PRF015",
+      "id": "PRF015_200SET",
+      "nome": "PRF015_200SET",
       "categoria": "incasso",
       "note": "",
-      "immagine": "/static/img/prf015.jpg",
+      "immagine": "/static/img/prf015_200set.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -279,11 +279,11 @@
       ]
     },
     {
-      "id": "PRF041",
-      "nome": "PRF041",
+      "id": "PRF041_300",
+      "nome": "PRF041_300",
       "categoria": "incasso",
       "note": "",
-      "immagine": "/static/img/prf041.jpg",
+      "immagine": "/static/img/prf041_300.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -294,11 +294,11 @@
       ]
     },
     {
-      "id": "PRF042",
-      "nome": "PRF042",
+      "id": "PRF042_300",
+      "nome": "PRF042_300",
       "categoria": "incasso",
       "note": "",
-      "immagine": "/static/img/prf042.jpg",
+      "immagine": "/static/img/prf042_300.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -384,11 +384,11 @@
       ]
     },
     {
-      "id": "PRF060",
-      "nome": "PRF060",
+      "id": "PRF060_300",
+      "nome": "PRF060_300",
       "categoria": "incasso",
       "note": "",
-      "immagine": "/static/img/prf060.jpg",
+      "immagine": "/static/img/prf060_300.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -399,11 +399,11 @@
       ]
     },
     {
-      "id": "PRF061",
-      "nome": "PRF061",
+      "id": "PRF061_300",
+      "nome": "PRF061_300",
       "categoria": "incasso",
       "note": "",
-      "immagine": "/static/img/prf061.jpg",
+      "immagine": "/static/img/prf061_300.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -414,8 +414,8 @@
       ]
     },
     {
-      "id": "PRF062",
-      "nome": "PRF062",
+      "id": "PRF062_300",
+      "nome": "PRF062_300",
       "categoria": "incasso",
       "note": "",
       "immagine": "/static/img/prf062.jpg",
@@ -444,11 +444,11 @@
       ]
     },
     {
-      "id": "PRF050",
-      "nome": "PRF050",
+      "id": "PRF050_300",
+      "nome": "PRF050_300",
       "categoria": "incasso",
       "note": "",
-      "immagine": "/static/img/prf050.jpg",
+      "immagine": "/static/img/prf050_300.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -459,11 +459,11 @@
       ]
     },
     {
-      "id": "PRF052",
-      "nome": "PRF052",
+      "id": "PRF052_200",
+      "nome": "PRF052_200",
       "categoria": "incasso",
       "note": "",
-      "immagine": "/static/img/prf052.jpg",
+      "immagine": "/static/img/prf052_200.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -489,11 +489,11 @@
       ]
     },
     {
-      "id": "PRF130",
-      "nome": "PRF130",
+      "id": "PRF130_200",
+      "nome": "PRF130_200",
       "categoria": "battiscopa",
       "note": "",
-      "immagine": "/static/img/prf130.jpg",
+      "immagine": "/static/img/prf130_200.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -504,11 +504,11 @@
       ]
     },
     {
-      "id": "PRF120",
-      "nome": "PRF120",
+      "id": "PRF120_300",
+      "nome": "PRF120_300",
       "categoria": "battiscopa",
       "note": "",
-      "immagine": "/static/img/prf120.jpg",
+      "immagine": "/static/img/prf120_300.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -534,11 +534,11 @@
       ]
     },
     {
-      "id": "PRF100",
-      "nome": "PRF100",
+      "id": "PRF100_200",
+      "nome": "PRF100_200",
       "categoria": "parete",
       "note": "",
-      "immagine": "/static/img/prf100.jpg",
+      "immagine": "/static/img/prf100_200.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -549,8 +549,8 @@
       ]
     },
     {
-      "id": "PRF101",
-      "nome": "PRF101",
+      "id": "PRF101_200",
+      "nome": "PRF101_200",
       "categoria": "parete",
       "note": "",
       "immagine": "/static/img/prf101.jpg",
@@ -564,8 +564,8 @@
       ]
     },
     {
-      "id": "PRF150",
-      "nome": "PRF150",
+      "id": "PRF150_200",
+      "nome": "PRF150_200",
       "categoria": "scalini",
       "note": "",
       "immagine": "/static/img/prf150.jpg",
@@ -579,11 +579,11 @@
       ]
     },
     {
-      "id": "PRF151",
-      "nome": "PRF151",
+      "id": "PRF151_250",
+      "nome": "PRF151_250",
       "categoria": "scalini",
       "note": "",
-      "immagine": "/static/img/prf151.jpg",
+      "immagine": "/static/img/prf151_250.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -594,11 +594,11 @@
       ]
     },
     {
-      "id": "PRF002",
-      "nome": "PRF002",
+      "id": "PRF002_200",
+      "nome": "PRF002_200",
       "categoria": "particolari",
       "note": "",
-      "immagine": "/static/img/prf002.jpg",
+      "immagine": "/static/img/prf002_200.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -609,11 +609,11 @@
       ]
     },
     {
-      "id": "PRF161",
-      "nome": "PRF161",
+      "id": "PRF161_300",
+      "nome": "PRF161_300",
       "categoria": "parete",
       "note": "",
-      "immagine": "/static/img/prf161.jpg",
+      "immagine": "/static/img/prf161_300.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
@@ -624,11 +624,11 @@
       ]
     },
     {
-      "id": "PRF110",
-      "nome": "PRF110",
+      "id": "PRF110_200",
+      "nome": "PRF110_200",
       "categoria": "particolari",
       "note": "",
-      "immagine": "/static/img/prf110.jpg",
+      "immagine": "/static/img/prf110_200.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,

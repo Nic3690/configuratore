@@ -279,21 +279,20 @@ h1, h2, h3, h4 {
   border-color: #e83f34 !important;
 }
 
-/* Stato attivo (cliccato) per TUTTI i pulsanti */
 .btn:active, .btn:focus, button:active, button:focus {
   background-color: #e83f34 !important;
   border-color: #e83f34 !important;
-  color: #333 !important;
+  color: #fff !important;
   box-shadow: none !important;
 }
 
-/* Stili per pulsanti continua */
 #btn-continua-step2, #btn-continua-step3, #btn-continua-step4, #btn-continua-step5,
 #btn-continua-step6, #btn-continua-step7, #btn-continua-strip, #btn-continua-parametri,
-#btn-finalizza {
+#btn-finalizza, #btn-continua-personalizzazione, #btn-continua-step2-option,
+#btn-continua-tipologia-strip {
   background-color: #e83f34 !important;
   border-color: #e83f34 !important;
-  color: #333 !important;
+  color: #fff !important;
 }
 
 /* Stile per pulsanti nei card selezionati */
@@ -301,7 +300,7 @@ h1, h2, h3, h4 {
 .tipologia-card.selected .btn-primary {
   background-color: #e83f34 !important;
   border-color: #e83f34 !important;
-  color: #333 !important;
+  color: #fff !important;
 }
 
 /* Finiture */
@@ -345,7 +344,7 @@ h1, h2, h3, h4 {
   box-shadow: 0 0 0 0.2rem rgba(232, 63, 52, 0.25);
 }
 
-/* Riepilogo */
+/* Card header di riepilogo */
 .card-header.bg-primary {
   background-color: #e83f34 !important;
   color: #333 !important;
@@ -400,4 +399,16 @@ h1, h2, h3, h4 {
     padding: 8px 16px;
     font-size: 14px;
   }
+}
+
+.assembly-warning {
+  font-size: 0.8rem;
+  color: #ff0000;
+  font-weight: bold;
+  padding: 5px 10px;
+  background-color: rgba(255, 119, 0, 0.1);
+  border-radius: 4px;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 20px;
 }

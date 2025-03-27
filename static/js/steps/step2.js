@@ -457,7 +457,7 @@ function mostraNonAssemblatoWarning() {
   // Se l'avviso non esiste ancora, lo creiamo
   if ($('#non-assemblato-warning').length === 0) {
     const warningHtml = `
-      <div id="non-assemblato-warning" class="alert alert-warning mt-3 mb-4">
+      <div id="non-assemblato-warning" class="assembly-warning mt-3 mb-4">
         <strong>IMPORTANTE:</strong> I profili verranno consegnati non assemblati tra di loro e la strip verrà consegnata non installata.
       </div>
     `;
@@ -685,6 +685,5 @@ function checkPersonalizzazioneComplete() {
       return false;
     }
   }
-  
   return true;
 }
