@@ -36,13 +36,10 @@ export function initStep5Listeners() {
   });
 }
 
-/**
- * Carica i dimmer compatibili con la strip LED selezionata
- */
 function caricaDimmerCompatibili() {
   // Contenitore iniziale per il dimmer
-  // Importante: Iniziamo con un container vuoto ma con la struttura corretta
   $('#dimmer-container').empty().html(`
+    <h3 class="mb-3">Dimmer</h3>
     <div class="text-center" id="dimmer-loading">
       <div class="spinner-border" role="status"></div>
       <p class="mt-3">Caricamento opzioni dimmer compatibili...</p>
@@ -54,7 +51,6 @@ function caricaDimmerCompatibili() {
       configurazione.stripLedSelezionata === 'senza_strip' || 
       configurazione.stripLedSelezionata === 'NO_STRIP') {
     
-    // Creiamo la card per "nessun dimmer" mantenendo la struttura corretta
     const dimmerHtml = `
       <h3 class="mb-3">Dimmer</h3>
       <div class="row">
@@ -70,11 +66,34 @@ function caricaDimmerCompatibili() {
     `;
     
     $('#dimmer-container').html(dimmerHtml);
+    bindDimmerCardListeners();
     return;
   }
 
   // Mostriamo un loader mentre carichiamo i dimmer compatibili
   $('#dimmer-loading').show();
+  
+  // Mappatura tra codici dimmer e testi visualizzati
+  const dimmerLabel = {
+    'NESSUN_DIMMER': 'Nessun dimmer',
+    'TOUCH_SU_PROFILO': 'Touch su profilo',
+    'CON_TELECOMANDO': 'Con telecomando',
+    'CENTRALINA_TUYA': 'Centralina TUYA',
+    'DIMMER_A_PULSANTE_SEMPLICE': 'Dimmer a pulsante semplice',
+    'DIMMERABILE_PWM': 'Dimmerabile PWM',
+    'DIMMERABILE_DALI': 'Dimmerabile DALI'
+  };
+  
+  // Mappatura tra codici dimmer e descrizioni
+  const dimmerDesc = {
+    'NESSUN_DIMMER': 'Installazione senza controllo di luminosità',
+    'TOUCH_SU_PROFILO': 'Controllo touch direttamente sul profilo',
+    'CON_TELECOMANDO': 'Controllo a distanza con telecomando dedicato',
+    'CENTRALINA_TUYA': 'Controllo smart tramite app mobile',
+    'DIMMER_A_PULSANTE_SEMPLICE': 'Controllo con pulsante standard',
+    'DIMMERABILE_PWM': 'Controllo tramite modulazione PWM',
+    'DIMMERABILE_DALI': 'Controllo tramite protocollo DALI'
+  };
   
   // Chiamiamo l'API per ottenere i dimmer compatibili
   $.ajax({
@@ -82,29 +101,29 @@ function caricaDimmerCompatibili() {
     method: 'GET',
     success: function(response) {
       if (response.success) {
-        // Creiamo l'HTML per le opzioni di dimmer - con la struttura corretta
+        // Iniziamo con tutte le opzioni disponibili dall'API
+        let opzioniDimmer = response.opzioni || [];
+        
+        // Filtriamo le opzioni in base all'alimentazione selezionata
+        if (configurazione.alimentazioneSelezionata && 
+            configurazione.compatibilitaAlimentazioneDimmer && 
+            configurazione.compatibilitaAlimentazioneDimmer[configurazione.alimentazioneSelezionata]) {
+          
+          // Intersezione tra opzioni API e opzioni compatibili con alimentazione
+          const opzioniCompatibili = configurazione.compatibilitaAlimentazioneDimmer[configurazione.alimentazioneSelezionata];
+          opzioniDimmer = opzioniDimmer.filter(dimmer => opzioniCompatibili.includes(dimmer));
+        }
+        
+        // Se non ci sono opzioni compatibili, mostriamo solo "nessun dimmer"
+        if (opzioniDimmer.length === 0 || !opzioniDimmer.includes('NESSUN_DIMMER')) {
+          opzioniDimmer = ['NESSUN_DIMMER'];
+        }
+        
+        // Creiamo l'HTML per le opzioni di dimmer
         let dimmerHtml = `<h3 class="mb-3">Dimmer</h3><div class="row">`;
         
-        // Mappatura tra codici dimmer e testi visualizzati
-        const dimmerLabel = {
-          'NESSUN_DIMMER': 'Nessun dimmer',
-          'TOUCH_SU_PROFILO': 'Touch su profilo',
-          'CON_TELECOMANDO': 'Con telecomando',
-          'CENTRALINA_TUYA': 'Centralina TUYA',
-          'DIMMER_A_PULSANTE_SEMPLICE': 'Dimmer a pulsante semplice'
-        };
-        
-        // Mappatura tra codici dimmer e descrizioni
-        const dimmerDesc = {
-          'NESSUN_DIMMER': 'Installazione senza controllo di luminosità',
-          'TOUCH_SU_PROFILO': 'Controllo touch direttamente sul profilo',
-          'CON_TELECOMANDO': 'Controllo a distanza con telecomando dedicato',
-          'CENTRALINA_TUYA': 'Controllo smart tramite app mobile',
-          'DIMMER_A_PULSANTE_SEMPLICE': 'Controllo con pulsante standard'
-        };
-        
         // Per ogni dimmer compatibile, creiamo una card
-        response.opzioni.forEach(dimmer => {
+        opzioniDimmer.forEach(dimmer => {
           // Ottieni il testo e la descrizione del dimmer
           const dimmerText = dimmerLabel[dimmer] || dimmer;
           const dimmerDescription = dimmerDesc[dimmer] || '';
@@ -126,6 +145,15 @@ function caricaDimmerCompatibili() {
         });
         
         dimmerHtml += `</div>`;
+        
+        // Se c'è l'opzione TOUCH_SU_PROFILO, aggiungiamo un alert sotto il container
+        if (opzioniDimmer.includes('TOUCH_SU_PROFILO')) {
+          dimmerHtml += `
+            <div id="dimmer-warning" class="alert alert-warning mt-3" style="display: none;">
+              <strong>Nota:</strong> Con l'opzione Touch su profilo ci sarà uno spazio non illuminato di 50mm.
+            </div>
+          `;
+        }
         
         // Aggiorniamo il contenitore con le opzioni di dimmer
         $('#dimmer-container').html(dimmerHtml);
@@ -149,6 +177,7 @@ function caricaDimmerCompatibili() {
           </div>`;
         
         $('#dimmer-container').html(dimmerHtml);
+        bindDimmerCardListeners();
       }
       
       // Nascondiamo il loader
@@ -172,6 +201,7 @@ function caricaDimmerCompatibili() {
       
       $('#dimmer-container').html(dimmerHtml);
       $('#dimmer-loading').hide();
+      bindDimmerCardListeners();
     }
   });
 }
@@ -209,7 +239,6 @@ export function vaiAlControllo() {
   });
 }
 
-/* Bind event listener per le card di dimmer */
 function bindDimmerCardListeners() {
   $('.dimmer-card').on('click', function() {
     $('.dimmer-card').removeClass('selected');
@@ -218,8 +247,18 @@ function bindDimmerCardListeners() {
     const dimmer = $(this).data('dimmer');
     configurazione.dimmerSelezionato = dimmer;
     
+    // Gestione dello warning per TOUCH_SU_PROFILO
     if (dimmer === 'TOUCH_SU_PROFILO') {
       $('#dimmer-warning').show();
+      
+      // Se c'è anche una lunghezza richiesta, aggiorna il calcolo considerando lo spazio non illuminato
+      if (configurazione.lunghezzaRichiesta) {
+        const spazioNonIlluminato = 50; // mm
+        $('#dimmer-warning').html(`
+          <strong>Nota:</strong> Con l'opzione Touch su profilo ci sarà uno spazio non illuminato di ${spazioNonIlluminato}mm.
+          Lunghezza illuminata effettiva: ${configurazione.lunghezzaRichiesta - spazioNonIlluminato}mm.
+        `);
+      }
     } else {
       $('#dimmer-warning').hide();
     }
@@ -228,7 +267,6 @@ function bindDimmerCardListeners() {
   });
 }
 
-/* Event listener per il controllo */
 export function prepareControlloListeners() {
   configurazione.dimmerSelezionato = null;
   configurazione.tipoAlimentazioneCavo = null;
@@ -245,6 +283,40 @@ export function prepareControlloListeners() {
   $('#btn-continua-step5').prop('disabled', true);
   
   $('.alimentazione-cavo-card, .uscita-cavo-card').removeClass('selected');
+  
+  // Configurazione delle opzioni di compatibilità tra alimentazioni e dimmer
+  // se non è già impostata in prepareAlimentazioneListeners
+  if (!configurazione.compatibilitaAlimentazioneDimmer) {
+    configurazione.compatibilitaAlimentazioneDimmer = {
+      'ON-OFF': ['NESSUN_DIMMER'],
+      'DIMMERABILE_TRIAC': ['NESSUN_DIMMER', 'DIMMER_A_PULSANTE_SEMPLICE'],
+      'DIMMERABILE_DALI_PUSH': ['NESSUN_DIMMER', 'DIMMER_A_PULSANTE_SEMPLICE', 'DIMMERABILE_DALI'],
+      'SENZA_ALIMENTATORE': ['NESSUN_DIMMER']
+    };
+    
+    // Aggiungi opzioni speciali se c'è una strip RGB
+    if (configurazione.stripLedSelezionata && 
+        (configurazione.stripLedSelezionata.includes('RGB') || 
+         configurazione.temperaturaColoreSelezionata === 'RGB' || 
+         configurazione.temperaturaColoreSelezionata === 'RGBW')) {
+      
+      configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
+      configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
+      configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_DALI_PUSH'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
+      configurazione.compatibilitaAlimentazioneDimmer['SENZA_ALIMENTATORE'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
+    }
+    
+    // Aggiungi TOUCH_SU_PROFILO per strip non-RGB compatibili
+    if (configurazione.stripLedSelezionata &&
+        !configurazione.stripLedSelezionata.includes('RGB') &&
+        configurazione.temperaturaColoreSelezionata !== 'RGB' &&
+        configurazione.temperaturaColoreSelezionata !== 'RGBW') {
+      
+      configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('TOUCH_SU_PROFILO');
+      configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('TOUCH_SU_PROFILO');
+      configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_DALI_PUSH'].push('TOUCH_SU_PROFILO');
+    }
+  }
   
   // Carica i dimmer compatibili
   caricaDimmerCompatibili();

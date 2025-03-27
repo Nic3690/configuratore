@@ -149,6 +149,46 @@ export function prepareAlimentazioneListeners() {
   
   $('.alimentazione-card').removeClass('selected');
   
+  // Aggiorna il container delle opzioni di alimentazione
+  $('#alimentazione-container').html(`
+    <div class="col-md-4 mb-3">
+      <div class="card option-card alimentazione-card" data-alimentazione="ON-OFF">
+        <div class="card-body text-center">
+          <h5 class="card-title">ON/OFF</h5>
+          <p class="card-text small text-muted">Alimentazione standard ON/OFF</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+      <div class="card option-card alimentazione-card" data-alimentazione="DIMMERABILE_TRIAC">
+        <div class="card-body text-center">
+          <h5 class="card-title">Dimmerabile TRIAC</h5>
+          <p class="card-text small text-muted">Alimentazione con controllo dell'intensità luminosa TRIAC</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+      <div class="card option-card alimentazione-card" data-alimentazione="DIMMERABILE_DALI_PUSH">
+        <div class="card-body text-center">
+          <h5 class="card-title">Dimmerabile DALI/PUSH</h5>
+          <p class="card-text small text-muted">Alimentazione con protocollo DALI o pulsante PUSH</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+      <div class="card option-card alimentazione-card" data-alimentazione="SENZA_ALIMENTATORE">
+        <div class="card-body text-center">
+          <h5 class="card-title">Senza alimentatore</h5>
+          <p class="card-text small text-muted">Configurazione senza alimentatore incluso</p>
+        </div>
+      </div>
+    </div>
+  `);
+  
+  // Riattiva i listener per le card di alimentazione
   $('.alimentazione-card').on('click', function() {
     $('.alimentazione-card').removeClass('selected');
     $(this).addClass('selected');
@@ -167,4 +207,36 @@ export function prepareAlimentazioneListeners() {
       $('#alimentatore-section').show();
     }
   });
+  
+  // Per compatibilità con le opzioni di dimmerazione, imposta quale
+  // tipo di alimentazione supporta quale tipo di dimmer
+  configurazione.compatibilitaAlimentazioneDimmer = {
+    'ON-OFF': ['NESSUN_DIMMER'],
+    'DIMMERABILE_TRIAC': ['NESSUN_DIMMER', 'DIMMER_A_PULSANTE_SEMPLICE'],
+    'DIMMERABILE_DALI_PUSH': ['NESSUN_DIMMER', 'DIMMER_A_PULSANTE_SEMPLICE', 'DIMMERABILE_DALI'],
+    'SENZA_ALIMENTATORE': ['NESSUN_DIMMER']
+  };
+  
+  // Aggiungi opzioni speciali se c'è una strip RGB
+  if (configurazione.stripLedSelezionata && 
+      (configurazione.stripLedSelezionata.includes('RGB') || 
+       configurazione.temperaturaColoreSelezionata === 'RGB' || 
+       configurazione.temperaturaColoreSelezionata === 'RGBW')) {
+    
+    configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
+    configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
+    configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_DALI_PUSH'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
+    configurazione.compatibilitaAlimentazioneDimmer['SENZA_ALIMENTATORE'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
+  }
+  
+  // Aggiungi TOUCH_SU_PROFILO per strip non-RGB compatibili
+  if (configurazione.stripLedSelezionata &&
+      !configurazione.stripLedSelezionata.includes('RGB') &&
+      configurazione.temperaturaColoreSelezionata !== 'RGB' &&
+      configurazione.temperaturaColoreSelezionata !== 'RGBW') {
+    
+    configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('TOUCH_SU_PROFILO');
+    configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('TOUCH_SU_PROFILO');
+    configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_DALI_PUSH'].push('TOUCH_SU_PROFILO');
+  }
 }

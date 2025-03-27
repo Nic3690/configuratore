@@ -299,7 +299,7 @@
         <div id="proposte-container" class="alert alert-info" style="display: none;">
           <h5>Proposte di lunghezza standard</h5>
           <p>Il sistema ha calcolato delle proposte di lunghezza standard più adatte per la tua installazione.</p>
-          <p><strong>ATTENZIONE:</strong> se viene utilizzata la lunghezza personalizzata si verificherà uno spazio buio di <span id="spazio-produzione">5</span>mm.</p>
+          <p><strong style="color:#ff0000;">ATTENZIONE:</strong> se viene utilizzata la lunghezza personalizzata si verificherà uno spazio buio di <span id="spazio-produzione">5</span>mm.</p>
           
           <div class="row mt-3">
             <div class="col-md-6 mb-2">
@@ -628,7 +628,7 @@
       <div class="container mb-5">
         <h3 class="mb-3">Alimentazione</h3>
         <div class="row" id="alimentazione-container">
-          <div class="col-md-6 mb-3">
+          <div class="col-md-3 mb-3">
             <div class="card option-card alimentazione-card" data-alimentazione="ON-OFF">
               <div class="card-body text-center">
                 <h5 class="card-title">ON/OFF</h5>
@@ -637,11 +637,29 @@
             </div>
           </div>
           
-          <div class="col-md-6 mb-3">
+          <div class="col-md-3 mb-3">
             <div class="card option-card alimentazione-card" data-alimentazione="DIMMERABILE_TRIAC">
               <div class="card-body text-center">
                 <h5 class="card-title">Dimmerabile TRIAC</h5>
-                <p class="card-text small text-muted">Alimentazione con controllo dell'intensità luminosa</p>
+                <p class="card-text small text-muted">Alimentazione con controllo dell'intensità luminosa TRIAC</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <div class="card option-card alimentazione-card" data-alimentazione="DIMMERABILE_DALI_PUSH">
+              <div class="card-body text-center">
+                <h5 class="card-title">Dimmerabile DALI/PUSH</h5>
+                <p class="card-text small text-muted">Alimentazione con protocollo DALI o pulsante PUSH</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <div class="card option-card alimentazione-card" data-alimentazione="SENZA_ALIMENTATORE">
+              <div class="card-body text-center">
+                <h5 class="card-title">Senza alimentatore</h5>
+                <p class="card-text small text-muted">Configurazione senza alimentatore incluso</p>
               </div>
             </div>
           </div>

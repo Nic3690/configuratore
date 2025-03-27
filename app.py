@@ -271,6 +271,33 @@ def get_opzioni_potenza(strip_id, temperatura):
 def get_opzioni_alimentatore(tipo_alimentazione):
     alimentazione_data = CONFIG_DATA.get('alimentazione', {})
     
+    # Gestire il caso DIMMERABILE_DALI_PUSH se non è già nel JSON
+    if tipo_alimentazione == 'DIMMERABILE_DALI_PUSH' and 'DIMMERABILE_DALI_PUSH' not in alimentazione_data.get('alimentatori', {}):
+        # Usa gli stessi alimentatori di DIMMERABILE_TRIAC se non è definito
+        alimentatori_ids = alimentazione_data.get('alimentatori', {}).get('DIMMERABILE_TRIAC', [])
+    else:
+        alimentatori_ids = alimentazione_data.get('alimentatori', {}).get(tipo_alimentazione, [])
+    
+    dettagli_alimentatori = CONFIG_DATA.get('dettagliAlimentatori', {})
+    
+    alimentatori_completi = []
+    for alimentatore_id in alimentatori_ids:
+        dettaglio = dettagli_alimentatori.get(alimentatore_id, {})
+        if dettaglio:
+            alimentatori_completi.append({
+                'id': alimentatore_id,
+                'nome': dettaglio.get('nome', ''),
+                'descrizione': dettaglio.get('descrizione', ''),
+                'potenze': dettaglio.get('potenze', [])
+            })
+    
+    return jsonify({
+        'success': True,
+        'alimentatori': alimentatori_completi
+    })
+
+    alimentazione_data = CONFIG_DATA.get('alimentazione', {})
+    
     alimentatori_ids = alimentazione_data.get('alimentatori', {}).get(tipo_alimentazione, [])
     
     dettagli_alimentatori = CONFIG_DATA.get('dettagliAlimentatori', {})

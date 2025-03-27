@@ -351,16 +351,10 @@ h1, h2, h3, h4 {
 }
 
 /* Avvisi e alert */
-.alert-info {
+.alert-info, .alert-warning {
   background-color: #f8f9fa;
-  border-color: #e9ecef;
-  color: #333;
-}
-
-.alert-warning {
-  background-color: #fff3cd;
-  border-color: #ffeeba;
-  color: #856404;
+  border: 2px solid #ddd;
+  color: #000000;
 }
 
 /* Animazioni */

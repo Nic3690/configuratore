@@ -612,8 +612,16 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
   
   configurazione.tipologiaAlimentatoreSelezionata = null;
   
+  // Mappa dei tipi di alimentazione da interfaccia a formato backend
+  const tipoAlimentazioneBackend = {
+    'ON-OFF': 'ON-OFF',
+    'DIMMERABILE_TRIAC': 'DIMMERABILE_TRIAC',
+    'DIMMERABILE_DALI_PUSH': 'DIMMERABILE_DALI_PUSH',
+    'SENZA_ALIMENTATORE': 'SENZA_ALIMENTATORE'
+  }[tipoAlimentazione] || tipoAlimentazione;
+  
   $.ajax({
-    url: `/get_opzioni_alimentatore/${tipoAlimentazione}`,
+    url: `/get_opzioni_alimentatore/${tipoAlimentazioneBackend}`,
     method: 'GET',
     success: function(data) {
       
@@ -767,11 +775,34 @@ export function finalizzaConfigurazione() {
   
   $('#riepilogo-container').html('<div class="text-center my-5"><div class="spinner-border" role="status"></div><p class="mt-3">Generazione riepilogo...</p></div>');
   
-  // MODIFICATO: Ora va da step5-controllo a step6-riepilogo invece che da step6-personalizzazione a step7-riepilogo
   $("#step5-controllo").fadeOut(300, function() {
     $("#step6-riepilogo").fadeIn(300);
     
     updateProgressBar(6);
+    
+    // Assicurati che dimmer e alimentazione siano correttamente formattati per il riepilogo
+    if (configurazione.dimmerSelezionato) {
+      const mappaDimmerText = {
+        'NESSUN_DIMMER': 'Nessun dimmer',
+        'TOUCH_SU_PROFILO': 'Touch su profilo',
+        'CON_TELECOMANDO': 'Con telecomando',
+        'CENTRALINA_TUYA': 'Centralina TUYA',
+        'DIMMER_A_PULSANTE_SEMPLICE': 'Dimmer a pulsante semplice',
+        'DIMMERABILE_PWM': 'Dimmerabile PWM',
+        'DIMMERABILE_DALI': 'Dimmerabile DALI'
+      };
+      configurazione.dimmerText = mappaDimmerText[configurazione.dimmerSelezionato] || configurazione.dimmerSelezionato;
+    }
+    
+    if (configurazione.alimentazioneSelezionata) {
+      const mappaAlimentazioneText = {
+        'ON-OFF': 'ON/OFF',
+        'DIMMERABILE_TRIAC': 'Dimmerabile TRIAC',
+        'DIMMERABILE_DALI_PUSH': 'Dimmerabile DALI/PUSH',
+        'SENZA_ALIMENTATORE': 'Senza alimentatore'
+      };
+      configurazione.alimentazioneText = mappaAlimentazioneText[configurazione.alimentazioneSelezionata] || configurazione.alimentazioneSelezionata;
+    }
     
     $.ajax({
       url: '/finalizza_configurazione',
@@ -916,10 +947,15 @@ export function finalizzaConfigurazione() {
         
         // Informazioni sull'alimentazione
         if (riepilogo.alimentazioneSelezionata) {
+          // Usa il testo formattato se disponibile
+          const alimentazioneText = riepilogo.alimentazioneText || 
+                                  (riepilogo.alimentazioneSelezionata === 'SENZA_ALIMENTATORE' ? 'Senza alimentatore' : 
+                                   riepilogo.alimentazioneSelezionata.replace('_', ' '));
+          
           riepilogoHtml += `
                       <tr>
                         <th scope="row">Alimentazione</th>
-                        <td>${riepilogo.alimentazioneSelezionata === 'SENZA_ALIMENTATORE' ? 'Senza alimentatore' : (riepilogo.alimentazioneSelezionata === 'ON-OFF' ? 'ON-OFF' : 'Dimmerabile TRIAC')}</td>
+                        <td>${alimentazioneText}</td>
                       </tr>
           `;
           
@@ -952,12 +988,27 @@ export function finalizzaConfigurazione() {
         
         // Dimmer e cavi
         if (riepilogo.dimmerSelezionato) {
+          // Usa il testo formattato se disponibile
+          const dimmerText = riepilogo.dimmerText || 
+                           (riepilogo.dimmerSelezionato === 'NESSUN_DIMMER' ? 'Nessun dimmer' : 
+                            riepilogo.dimmerSelezionato.replace(/_/g, ' '));
+          
           riepilogoHtml += `
                     <tr>
                       <th scope="row">Dimmer</th>
-                      <td>${riepilogo.dimmerSelezionato === 'NESSUN_DIMMER' ? 'Nessun dimmer' : riepilogo.dimmerSelezionato.replace(/_/g, ' ')}</td>
+                      <td>${dimmerText}</td>
                     </tr>
           `;
+          
+          // Se è TOUCH_SU_PROFILO, aggiungi la nota sullo spazio non illuminato
+          if (riepilogo.dimmerSelezionato === 'TOUCH_SU_PROFILO') {
+            riepilogoHtml += `
+                    <tr>
+                      <th scope="row">Nota dimmer</th>
+                      <td class="text-warning">Spazio non illuminato di 50mm per touch su profilo</td>
+                    </tr>
+            `;
+          }
         }
         
         if (riepilogo.tipoAlimentazioneCavo) {
@@ -987,10 +1038,17 @@ export function finalizzaConfigurazione() {
           }
           
           if (riepilogo.uscitaCavoSelezionata) {
+            // Formatta l'uscita cavo per una migliore visualizzazione
+            let uscitaCavoText = riepilogo.uscitaCavoSelezionata;
+            if (uscitaCavoText === 'DRITTA') uscitaCavoText = 'Dritta';
+            else if (uscitaCavoText === 'LATERALE_DX') uscitaCavoText = 'Laterale destra';
+            else if (uscitaCavoText === 'LATERALE_SX') uscitaCavoText = 'Laterale sinistra';
+            else if (uscitaCavoText === 'RETRO') uscitaCavoText = 'Retro';
+            
             riepilogoHtml += `
                     <tr>
                       <th scope="row">Uscita cavo</th>
-                      <td>${riepilogo.uscitaCavoSelezionata}</td>
+                      <td>${uscitaCavoText}</td>
                     </tr>
             `;
           }
@@ -1047,7 +1105,6 @@ export function finalizzaConfigurazione() {
         $('#riepilogo-container').html(riepilogoHtml);
         
         // Inizializza i listener per i pulsanti delle operazioni finali
-        // Importato da step6.js (ex step7.js)
         initRiepilogoOperationsListeners(codiceProdotto);
       },
       error: function(error) {

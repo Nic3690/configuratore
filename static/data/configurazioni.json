@@ -646,7 +646,7 @@
       "tipo": "SMD",
       "tensione": "24V",
       "ip": "IP20",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K", "CCT"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K", "CCT"],
       "potenzeDisponibili": ["6W/m", "12W/m CRI90", "18W/m", "18W/m CRI90", "22W/m", "14W/m SMD"],
       "codiciProdotto": ["RB26420", "RB212820", "RB219220", "RB224020"]
     },
@@ -656,7 +656,7 @@
       "tipo": "SMD",
       "tensione": "24V",
       "ip": "IP66",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K", "CCT"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K", "CCT"],
       "potenzeDisponibili": ["6W/m", "12W/m CRI90", "18W/m", "18W/m CRI90", "22W/m", "14W/m SMD"],
       "codiciProdotto": ["RB26466", "RB212866", "RB219266", "RB224066"]
     },
@@ -666,7 +666,7 @@
       "tipo": "COB",
       "tensione": "24V",
       "ip": "IP20",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K", "CCT"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K", "CCT"],
       "potenzeDisponibili": ["8W/m", "10W/m", "12W/m", "14W/m", "10W/m MINI"],
       "codiciProdotto": ["SLS01WW", "SLS02WW", "SLS03WW", "SLS04WW", "SLSIP20WW4CRI90"]
     },
@@ -676,7 +676,7 @@
       "tipo": "COB",
       "tensione": "24V",
       "ip": "IP66",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K", "CCT"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K", "CCT"],
       "potenzeDisponibili": ["8W/m", "10W/m", "12W/m", "14W/m"],
       "codiciProdotto": ["SLS01WW67CL", "SLS02WW67CL", "SLS03WW67CL", "SLS04WW67CL", "SLS01WW67FR", "SLS02WW67FR", "SLS03WW67FR", "SLS04WW67FR"]
     },
@@ -686,7 +686,7 @@
       "tipo": "SMD",
       "tensione": "48V",
       "ip": "IP20",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K"],
       "potenzeDisponibili": ["14W/m", "20W/m", "25W/m"],
       "codiciProdotto": ["RB26520..48", "RB213020..48", "RB218220..48", "RB224020..48"]
     },
@@ -696,7 +696,7 @@
       "tipo": "SMD",
       "tensione": "48V",
       "ip": "IP66",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K"],
       "potenzeDisponibili": ["14W/m", "20W/m", "25W/m"],
       "codiciProdotto": ["RB26566..48", "RB213066..48", "RB218266..48", "RB224066..48"]
     },
@@ -746,7 +746,7 @@
       "tipo": "COB",
       "tensione": "220V",
       "ip": "IP20",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K"],
       "potenzeDisponibili": ["15W/m", "20W/m", "25W/m"]
     },
     "STRIP_220V_COB_IP66": {
@@ -755,7 +755,7 @@
       "tipo": "COB",
       "tensione": "220V",
       "ip": "IP66",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6500K"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K"],
       "potenzeDisponibili": ["15W/m", "20W/m", "25W/m"],
       "codiciProdotto": ["XTP01..65", "XTP02..65"]
     }
@@ -780,7 +780,7 @@
     "XMAGIS": "STRIP_24V_SMD_IP20"
   },
   "temperaturaColore": {
-    "opzioni": ["2700K", "3000K", "6500K", "CCT", "RGB", "RGBW"]
+    "opzioni": ["2700K", "3000K", "6000K", "CCT", "RGB", "RGBW"]
   },
   "dettagliPotenze": {
     "6W/m": {
@@ -836,7 +836,7 @@
       "specifiche": "24V DC · 20W/m · COB · 2200lm/m · CRI90"
     },
     "25W/m": {
-      "codice": "HO25WW",
+      "codice": "XTP01WW65",
       "specifiche": "48V/220V · 25W/m · COB/SMD · 2750lm/m · CRI90"
     },
     "13W/m": {
@@ -845,10 +845,11 @@
     }
   },
   "alimentazione": {
-    "tipi": ["ON-OFF", "DIMMERABILE_TRIAC"],
+    "tipi": ["ON-OFF", "DIMMERABILE_TRIAC", "DIMMERABILE_DALI_PUSH", "SENZA_ALIMENTATORE"],
     "alimentatori": {
       "ON-OFF": ["SERIE_AT24", "SERIE_ATN24", "SERIE_ATS", "SERIE_ATUS", "SERIE_ATSIP44"],
-      "DIMMERABILE_TRIAC": ["SERIE_ATD24"]
+      "DIMMERABILE_TRIAC": ["SERIE_ATD24"],
+      "DIMMERABILE_DALI_PUSH": ["SERIE_ATD24", "SERIE_AT24"]
     }
   },
   "dettagliAlimentatori": {
@@ -884,7 +885,7 @@
     }
   },
   "dimmerazione": {
-    "opzioni": ["NESSUN_DIMMER", "TOUCH_SU_PROFILO", "CON_TELECOMANDO", "CENTRALINA_TUYA", "DIMMER_A_PULSANTE_SEMPLICE"],
+    "opzioni": ["NESSUN_DIMMER", "TOUCH_SU_PROFILO", "CON_TELECOMANDO", "CENTRALINA_TUYA", "DIMMER_A_PULSANTE_SEMPLICE", "DIMMERABILE_PWM", "DIMMERABILE_DALI"],
     "spaziNonIlluminati": {
       "TOUCH_SU_PROFILO": 50
     },
@@ -892,7 +893,15 @@
       "TOUCH_SU_PROFILO": ["STRIP_24V_SMD_IP20", "STRIP_24V_SMD_IP66", "STRIP_24V_COB_IP20", "STRIP_24V_COB_IP66"],
       "CON_TELECOMANDO": ["STRIP_24V_RGB_SMD_IP20", "STRIP_24V_RGB_SMD_IP66", "STRIP_24V_RGB_COB_IP20", "STRIP_24V_RGB_COB_IP66"],
       "CENTRALINA_TUYA": ["STRIP_24V_RGB_SMD_IP20", "STRIP_24V_RGB_SMD_IP66", "STRIP_24V_RGB_COB_IP20", "STRIP_24V_RGB_COB_IP66"],
-      "DIMMER_A_PULSANTE_SEMPLICE": ["STRIP_24V_SMD_IP20", "STRIP_24V_SMD_IP66", "STRIP_24V_COB_IP20", "STRIP_24V_COB_IP66"]
+      "DIMMER_A_PULSANTE_SEMPLICE": ["STRIP_24V_SMD_IP20", "STRIP_24V_SMD_IP66", "STRIP_24V_COB_IP20", "STRIP_24V_COB_IP66"],
+      "DIMMERABILE_PWM": ["STRIP_24V_SMD_IP20", "STRIP_24V_SMD_IP66", "STRIP_24V_COB_IP20", "STRIP_24V_COB_IP66", "STRIP_24V_RGB_SMD_IP20", "STRIP_24V_RGB_SMD_IP66", "STRIP_24V_RGB_COB_IP20", "STRIP_24V_RGB_COB_IP66"],
+      "DIMMERABILE_DALI": ["STRIP_24V_SMD_IP20", "STRIP_24V_SMD_IP66", "STRIP_24V_COB_IP20", "STRIP_24V_COB_IP66"]
+    },
+    "compatibilitaAlimentazioneDimmer": {
+      "ON-OFF": ["NESSUN_DIMMER", "TOUCH_SU_PROFILO", "CON_TELECOMANDO", "CENTRALINA_TUYA"],
+      "DIMMERABILE_TRIAC": ["NESSUN_DIMMER", "DIMMER_A_PULSANTE_SEMPLICE", "TOUCH_SU_PROFILO"],
+      "DIMMERABILE_DALI_PUSH": ["NESSUN_DIMMER", "DIMMER_A_PULSANTE_SEMPLICE", "DIMMERABILE_DALI", "TOUCH_SU_PROFILO"],
+      "SENZA_ALIMENTATORE": ["NESSUN_DIMMER", "CON_TELECOMANDO", "CENTRALINA_TUYA"]
     }
   },
   "opzioniCavo": {
