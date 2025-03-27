@@ -654,10 +654,10 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
         }
         
         // Percorso immagine per il tipo di alimentatore (usa placeholder se non disponibile)
-        const imgPath = `/static/img/alimentatori/${alimentatore.id.toLowerCase()}.jpg`;
+        const imgPath = `/static/img/${alimentatore.id.toLowerCase()}.jpg`;
         
         $('#alimentatore-container').append(`
-          <div class="col-md-4 mb-3">
+          <div class="col-md-4 mb-3 alimentatore-column">
             <div class="card option-card alimentatore-card" data-alimentatore="${alimentatore.id}">
               <img src="${imgPath}" class="card-img-top" alt="${alimentatore.nome}" 
                    style="height: 180px; object-fit: cover;" 

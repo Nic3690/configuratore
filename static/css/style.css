@@ -236,7 +236,7 @@ h1, h2, h3, h4 {
   font-size: 16px;
 }
 
-.profilo-card-row {
+.profilo-card-row, .alimentatore-column {
   width: 20%;
 }
 
@@ -355,6 +355,16 @@ h1, h2, h3, h4 {
   background-color: #f8f9fa;
   border: 2px solid #ddd;
   color: #000000;
+}
+
+.alert-success {
+  background-color: rgba(255, 119, 0, 0.1);
+  color: #ff0000;
+  border: none;
+}
+
+.text-warning {
+  color: #000;
 }
 
 /* Animazioni */

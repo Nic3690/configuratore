@@ -150,7 +150,7 @@ function caricaDimmerCompatibili() {
         if (opzioniDimmer.includes('TOUCH_SU_PROFILO')) {
           dimmerHtml += `
             <div id="dimmer-warning" class="alert alert-warning mt-3" style="display: none;">
-              <strong>Nota:</strong> Con l'opzione Touch su profilo ci sarà uno spazio non illuminato di 50mm.
+              <strong style="color:#ff0000 !important;">Nota:</strong> Con l'opzione Touch su profilo ci sarà uno spazio non illuminato di 50mm.
             </div>
           `;
         }
@@ -255,7 +255,7 @@ function bindDimmerCardListeners() {
       if (configurazione.lunghezzaRichiesta) {
         const spazioNonIlluminato = 50; // mm
         $('#dimmer-warning').html(`
-          <strong>Nota:</strong> Con l'opzione Touch su profilo ci sarà uno spazio non illuminato di ${spazioNonIlluminato}mm.
+          <strong style="color:#ff0000 !important;">Nota:</strong> Con l'opzione Touch su profilo ci sarà uno spazio non illuminato di ${spazioNonIlluminato}mm.
           Lunghezza illuminata effettiva: ${configurazione.lunghezzaRichiesta - spazioNonIlluminato}mm.
         `);
       }
