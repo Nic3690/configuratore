@@ -7,15 +7,18 @@ export function initStep4Listeners() {
   $('#btn-torna-step3').on('click', function(e) {
     e.preventDefault();
     
-    // Utilizzo della funzione di transizione che include lo scroll verso l'alto
-    transitionToStep("#step4-alimentazione", 
-                     configurazione.stripLedSelezionata !== 'senza_strip' && 
-                     configurazione.stripLedSelezionata !== 'NO_STRIP' ? 
-                     "#step3-temperatura-potenza" : "#step2-strip",
-                     function() {
-                       updateProgressBar(configurazione.stripLedSelezionata !== 'senza_strip' && 
-                                        configurazione.stripLedSelezionata !== 'NO_STRIP' ? 3 : 2);
-                     });
+    $("#step4-alimentazione").fadeOut(300, function() {
+      const targetStep = configurazione.stripLedSelezionata !== 'senza_strip' && 
+                         configurazione.stripLedSelezionata !== 'NO_STRIP' ? 
+                         "#step3-temperatura-potenza" : "#step2-strip";
+      
+      // Mostra lo step target
+      $(targetStep).fadeIn(300);
+      
+      // Aggiorna la progress bar
+      updateProgressBar(configurazione.stripLedSelezionata !== 'senza_strip' && 
+                     configurazione.stripLedSelezionata !== 'NO_STRIP' ? 3 : 2);
+    });
   });
   
   $('#btn-continua-step4').on('click', function(e) {
@@ -42,7 +45,8 @@ export function initStep4Listeners() {
     }
     
     // Nascondi completamente questa sezione prima di procedere
-    transitionToStep("#step4-alimentazione", "#step5-controllo", function() {
+    $("#step4-alimentazione").fadeOut(300, function() {
+      $("#step5-controllo").fadeIn(300);
       // Solo dopo che è completamente nascosta, vai alla sezione controllo
       vaiAlControllo();
     });
@@ -107,7 +111,6 @@ function calcolaPotenzaAlimentatoreConsigliata() {
 export function vaiAllAlimentazione() {
   // Assicurati che tutte le altre sezioni siano nascoste
   $(".step-section").hide();
-  
   $('#profilo-nome-step4').text(configurazione.nomeModello);
   $('#tipologia-nome-step4').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
   

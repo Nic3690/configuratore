@@ -529,13 +529,14 @@ export function caricaOpzioniPotenza(stripId, temperatura) {
         `);
       });
       
-      $('.potenza-card').on('click', function() {
+      $(document).off('click', '.potenza-card').on('click', '.potenza-card', function() {
         $('.potenza-card').removeClass('selected');
         $(this).addClass('selected');
         configurazione.potenzaSelezionata = $(this).data('potenza');
         configurazione.codicePotenza = $(this).data('codice');
         
-        $('#btn-continua-step3').prop('disabled', false);
+        // Usa direttamente l'elemento DOM
+        document.getElementById('btn-continua-step3').disabled = false;
         
         // Calcola potenza consigliata per l'alimentatore
         if (configurazione.lunghezzaRichiesta || configurazione.lunghezzaSelezionata) {
