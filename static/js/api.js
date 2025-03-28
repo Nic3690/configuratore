@@ -1380,6 +1380,6 @@ export function finalizzaConfigurazione() {
  * Richiede un preventivo per il prodotto configurato
  * @param {string} codiceProdotto - Codice prodotto finale
  */
-export function richiedPreventivo(codiceProdotto) {
+export function richiediPreventivo(codiceProdotto) {
   alert(`La richiesta di preventivo per il prodotto ${codiceProdotto} è stata inviata al nostro team. Verrai contattato al più presto.`);
 }

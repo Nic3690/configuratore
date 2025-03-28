@@ -1,4 +1,4 @@
-import { richiedPreventivo } from '../api.js';
+import { richiediPreventivo } from '../api.js';
 import { updateProgressBar } from '../utils.js';
 import { configurazione } from '../config.js';
 import { generaPDF } from '../pdf.js';
@@ -40,6 +40,6 @@ export function initRiepilogoOperationsListeners(codiceProdotto) {
   });
   
   $('#btn-preventivo').on('click', function() {
-    richiedPreventivo(codiceProdotto);
+    richiediPreventivo(codiceProdotto);
   });
 }
