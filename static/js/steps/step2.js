@@ -112,7 +112,6 @@ export function initStep2Listeners() {
     $('#btn-continua-step2-option').prop('disabled', false);
   });
   
-  // Continua dopo scelta strip sì/no
   $('#btn-continua-step2-option').on('click', function(e) {
     e.preventDefault();
     
@@ -127,9 +126,22 @@ export function initStep2Listeners() {
     } else {
       // L'utente ha scelto di non includere una strip LED
       configurazione.stripLedSelezionata = 'NO_STRIP';
+      
+      // Impostiamo i valori necessari per saltare gli step intermedi
+      configurazione.alimentazioneSelezionata = 'SENZA_ALIMENTATORE';
+      configurazione.tipologiaAlimentatoreSelezionata = null;
+      configurazione.dimmerSelezionato = 'NESSUN_DIMMER';
+      configurazione.tipoAlimentazioneCavo = 'ALIMENTAZIONE_UNICA';
+      configurazione.lunghezzaCavoIngresso = 0;
+      configurazione.lunghezzaCavoUscita = 0;
+      configurazione.uscitaCavoSelezionata = 'DRITTA';
+      
+      // Aggiorna la barra di avanzamento all'ultimo step
+      updateProgressBar(6);
+      
       $("#step2-option-strip").fadeOut(300, function() {
-        // Vai direttamente all'alimentazione
-        vaiAllAlimentazione();
+        // Vai direttamente al riepilogo invece che all'alimentazione
+        finalizzaConfigurazione();
       });
     }
   });
@@ -248,13 +260,66 @@ export function preparePersonalizzazioneListeners() {
     checkPersonalizzazioneCompletion();
   });
   
-  updateIstruzioniMisurazione('DRITTO_SEMPLICE');
+  // NUOVA FUNZIONALITÀ: Verifica se è stato selezionato profilo intero o taglio su misura
+  // Se è profilo intero, nascondi la sezione di personalizzazione lunghezza
+  console.log("Tipologia selezionata:", configurazione.tipologiaSelezionata);
+  togglePersonalizzazioneLunghezza();
   
+  updateIstruzioniMisurazione('DRITTO_SEMPLICE');
   checkPersonalizzazioneCompletion();
+}
+
+// Nuova funzione per gestire visibilità della sezione di personalizzazione della lunghezza
+function togglePersonalizzazioneLunghezza() {
+  // Rimuoviamo prima eventuali sezioni informative create in precedenza
+  $('#lunghezza-info-container').remove();
+  
+  // Otteniamo la sezione di personalizzazione lunghezza
+  let personalizzazioneLunghezzaContainer = null;
+  $('.container.mb-5').each(function() {
+    const heading = $(this).find('h3.mb-3').text();
+    if (heading === 'Personalizzazione lunghezza') {
+      personalizzazioneLunghezzaContainer = $(this);
+    }
+  });
+  
+  if (!personalizzazioneLunghezzaContainer) {
+    console.error("Impossibile trovare la sezione di personalizzazione lunghezza");
+    return;
+  }
+  
+  if (configurazione.tipologiaSelezionata === 'profilo_intero') {
+    // Nasconde la sezione di personalizzazione lunghezza
+    personalizzazioneLunghezzaContainer.hide();
+    
+    // Aggiungi un messaggio informativo
+    const infoMessage = `
+      <div class="container mb-5" id="lunghezza-info-container">
+        <h3 class="mb-3">Lunghezza profilo</h3>
+        <div class="alert alert-info">
+          <p>Hai selezionato un profilo intero che ha una lunghezza standard predefinita.</p>
+        </div>
+      </div>
+    `;
+    
+    // Inserisci il messaggio dopo la sezione della finitura
+    $('#finitura-container').closest('.container').after(infoMessage);
+    
+    // Impostazione automatica per la lunghezza richiesta per passare la validazione
+    configurazione.lunghezzaRichiesta = 3000; // lunghezza standard di default
+  } else {
+    // Per taglio su misura, mostra la sezione di personalizzazione lunghezza
+    personalizzazioneLunghezzaContainer.show();
+  }
 }
 
 // Modifica della funzione updateIstruzioniMisurazione in static/js/steps/step2.js
 export function updateIstruzioniMisurazione(forma) {
+  // Se è profilo intero, non fare nulla con la visualizzazione delle istruzioni di misurazione
+  if (configurazione.tipologiaSelezionata === 'profilo_intero') {
+    return;
+  }
+  
   const istruzioniContainer = $('#istruzioni-misurazione');
   const misurazioneContainer = $('#misurazione-container');
   
@@ -650,6 +715,11 @@ function checkPersonalizzazioneComplete() {
   if (!configurazione.finituraSelezionata) {
     alert("Seleziona una finitura prima di continuare");
     return false;
+  }
+  
+  // Se la tipologia è profilo intero, non controlliamo la lunghezza
+  if (configurazione.tipologiaSelezionata === 'profilo_intero') {
+    return true;
   }
   
   if (configurazione.tipologiaSelezionata === 'taglio_misura') {

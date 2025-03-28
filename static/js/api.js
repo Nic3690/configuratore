@@ -412,8 +412,6 @@ export function caricaStripLedFiltrate(profiloId, tensione, ip, temperatura) {
                   IP: ${strip.ip}, 
                   Temperatura: ${formatTemperatura(strip.temperatura)}
                 </p>
-                ${strip.codiciProdotto && strip.codiciProdotto.length > 0 ? 
-                  `<p class="card-text small">Codici prodotto: ${strip.codiciProdotto.join(', ')}</p>` : ''}
               </div>
             </div>
           </div>
@@ -671,8 +669,6 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
                   Temperatura: ${formatTemperatura(strip.temperatura)}
                 </p>
                 <p class="card-text small">Potenza: ${potenza}</p>
-                ${codiciProdottoFiltrati.length > 0 ? 
-                  `<p class="card-text small">Codici prodotto: ${codiciProdottoFiltrati.join(', ')}</p>` : ''}
               </div>
             </div>
           </div>
