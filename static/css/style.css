@@ -165,25 +165,69 @@ h1, h2, h3, h4 {
   .hotspot {
 	position: absolute;
 	cursor: pointer;
-	z-index: 10;
+	z-index: 100;
 	transition: all 0.3s ease;
   }
-  
+
   /* Area di attivazione (invisibile ma cliccabile) */
   .hotspot-area {
-	width: 100px;
-	height: 100px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	border-radius: 50%;
-	background-color: transparent;
-	transition: border-color 0.3s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background-color: transparent;
+    transition: border-color 0.3s ease;
   }
   
   .hotspot:hover .hotspot-label {
-	opacity: 1;
+    opacity: 1;
+  }
+  
+  /* Dimensioni specifiche per categoria */
+  .hotspot[data-categoria="nanoprofili"] .hotspot-area {
+    width: 220px;
+    height: 270px;
+  }
+
+  .hotspot[data-categoria="incasso"] .hotspot-area {
+    width: 150px;
+    height: 150px;
+  }
+
+  .hotspot[data-categoria="sospensione"] .hotspot-area {
+    width: 200px;
+    height: 110px;
+  }
+
+  .hotspot[data-categoria="plafone"] .hotspot-area {
+    width: 130px;
+    height: 130px;
+  }
+
+  .hotspot[data-categoria="parete"] .hotspot-area {
+    width: 200px;
+    height: 110px;
+  }
+
+  .hotspot[data-categoria="particolari"] .hotspot-area {
+    width: 90px;
+    height: 90px;
+  }
+
+  .hotspot[data-categoria="scalino"] .hotspot-area {
+    width: 280px;
+    height: 200px;
+  }
+
+  .hotspot[data-categoria="wall_washer"] .hotspot-area {
+    width: 130px;
+    height: 130px;
+  }
+
+  .hotspot[data-categoria="battiscopa"] .hotspot-area {
+    width: 270px;
+    height: 80px;
   }
   
   /* Rendere visibile l'SVG corrispondente all'hover */

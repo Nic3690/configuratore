@@ -913,18 +913,21 @@ export function caricaPotenzeAlimentatore(alimentatoreId) {
       
       potenzeOrdinate.forEach(function(potenza) {
         // Verifica se questa potenza è quella consigliata
-        const isConsigliata = potenzaConsigliata && parseInt(potenzaConsigliata) === potenza;
-        const consigliataBadge = isConsigliata ? '<span class="badge bg-success ms-2">Consigliata</span>' : '';
-        
-        $('#potenza-alimentatore-container').append(`
-          <div class="col-md-3 mb-3">
-            <div class="card option-card potenza-alimentatore-card" data-potenza="${potenza}">
-              <div class="card-body text-center">
-                <h5 class="card-title">${potenza}W ${consigliataBadge}</h5>
+        if (potenza >= configurazione.potenzaConsigliataAlimentatore)
+        {
+          const isConsigliata = potenzaConsigliata && parseInt(potenzaConsigliata) === potenza;
+          const consigliataBadge = isConsigliata ? '<span class="badge bg-success ms-2">Consigliata</span>' : '';
+          
+          $('#potenza-alimentatore-container').append(`
+            <div class="col-md-3 mb-3">
+              <div class="card option-card potenza-alimentatore-card" data-potenza="${potenza}">
+                <div class="card-body text-center">
+                  <h5 class="card-title">${potenza}W ${consigliataBadge}</h5>
+                </div>
               </div>
             </div>
-          </div>
-        `);
+          `);
+        }
       });
       
       // Aggiungi i listener per la selezione della potenza
