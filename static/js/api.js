@@ -29,7 +29,7 @@ export function caricaProfili(categoria) {
         let profiloCard = $(`
           <div class="col-md-4 col-sm-6 mb-4 profilo-card-row">
             <div class="card profilo-card" data-id="${profilo.id}" data-nome="${profilo.nome}">
-              <img src="${profilo.immagine || '/static/img/placeholder.jpg'}" class="card-img-top" alt="${profilo.nome}" onerror="this.src='/static/img/placeholder.jpg'">
+              <img src="${profilo.immagine || '/static/img/placeholder_logo.jpg'}" class="card-img-top" alt="${profilo.nome}" onerror="this.src='/static/img/placeholder_logo.jpg'">
               <div class="card-body">
                 <h5 class="card-title">${profilo.nome}</h5>
               </div>
@@ -660,7 +660,7 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
                  data-nome-commerciale="${strip.nomeCommerciale || ''}">
               <img src="${imgPath}" class="card-img-top" alt="${nomeVisualizzato}" 
                    style="height: 180px; object-fit: cover;" 
-                   onerror="this.src='/static/img/placeholder.jpg'; this.style.height='180px';">
+                   onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px';">
               <div class="card-body">
                 <h5 class="card-title">${nomeVisualizzato}</h5>
                 ${strip.nomeCommerciale ? `<p class="card-subtitle mb-2 text-muted">${strip.nome}</p>` : ''}
@@ -842,7 +842,7 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
             <div class="card option-card alimentatore-card" data-alimentatore="${alimentatore.id}">
               <img src="${imgPath}" class="card-img-top" alt="${alimentatore.nome}" 
                    style="height: 180px; object-fit: cover;" 
-                   onerror="this.src='/static/img/placeholder.jpg'; this.style.height='180px';">
+                   onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px';">
               <div class="card-body">
                 <h5 class="card-title">${alimentatore.nome}</h5>
                 <p class="card-text small text-muted">${alimentatore.descrizione}</p>
