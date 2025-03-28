@@ -200,9 +200,7 @@ export function vaiAllaPersonalizzazione() {
 
 // NUOVO: Funzione di preparazione della personalizzazione (spostata da step6.js)
 export function preparePersonalizzazioneListeners() {
-  configurazione.formaDiTaglioSelezionata = "DRITTO_SEMPLICE";
   caricaFinitureDisponibili(configurazione.profiloSelezionato);
-  $('.forma-taglio-card[data-forma="DRITTO_SEMPLICE"]').addClass('selected');
   
   $('.forma-taglio-card').on('click', function() {
     $('.forma-taglio-card').removeClass('selected');

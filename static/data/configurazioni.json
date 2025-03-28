@@ -10,7 +10,7 @@
       "id": "incasso",
       "nome": "Incasso",
       "immagine": "/static/img/categorie/incasso.jpg",
-      "sottofamiglie": ["incasso", "wallwasher", "battiscopa", "scalini"]
+      "sottofamiglie": ["incasso", "wallwasher", "battiscopa"]
     },
     {
       "id": "sospensione",
@@ -35,6 +35,12 @@
       "nome": "Particolari",
       "immagine": "/static/img/categorie/particolari.jpg",
       "sottofamiglie": ["nanoprofili"]
+    },
+    {
+      "id": "scalino",
+      "nome": "Scalino",
+      "immagine": "/static/img/categorie/scalino.jpg",
+      "sottofamiglie": ["scalino"]
     }
   ],
   "profili": [
@@ -566,7 +572,7 @@
     {
       "id": "PRF150_200",
       "nome": "PRF150_200",
-      "categoria": "scalini",
+      "categoria": "scalino",
       "note": "",
       "immagine": "/static/img/prf150.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -581,7 +587,7 @@
     {
       "id": "PRF151_250",
       "nome": "PRF151_250",
-      "categoria": "scalini",
+      "categoria": "scalino",
       "note": "",
       "immagine": "/static/img/prf151_250.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -906,8 +912,8 @@
   },
   "opzioniCavo": {
     "alimentazione": ["ALIMENTAZIONE_UNICA", "ALIMENTAZIONE_DOPPIA"],
-    "lunghezzaIngresso": 1800,
-    "lunghezzaUscita": 1800,
+    "lunghezzaIngresso": 0,
+    "lunghezzaUscita": 0,
     "usciteCavo": ["DRITTA", "LATERALE_DX", "RETRO", "LATERALE_SX"]
   },
   "formeDiTaglio": [

@@ -275,10 +275,10 @@ export function prepareControlloListeners() {
   $('#dimmer-warning').hide();
   $('#lunghezza-cavo-uscita-container').hide();
   
-  $('#lunghezza-cavo-ingresso').val(1800);
-  $('#lunghezza-cavo-uscita').val(1800);
-  configurazione.lunghezzaCavoIngresso = 1800;
-  configurazione.lunghezzaCavoUscita = 1800;
+  $('#lunghezza-cavo-ingresso').val(0);
+  $('#lunghezza-cavo-uscita').val(0);
+  configurazione.lunghezzaCavoIngresso = 0;
+  configurazione.lunghezzaCavoUscita = 0;
   
   $('#btn-continua-step5').prop('disabled', true);
   

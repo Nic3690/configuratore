@@ -14,10 +14,10 @@ const configurazione = {
 	tipologiaAlimentatoreSelezionata: null,
 	dimmerSelezionato: null,
 	tipoAlimentazioneCavo: null,
-	lunghezzaCavoIngresso: 1800,
-	lunghezzaCavoUscita: 1800,
+	lunghezzaCavoIngresso: null,
+	lunghezzaCavoUscita: null,
 	uscitaCavoSelezionata: null,
-	formaDiTaglioSelezionata: "DRITTO_SEMPLICE",
+	formaDiTaglioSelezionata: null,
 	finituraSelezionata: null,
 	lunghezzaRichiesta: null,
 	lunghezzeMultiple: {},
@@ -33,7 +33,8 @@ const configurazione = {
 	'sospensione': 'Profili a Sospensione',
 	'plafone': 'Profili a Plafone',
 	'parete': 'Profili a Parete',
-	'particolari': 'Profili Particolari'
+	'particolari': 'Profili Particolari',
+	'scalino': 'Profili a Scalino'
   };
   
   const mappaTipologieVisualizzazione = {
