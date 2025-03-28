@@ -1,26 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 2500 1000">
+<svg id="Shadows" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 2500 1000">
   <defs>
     <style>
       .cls-1 {
         fill: url(#Sfumatura_senza_nome_25);
-      }
-
-      .cls-2 {
-        fill: url(#Sfumatura_senza_nome_24);
+        opacity: .68;
       }
     </style>
-    <linearGradient id="Sfumatura_senza_nome_24" data-name="Sfumatura senza nome 24" x1="2260.2" y1="226.68" x2="2215.37" y2="132.18" gradientUnits="userSpaceOnUse">
-      <stop offset=".01" stop-color="#dae0a3" stop-opacity=".6"/>
-      <stop offset=".1" stop-color="#e3e7ba" stop-opacity=".45"/>
-      <stop offset=".19" stop-color="#ebefcf" stop-opacity=".31"/>
-      <stop offset=".29" stop-color="#f2f4e0" stop-opacity=".2"/>
-      <stop offset=".41" stop-color="#f8f9ee" stop-opacity=".11"/>
-      <stop offset=".54" stop-color="#fcfcf7" stop-opacity=".05"/>
-      <stop offset=".71" stop-color="#fefefd" stop-opacity=".01"/>
-      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
-    </linearGradient>
-    <linearGradient id="Sfumatura_senza_nome_25" data-name="Sfumatura senza nome 25" x1="2349.07" y1="214.39" x2="2375.62" y2="273.62" gradientUnits="userSpaceOnUse">
+    <linearGradient id="Sfumatura_senza_nome_25" data-name="Sfumatura senza nome 25" x1="2288.56" y1="264.41" x2="2415.3" y2="547.13" gradientUnits="userSpaceOnUse">
       <stop offset=".01" stop-color="#dae0a3" stop-opacity=".6"/>
       <stop offset=".18" stop-color="#dee3ae" stop-opacity=".53"/>
       <stop offset=".5" stop-color="#eaedca" stop-opacity=".34"/>
@@ -28,6 +15,5 @@
       <stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </linearGradient>
   </defs>
-  <polygon class="cls-2" points="1932 265 2500 2 2500 130 2183 266 1932 265"/>
-  <polygon class="cls-1" points="2500.5 238.5 2221.5 339.5 2221.5 265.5 2500.5 142.5 2500.5 238.5"/>
+  <polygon class="cls-1" points="2500.5 608.5 2221.5 709.5 2221.5 265.5 2500.5 142.5 2500.5 608.5"/>
 </svg>
