@@ -63,9 +63,7 @@ $(document).ready(function() {
     
     updateProgressBar(2);
     
-    $("#step1-tipologia").fadeOut(300, function() {
-      $("#step2-modello").fadeIn(300);
-      
+    transitionToStep("#step1-tipologia", "#step2-modello", function() {
       caricaProfili(categoria);
     });
   });

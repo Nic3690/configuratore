@@ -7,32 +7,42 @@ export function initStep4Listeners() {
   $('#btn-torna-step3').on('click', function(e) {
     e.preventDefault();
     
-    $("#step4-alimentazione").fadeOut(300, function() {
-      if (configurazione.stripLedSelezionata !== 'senza_strip' && configurazione.stripLedSelezionata !== 'NO_STRIP') {
-        $("#step3-temperatura-potenza").fadeIn(300);
-        updateProgressBar(3);
-      } else {
-        $("#step2-strip").fadeIn(300);
-        updateProgressBar(2);
-      }
-    });
+    // Utilizzo della funzione di transizione che include lo scroll verso l'alto
+    transitionToStep("#step4-alimentazione", 
+                     configurazione.stripLedSelezionata !== 'senza_strip' && 
+                     configurazione.stripLedSelezionata !== 'NO_STRIP' ? 
+                     "#step3-temperatura-potenza" : "#step2-strip",
+                     function() {
+                       updateProgressBar(configurazione.stripLedSelezionata !== 'senza_strip' && 
+                                        configurazione.stripLedSelezionata !== 'NO_STRIP' ? 3 : 2);
+                     });
   });
   
   $('#btn-continua-step4').on('click', function(e) {
     e.preventDefault();
     
-    if (!configurazione.alimentazioneSelezionata) {
-      alert("Seleziona il tipo di alimentazione prima di continuare");
-      return;
-    }
-    
-    if (configurazione.alimentazioneSelezionata !== 'SENZA_ALIMENTATORE' && !configurazione.tipologiaAlimentatoreSelezionata) {
-      alert("Seleziona la tipologia di alimentatore prima di continuare");
+    if (!checkStep4Completion()) {
+      // Verifica quali campi mancano
+      let messaggi = [];
+      
+      if (!configurazione.alimentazioneSelezionata) {
+        messaggi.push("il tipo di alimentazione");
+      } else if (configurazione.alimentazioneSelezionata !== 'SENZA_ALIMENTATORE') {
+        if (!configurazione.tipologiaAlimentatoreSelezionata) {
+          messaggi.push("la tipologia di alimentatore");
+        }
+        
+        if (!configurazione.potenzaAlimentatoreSelezionata) {
+          messaggi.push("la potenza dell'alimentatore");
+        }
+      }
+      
+      alert("Seleziona " + messaggi.join(", ") + " prima di continuare");
       return;
     }
     
     // Nascondi completamente questa sezione prima di procedere
-    $("#step4-alimentazione").fadeOut(300, function() {
+    transitionToStep("#step4-alimentazione", "#step5-controllo", function() {
       // Solo dopo che è completamente nascosta, vai alla sezione controllo
       vaiAlControllo();
     });
@@ -142,8 +152,10 @@ export function vaiAllAlimentazione() {
 export function prepareAlimentazioneListeners() {
   configurazione.alimentazioneSelezionata = null;
   configurazione.tipologiaAlimentatoreSelezionata = null;
+  configurazione.potenzaAlimentatoreSelezionata = null;
   
   $('#alimentatore-section').hide();
+  $('#potenza-alimentatore-section').hide(); // Nascondi la sezione della potenza
   
   $('#btn-continua-step4').prop('disabled', true);
   
@@ -198,16 +210,20 @@ export function prepareAlimentazioneListeners() {
     
     if (alimentazione === 'SENZA_ALIMENTATORE') {
       $('#alimentatore-section').hide();
+      $('#potenza-alimentatore-section').hide(); // Nascondi anche la sezione potenza
       configurazione.tipologiaAlimentatoreSelezionata = null;
+      configurazione.potenzaAlimentatoreSelezionata = null;
       
       $('#btn-continua-step4').prop('disabled', false);
     } else {
       caricaOpzioniAlimentatore(alimentazione);
       
       $('#alimentatore-section').show();
+      $('#potenza-alimentatore-section').hide(); // Nascondi la sezione potenza fino a quando non viene scelto un alimentatore
+      $('#btn-continua-step4').prop('disabled', true);
     }
   });
-  
+
   // Per compatibilità con le opzioni di dimmerazione, imposta quale
   // tipo di alimentazione supporta quale tipo di dimmer
   configurazione.compatibilitaAlimentazioneDimmer = {
@@ -239,4 +255,25 @@ export function prepareAlimentazioneListeners() {
     configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('TOUCH_SU_PROFILO');
     configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_DALI_PUSH'].push('TOUCH_SU_PROFILO');
   }
+}
+
+export function checkStep4Completion() {
+  let isComplete = true;
+  
+  if (!configurazione.alimentazioneSelezionata) {
+    isComplete = false;
+  }
+  
+  if (configurazione.alimentazioneSelezionata !== 'SENZA_ALIMENTATORE') {
+    if (!configurazione.tipologiaAlimentatoreSelezionata) {
+      isComplete = false;
+    }
+    
+    if (!configurazione.potenzaAlimentatoreSelezionata) {
+      isComplete = false;
+    }
+  }
+  
+  $('#btn-continua-step4').prop('disabled', !isComplete);
+  return isComplete;
 }

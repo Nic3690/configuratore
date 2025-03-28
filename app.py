@@ -318,6 +318,27 @@ def get_opzioni_alimentatore(tipo_alimentazione):
         'alimentatori': alimentatori_completi
     })
 
+@app.route('/get_potenze_alimentatore/<alimentatore_id>')
+def get_potenze_alimentatore(alimentatore_id):
+    """
+    Restituisce le potenze disponibili per l'alimentatore selezionato
+    """
+    dettagli_alimentatori = CONFIG_DATA.get('dettagliAlimentatori', {})
+    alimentatore = dettagli_alimentatori.get(alimentatore_id, {})
+    
+    if not alimentatore:
+        return jsonify({
+            'success': False,
+            'message': f'Alimentatore non trovato: {alimentatore_id}'
+        })
+    
+    potenze = alimentatore.get('potenze', [])
+    
+    return jsonify({
+        'success': True,
+        'potenze': potenze
+    })
+
 @app.route('/calcola_potenza_alimentatore', methods=['POST'])
 def calcola_potenza_alimentatore():
     data = request.json

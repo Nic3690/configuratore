@@ -112,39 +112,39 @@ export function initStep2Listeners() {
     $('#btn-continua-step2-option').prop('disabled', false);
   });
   
-  $('#btn-continua-step2-option').on('click', function(e) {
-    e.preventDefault();
+$('#btn-continua-step2-option').on('click', function(e) {
+  e.preventDefault();
+  
+  if (configurazione.includeStripLed === undefined) {
+    alert("Seleziona se includere o meno una strip LED prima di continuare");
+    return;
+  }
+  
+  if (configurazione.includeStripLed) {
+    // L'utente ha scelto di includere una strip LED, continua con il flusso normale
+    vaiAllaTipologiaStrip();
+  } else {
+    // L'utente ha scelto di non includere una strip LED
+    configurazione.stripLedSelezionata = 'NO_STRIP';
     
-    if (configurazione.includeStripLed === undefined) {
-      alert("Seleziona se includere o meno una strip LED prima di continuare");
-      return;
-    }
+    // Impostiamo i valori necessari per saltare gli step intermedi
+    configurazione.alimentazioneSelezionata = 'SENZA_ALIMENTATORE';
+    configurazione.tipologiaAlimentatoreSelezionata = null;
+    configurazione.dimmerSelezionato = 'NESSUN_DIMMER';
+    configurazione.tipoAlimentazioneCavo = 'ALIMENTAZIONE_UNICA';
+    configurazione.lunghezzaCavoIngresso = 0;
+    configurazione.lunghezzaCavoUscita = 0;
+    configurazione.uscitaCavoSelezionata = 'DRITTA';
     
-    if (configurazione.includeStripLed) {
-      // L'utente ha scelto di includere una strip LED, continua con il flusso normale
-      vaiAllaTipologiaStrip();
-    } else {
-      // L'utente ha scelto di non includere una strip LED
-      configurazione.stripLedSelezionata = 'NO_STRIP';
-      
-      // Impostiamo i valori necessari per saltare gli step intermedi
-      configurazione.alimentazioneSelezionata = 'SENZA_ALIMENTATORE';
-      configurazione.tipologiaAlimentatoreSelezionata = null;
-      configurazione.dimmerSelezionato = 'NESSUN_DIMMER';
-      configurazione.tipoAlimentazioneCavo = 'ALIMENTAZIONE_UNICA';
-      configurazione.lunghezzaCavoIngresso = 0;
-      configurazione.lunghezzaCavoUscita = 0;
-      configurazione.uscitaCavoSelezionata = 'DRITTA';
-      
-      // Aggiorna la barra di avanzamento all'ultimo step
-      updateProgressBar(6);
-      
-      $("#step2-option-strip").fadeOut(300, function() {
-        // Vai direttamente al riepilogo invece che all'alimentazione
-        finalizzaConfigurazione();
-      });
-    }
-  });
+    // Aggiorna la barra di avanzamento all'ultimo step
+    updateProgressBar(6);
+    
+    $("#step2-option-strip").fadeOut(300, function() {
+      // Vai direttamente al riepilogo invece che all'alimentazione
+      finalizzaConfigurazione();
+    });
+  }
+});
 }
 
 // Funzione per andare alla selezione della tipologia strip

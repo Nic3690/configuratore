@@ -794,6 +794,10 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
   $('#btn-continua-step4').prop('disabled', true);
   
   configurazione.tipologiaAlimentatoreSelezionata = null;
+  configurazione.potenzaAlimentatoreSelezionata = null;
+  
+  // Nascondi la sezione delle potenze (verrà mostrata solo quando viene selezionato un alimentatore)
+  $('#potenza-alimentatore-section').hide();
   
   // Mappa dei tipi di alimentazione da interfaccia a formato backend
   const tipoAlimentazioneBackend = {
@@ -829,13 +833,6 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
       }
       
       alimentatori.forEach(function(alimentatore) {
-        // Evidenzia gli alimentatori che supportano la potenza consigliata
-        let supportaPotenzaConsigliata = '';
-        if (configurazione.potenzaConsigliataAlimentatore && 
-            alimentatore.potenze.includes(configurazione.potenzaConsigliataAlimentatore)) {
-          supportaPotenzaConsigliata = '<div class="alert alert-success mt-2">Supporta la potenza consigliata</div>';
-        }
-        
         // Percorso immagine per il tipo di alimentatore (usa placeholder se non disponibile)
         const imgPath = `/static/img/${alimentatore.id.toLowerCase()}.jpg`;
         
@@ -848,8 +845,6 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
               <div class="card-body">
                 <h5 class="card-title">${alimentatore.nome}</h5>
                 <p class="card-text small text-muted">${alimentatore.descrizione}</p>
-                <p class="card-text small">Potenze disponibili: ${alimentatore.potenze.join(', ')}W</p>
-                ${supportaPotenzaConsigliata}
               </div>
             </div>
           </div>
@@ -859,14 +854,92 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
       $('.alimentatore-card').on('click', function() {
         $('.alimentatore-card').removeClass('selected');
         $(this).addClass('selected');
-        configurazione.tipologiaAlimentatoreSelezionata = $(this).data('alimentatore');
         
-        $('#btn-continua-step4').prop('disabled', false);
+        const alimentatoreId = $(this).data('alimentatore');
+        configurazione.tipologiaAlimentatoreSelezionata = alimentatoreId;
+        
+        // Carica le potenze disponibili per questo alimentatore
+        caricaPotenzeAlimentatore(alimentatoreId);
       });
     },
     error: function(error) {
       console.error("Errore nel caricamento delle opzioni alimentatore:", error);
       $('#alimentatore-container').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle opzioni alimentatore. Riprova più tardi.</p></div>');
+    }
+  });
+}
+
+/**
+ * Carica le potenze disponibili per un alimentatore
+ * @param {string} alimentatoreId - ID dell'alimentatore selezionato
+ */
+export function caricaPotenzeAlimentatore(alimentatoreId) {
+  
+  $('#potenza-alimentatore-container').html('<div class="col-12 text-center"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento potenze disponibili...</p></div>');
+  
+  // Mostra la sezione delle potenze
+  $('#potenza-alimentatore-section').show();
+  
+  configurazione.potenzaAlimentatoreSelezionata = null;
+  
+  // Disabilita il pulsante continua finché non viene selezionata una potenza
+  $('#btn-continua-step4').prop('disabled', true);
+  
+  $.ajax({
+    url: `/get_potenze_alimentatore/${alimentatoreId}`,
+    method: 'GET',
+    success: function(data) {
+      
+      $('#potenza-alimentatore-container').empty();
+      
+      if (!data.success) {
+        $('#potenza-alimentatore-container').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle potenze disponibili.</p></div>');
+        return;
+      }
+      
+      const potenze = data.potenze;
+      
+      if (!potenze || potenze.length === 0) {
+        $('#potenza-alimentatore-container').html('<div class="col-12 text-center"><p>Nessuna potenza disponibile per questo alimentatore.</p></div>');
+        return;
+      }
+      
+      // Potenza consigliata (se disponibile)
+      const potenzaConsigliata = configurazione.potenzaConsigliataAlimentatore;
+      
+      // Ordina le potenze in ordine crescente
+      const potenzeOrdinate = [...potenze].sort((a, b) => a - b);
+      
+      potenzeOrdinate.forEach(function(potenza) {
+        // Verifica se questa potenza è quella consigliata
+        const isConsigliata = potenzaConsigliata && parseInt(potenzaConsigliata) === potenza;
+        const consigliataBadge = isConsigliata ? '<span class="badge bg-success ms-2">Consigliata</span>' : '';
+        
+        $('#potenza-alimentatore-container').append(`
+          <div class="col-md-3 mb-3">
+            <div class="card option-card potenza-alimentatore-card" data-potenza="${potenza}">
+              <div class="card-body text-center">
+                <h5 class="card-title">${potenza}W ${consigliataBadge}</h5>
+              </div>
+            </div>
+          </div>
+        `);
+      });
+      
+      // Aggiungi i listener per la selezione della potenza
+      $('.potenza-alimentatore-card').on('click', function() {
+        $('.potenza-alimentatore-card').removeClass('selected');
+        $(this).addClass('selected');
+        
+        configurazione.potenzaAlimentatoreSelezionata = $(this).data('potenza');
+        
+        // Abilita il pulsante continua
+        $('#btn-continua-step4').prop('disabled', false);
+      });
+    },
+    error: function(error) {
+      console.error("Errore nel caricamento delle potenze disponibili:", error);
+      $('#potenza-alimentatore-container').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle potenze disponibili. Riprova più tardi.</p></div>');
     }
   });
 }
