@@ -1,6 +1,7 @@
-import { salvaConfigurazione, richiedPreventivo } from '../api.js';
+import { richiedPreventivo } from '../api.js';
 import { updateProgressBar } from '../utils.js';
 import { configurazione } from '../config.js';
+import { generaPDF } from '../pdf.js';
 
 // Questo file ora gestisce solo la funzionalità di riepilogo (ex step7)
 export function initStep6Listeners() {
@@ -35,7 +36,7 @@ export function initStep6Listeners() {
  */
 export function initRiepilogoOperationsListeners(codiceProdotto) {
   $('#btn-salva-configurazione').on('click', function() {
-    salvaConfigurazione(codiceProdotto);
+    generaPDF(codiceProdotto, configurazione);
   });
   
   $('#btn-preventivo').on('click', function() {

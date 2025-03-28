@@ -1375,31 +1375,6 @@ export function finalizzaConfigurazione() {
   });
 }
 
-/**
- * Salva la configurazione come file JSON
- * @param {string} codiceProdotto - Codice prodotto finale
- */
-export function salvaConfigurazione(codiceProdotto) {
-  const configurazioneDaScaricare = {
-    codiceProdotto: codiceProdotto,
-    configurazione: configurazione,
-    dataCreazione: new Date().toISOString()
-  };
-  
-  const jsonString = JSON.stringify(configurazioneDaScaricare, null, 2);
-  
-  const blob = new Blob([jsonString], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `configurazione_${codiceProdotto}_${Date.now()}.json`;
-  a.click();
-  
-  URL.revokeObjectURL(url);
-  
-  alert("Configurazione salvata con successo!");
-}
 
 /**
  * Richiede un preventivo per il prodotto configurato
