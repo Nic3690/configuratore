@@ -79,7 +79,8 @@ def get_opzioni_profilo(profilo_id):
         return jsonify({'tipologie': []})
 
 @app.route('/get_opzioni_tensione/<profilo_id>')
-def get_opzioni_tensione(profilo_id):
+@app.route('/get_opzioni_tensione/<profilo_id>/<tipologia_strip>')
+def get_opzioni_tensione(profilo_id, tipologia_strip=None):
     profili = CONFIG_DATA.get('profili', [])
     profilo = next((p for p in profili if p.get('id') == profilo_id), None)
     
@@ -88,13 +89,23 @@ def get_opzioni_tensione(profilo_id):
 
     # Ottieni le strip LED compatibili con questo profilo
     strip_led_compatibili = profilo.get('stripLedCompatibili', [])
-    
-    # Ottieni le tensioni disponibili per le strip LED compatibili
     strip_led_data = CONFIG_DATA.get('stripLed', {})
     
     voltaggi_disponibili = set()
     for strip_id in strip_led_compatibili:
         strip_info = strip_led_data.get(strip_id, {})
+        
+        # Filtra in base alla tipologia selezionata
+        if tipologia_strip:
+            if tipologia_strip == 'COB' and 'COB' not in strip_id:
+                continue
+            elif tipologia_strip == 'SMD' and 'SMD' not in strip_id:
+                continue
+            elif tipologia_strip == 'SPECIAL':
+                # Per SPECIAL, definisci qui la logica di filtro specifica
+                if 'COB' in strip_id or 'SMD' in strip_id:
+                    continue
+            
         tensione = strip_info.get('tensione')
         if tensione:
             voltaggi_disponibili.add(tensione)
@@ -105,22 +116,31 @@ def get_opzioni_tensione(profilo_id):
     })
 
 @app.route('/get_opzioni_ip/<profilo_id>/<tensione>')
-def get_opzioni_ip(profilo_id, tensione):
+@app.route('/get_opzioni_ip/<profilo_id>/<tensione>/<tipologia_strip>')
+def get_opzioni_ip(profilo_id, tensione, tipologia_strip=None):
     profili = CONFIG_DATA.get('profili', [])
     profilo = next((p for p in profili if p.get('id') == profilo_id), None)
     
     if not profilo:
         return jsonify({'success': False, 'message': 'Profilo non trovato'})
     
-    # Ottieni le strip LED compatibili con questo profilo
     strip_led_compatibili = profilo.get('stripLedCompatibili', [])
-    
-    # Ottieni gli IP disponibili per le strip LED compatibili con questa tensione
     strip_led_data = CONFIG_DATA.get('stripLed', {})
     
     ip_disponibili = set()
     for strip_id in strip_led_compatibili:
         strip_info = strip_led_data.get(strip_id, {})
+        
+        # Filtra in base alla tipologia selezionata
+        if tipologia_strip:
+            if tipologia_strip == 'COB' and 'COB' not in strip_id:
+                continue
+            elif tipologia_strip == 'SMD' and 'SMD' not in strip_id:
+                continue
+            elif tipologia_strip == 'SPECIAL':
+                if 'COB' in strip_id or 'SMD' in strip_id:
+                    continue
+                
         if strip_info.get('tensione') == tensione:
             ip = strip_info.get('ip')
             if ip:
@@ -132,39 +152,37 @@ def get_opzioni_ip(profilo_id, tensione):
     })
 
 @app.route('/get_opzioni_temperatura_iniziale/<profilo_id>/<tensione>/<ip>')
-def get_opzioni_temperatura_iniziale(profilo_id, tensione, ip):
+@app.route('/get_opzioni_temperatura_iniziale/<profilo_id>/<tensione>/<ip>/<tipologia_strip>')
+def get_opzioni_temperatura_iniziale(profilo_id, tensione, ip, tipologia_strip=None):
     profili = CONFIG_DATA.get('profili', [])
     profilo = next((p for p in profili if p.get('id') == profilo_id), None)
     
     if not profilo:
         return jsonify({'success': False, 'message': 'Profilo non trovato'})
     
-    # Ottieni le strip LED compatibili con questo profilo
     strip_led_compatibili = profilo.get('stripLedCompatibili', [])
-    
-    # Ottieni le temperature disponibili per le strip LED compatibili con questa tensione e IP
     strip_led_data = CONFIG_DATA.get('stripLed', {})
     
     temperature_disponibili = set()
     for strip_id in strip_led_compatibili:
         strip_info = strip_led_data.get(strip_id, {})
+        
+        # Filtra in base alla tipologia selezionata
+        if tipologia_strip:
+            if tipologia_strip == 'COB' and 'COB' not in strip_id:
+                continue
+            elif tipologia_strip == 'SMD' and 'SMD' not in strip_id:
+                continue
+            elif tipologia_strip == 'SPECIAL':
+                if 'COB' in strip_id or 'SMD' in strip_id:
+                    continue
+                
         if strip_info.get('tensione') == tensione and strip_info.get('ip') == ip:
             temperature_disponibili.update(strip_info.get('temperaturaColoreDisponibili', []))
     
     return jsonify({
         'success': True,
         'temperature': list(temperature_disponibili)
-    })
-
-@app.route('/get_nomi_commerciali/<strip_id>')
-def get_nomi_commerciali(strip_id):
-    strip_led_data = CONFIG_DATA.get('stripLed', {})
-    strip_info = strip_led_data.get(strip_id, {})
-    
-    return jsonify({
-        'success': True,
-        'nomeCommerciale': strip_info.get('nomeCommerciale', strip_info.get('nome', strip_id)),
-        'codiciProdotto': strip_info.get('codiciProdotto', [])
     })
 
 @app.route('/get_dimmer_compatibili/<strip_id>')
@@ -208,63 +226,17 @@ def get_opzioni_dimmerazione(strip_id):
         'spaziNonIlluminati': dimmerazione.get('spaziNonIlluminati', {})
     })
 
-@app.route('/get_opzioni_potenza/<profilo_id>/<tensione>/<ip>/<temperatura>')
-def get_opzioni_potenza(profilo_id, tensione, ip, temperatura):
-    profili = CONFIG_DATA.get('profili', [])
-    profilo = next((p for p in profili if p.get('id') == profilo_id), None)
-    
-    if not profilo:
-        return jsonify({'success': False, 'message': 'Profilo non trovato'})
-    
-    strip_led_compatibili = profilo.get('stripLedCompatibili', [])
-    strip_led_data = CONFIG_DATA.get('stripLed', {})
-    
-    tutte_potenze_disponibili = set()
-    
-    for strip_id in strip_led_compatibili:
-        strip_info = strip_led_data.get(strip_id, {})
-        
-        # Verifica se la strip soddisfa i parametri selezionati
-        if (strip_info.get('tensione') == tensione and 
-            strip_info.get('ip') == ip and 
-            temperatura in strip_info.get('temperaturaColoreDisponibili', [])):
-            tutte_potenze_disponibili.update(strip_info.get('potenzeDisponibili', []))
-    
-    if not tutte_potenze_disponibili:
-        return jsonify({'success': False, 'message': 'Nessuna potenza disponibile per i parametri selezionati'})
-    
-    potenze_disponibili_list = list(tutte_potenze_disponibili)
-    dettagli_potenze = CONFIG_DATA.get('dettagliPotenze', {})
-    
-    potenze_complete = []
-    for potenza in potenze_disponibili_list:
-        potenza_key = potenza
-        if potenza_key not in dettagli_potenze:
-            for key in dettagli_potenze:
-                if key.startswith(potenza):
-                    potenza_key = key
-                    break
-                    
-        dettaglio = dettagli_potenze.get(potenza_key, {})
-        potenze_complete.append({
-            'id': potenza,
-            'nome': potenza,
-            'codice': dettaglio.get('codice', ''),
-            'specifiche': dettaglio.get('specifiche', '')
-        })
-    
-    return jsonify({
-        'success': True,
-        'potenze': potenze_complete
-    })
+
 
 @app.route('/get_strip_led_filtrate/<profilo_id>/<tensione>/<ip>/<temperatura>/<potenza>')
-def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza):
+@app.route('/get_opzioni_potenza/<profilo_id>/<tensione>/<ip>/<temperatura>/<tipologia_strip>')
+def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipologia_strip = None):
     try:
         print(f"Chiamata a get_strip_led_filtrate con: {profilo_id}, {tensione}, {ip}, {temperatura}, {potenza}")
         
         # Decodifica il parametro potenza (in caso sia codificato)
-        potenza = potenza.replace('%2F', '/')
+        potenza = potenza.replace('_', ' ')
+        potenza = potenza.replace('%', '/')
         
         profili = CONFIG_DATA.get('profili', [])
         profilo = next((p for p in profili if p.get('id') == profilo_id), None)
@@ -280,6 +252,15 @@ def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza):
         for strip_id in strip_led_compatibili:
             strip_info = strip_led_data.get(strip_id, {})
             
+            if tipologia_strip:
+                if tipologia_strip == 'COB' and 'COB' not in strip_id:
+                    continue
+                elif tipologia_strip == 'SMD' and 'SMD' not in strip_id:
+                    continue
+                elif tipologia_strip == 'SPECIAL':
+                    if 'COB' in strip_id or 'SMD' in strip_id:
+                        continue
+
             # Verifica la compatibilità con tutti i parametri
             if (strip_info.get('tensione') == tensione and 
                 strip_info.get('ip') == ip and 

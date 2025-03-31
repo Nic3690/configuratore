@@ -586,55 +586,23 @@ export function caricaOpzioniParametriFiltrate() {
   configurazione.temperaturaSelezionata = null;
   
   $('#btn-continua-parametri').prop('disabled', true);
-  
-  // Definiamo le tensioni disponibili in base alla tipologia di strip
-  let tensioniDisponibili = [];
-  
-  switch(configurazione.tipologiaStripSelezionata) {
-    case 'COB':
-      tensioniDisponibili = ['24V', '220V'];
-      break;
-    case 'SMD':
-      tensioniDisponibili = ['24V', '48V'];
-      break;
-    case 'SPECIAL':
-      // Per Special Strip, dipende dal tipo specifico
-      switch(configurazione.specialStripSelezionata) {
-        case 'XFLEX':
-        case 'RUNNING':
-        case 'XNAKE':
-        case 'XMAGIS':
-          tensioniDisponibili = ['24V'];
-          break;
-        case 'ZIG_ZAG':
-          tensioniDisponibili = ['24V', '48V'];
-          break;
-        default:
-          tensioniDisponibili = ['24V']; // Fallback
-      }
-      break;
-    default:
-      // Carica tutte le tensioni disponibili per il profilo
-      $.ajax({
-        url: `/get_opzioni_tensione/${configurazione.profiloSelezionato}`,
-        method: 'GET',
-        success: function(data) {
-          if (data.success && data.voltaggi) {
-            renderizzaOpzioniTensione(data.voltaggi);
-          } else {
-            $('#tensione-options').html('<p class="text-danger">Errore nel caricamento delle opzioni tensione.</p>');
-          }
-        },
-        error: function(error) {
-          console.error("Errore nel caricamento delle opzioni tensione:", error);
-          $('#tensione-options').html('<p class="text-danger">Errore nel caricamento delle opzioni tensione. Riprova più tardi.</p>');
+
+    // Carica tutte le tensioni disponibili per il profilo
+    $.ajax({
+      url: `/get_opzioni_tensione/${configurazione.profiloSelezionato}/${configurazione.tipologiaStripSelezionata}`,
+      method: 'GET',
+      success: function(data) {
+        if (data.success && data.voltaggi) {
+          renderizzaOpzioniTensione(data.voltaggi);
+        } else {
+          $('#tensione-options').html('<p class="text-danger">Errore nel caricamento delle opzioni tensione.</p>');
         }
-      });
-      return;
-  }
-  
-  // Renderizziamo le tensioni disponibili
-  renderizzaOpzioniTensione(tensioniDisponibili);
+      },
+      error: function(error) {
+        console.error("Errore nel caricamento delle opzioni tensione:", error);
+        $('#tensione-options').html('<p class="text-danger">Errore nel caricamento delle opzioni tensione. Riprova più tardi.</p>');
+      }
+    });
 }
 
 // Funzione helper per visualizzare le opzioni tensione

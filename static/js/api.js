@@ -143,7 +143,7 @@ export function caricaOpzioniProfilo(profiloId) {
  * Carica le opzioni parametri per il profilo selezionato
  * @param {string} profiloId - ID del profilo selezionato
  */
-export function caricaOpzioniParametri(profiloId) {
+export function caricaOpzioniParametri(profiloId, potenza = null) {
   
   $('#tensione-options').empty().html('<div class="spinner-border" role="status"></div><p>Caricamento opzioni tensione...</p>');
   $('#ip-options').empty();
@@ -155,8 +155,13 @@ export function caricaOpzioniParametri(profiloId) {
   
   $('#btn-continua-parametri').prop('disabled', true);
   
+  let url = `/get_opzioni_tensione/${profiloId}`;
+  if (tipologiaStrip) {
+    url += `/${configurazione.tipologiaStripSelezionata}`;
+  }
+
   $.ajax({
-    url: `/get_opzioni_tensione/${profiloId}`,
+    url: url,
     method: 'GET',
     success: function(data) {
       
@@ -220,7 +225,7 @@ export function caricaOpzioniIP(profiloId, tensione) {
   configurazione.temperaturaSelezionata = null;
   
   $.ajax({
-    url: `/get_opzioni_ip/${profiloId}/${tensione}`,
+    url: `/get_opzioni_ip/${profiloId}/${tensione}/${configurazione.tipologiaStripSelezionata}`,
     method: 'GET',
     success: function(data) {
       
@@ -278,7 +283,7 @@ export function caricaOpzioniTemperaturaIniziale(profiloId, tensione, ip) {
   configurazione.temperaturaSelezionata = null;
   
   $.ajax({
-    url: `/get_opzioni_temperatura_iniziale/${profiloId}/${tensione}/${ip}`,
+    url: `/get_opzioni_temperatura_iniziale/${profiloId}/${tensione}/${ip}/${configurazione.tipologiaStripSelezionata}`,
     method: 'GET',
     success: function(data) {
       
@@ -498,7 +503,7 @@ export function caricaOpzioniPotenza(profiloId, temperatura) {
   configurazione.potenzaSelezionata = null;
   
   $.ajax({
-    url: `/get_opzioni_potenza/${profiloId}/${configurazione.tensioneSelezionato}/${configurazione.ipSelezionato}/${temperatura}`,
+    url: `/get_opzioni_potenza/${profiloId}/${configurazione.tensioneSelezionato}/${configurazione.ipSelezionato}/${temperatura}/${configurazione.tipologiaStripSelezionata}`,
     method: 'GET',
     success: function(data) {
       $('#potenza-container').empty();
@@ -559,9 +564,11 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
   
   configurazione.stripLedSceltaFinale = null;
   $('#btn-continua-step3-strip').prop('disabled', true);
+  var potenzaNew = potenza.replace(' ', '_');
+  var potenzaFinale = potenzaNew.replace('/', '%');
   
   $.ajax({
-    url: `/get_strip_led_filtrate/${profiloId}/${tensione}/${ip}/${temperatura}/${encodeURIComponent(potenza)}`,
+    url: `/get_strip_led_filtrate/${profiloId}/${tensione}/${ip}/${temperatura}/${potenzaFinale}`,
     method: 'GET',
     success: function(data) {
       console.log("Risposta da get_strip_led_filtrate:", data);
