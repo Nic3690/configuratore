@@ -47,7 +47,7 @@ export function vaiAllaTemperaturaEPotenza() {
   // Poi mostra solo la sezione corrente
   $("#step3-temperatura-potenza").fadeIn(300);
   
-  caricaOpzioniPotenza(configurazione.stripLedSelezionata, configurazione.temperaturaSelezionata);
+  caricaOpzioniPotenza(configurazione.profiloSelezionato, configurazione.temperaturaSelezionata);
 }
 
 // Seleziona automaticamente una strip LED basata sui parametri scelti
