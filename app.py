@@ -227,9 +227,69 @@ def get_opzioni_dimmerazione(strip_id):
     })
 
 
+@app.route('/get_opzioni_potenza/<profilo_id>/<tensione>/<ip>/<temperatura>')
+@app.route('/get_opzioni_potenza/<profilo_id>/<tensione>/<ip>/<temperatura>/<tipologia_strip>')
+def get_opzioni_potenza(profilo_id, tensione, ip, temperatura, tipologia_strip=None):
+    profili = CONFIG_DATA.get('profili', [])
+    profilo = next((p for p in profili if p.get('id') == profilo_id), None)
+    
+    if not profilo:
+        return jsonify({'success': False, 'message': 'Profilo non trovato'})
+    
+    strip_led_compatibili = profilo.get('stripLedCompatibili', [])
+    strip_led_data = CONFIG_DATA.get('stripLed', {})
+    
+    tutte_potenze_disponibili = set()
+    
+    for strip_id in strip_led_compatibili:
+        strip_info = strip_led_data.get(strip_id, {})
+        
+        # Filtra in base alla tipologia selezionata
+        if tipologia_strip:
+            if tipologia_strip == 'COB' and 'COB' not in strip_id:
+                continue
+            elif tipologia_strip == 'SMD' and 'SMD' not in strip_id:
+                continue
+            elif tipologia_strip == 'SPECIAL':
+                if 'COB' in strip_id or 'SMD' in strip_id:
+                    continue
+        
+        # Verifica se la strip soddisfa i parametri selezionati
+        if (strip_info.get('tensione') == tensione and 
+            strip_info.get('ip') == ip and 
+            temperatura in strip_info.get('temperaturaColoreDisponibili', [])):
+            tutte_potenze_disponibili.update(strip_info.get('potenzeDisponibili', []))
+    
+    if not tutte_potenze_disponibili:
+        return jsonify({'success': False, 'message': 'Nessuna potenza disponibile per i parametri selezionati'})
+    
+    potenze_disponibili_list = list(tutte_potenze_disponibili)
+    dettagli_potenze = CONFIG_DATA.get('dettagliPotenze', {})
+    
+    potenze_complete = []
+    for potenza in potenze_disponibili_list:
+        potenza_key = potenza
+        if potenza_key not in dettagli_potenze:
+            for key in dettagli_potenze:
+                if key.startswith(potenza):
+                    potenza_key = key
+                    break
+                    
+        dettaglio = dettagli_potenze.get(potenza_key, {})
+        potenze_complete.append({
+            'id': potenza,
+            'nome': potenza,
+            'codice': dettaglio.get('codice', ''),
+            'specifiche': dettaglio.get('specifiche', '')
+        })
+    
+    return jsonify({
+        'success': True,
+        'potenze': potenze_complete
+    })
+
 
 @app.route('/get_strip_led_filtrate/<profilo_id>/<tensione>/<ip>/<temperatura>/<potenza>')
-@app.route('/get_opzioni_potenza/<profilo_id>/<tensione>/<ip>/<temperatura>/<tipologia_strip>')
 def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipologia_strip = None):
     try:
         print(f"Chiamata a get_strip_led_filtrate con: {profilo_id}, {tensione}, {ip}, {temperatura}, {potenza}")
