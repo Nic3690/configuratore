@@ -45,6 +45,8 @@ export function getTemperaturaColor(temperatura) {
       return '#FFE9C0';
     case '3000K':
       return '#FFF1D9';
+    case '4000K':
+      return '#FFFBE3';
     case '6000K':
     case '6500K':
       return '#F5FBFF';

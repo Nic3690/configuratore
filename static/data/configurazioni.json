@@ -53,7 +53,7 @@
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 2000,
-      "stripLedCompatibili": ["STRIP_24V_COB_IP20"]
+      "stripLedCompatibili": ["STRIP_24V_COB_IP20_MINI"]
     },
     {
       "id": "PRF017_200SET",
@@ -64,7 +64,7 @@
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 3000,
-      "stripLedCompatibili": ["STRIP_24V_COB_IP20"]
+      "stripLedCompatibili": ["STRIP_24V_COB_IP20_MINI"]
     },
     {
       "id": "PRF005_200SET",
@@ -604,14 +604,34 @@
     }
   ],
   "stripLed": {
+    "STRIP_24V_COB_IP20_MINI": {
+      "nome": "STRIP 24V COB IP20",
+      "nomeCommerciale": "XSOLIS 24V IP20 MINI",
+      "tipo": "COB",
+      "tensione": "24V",
+      "ip": "IP20",
+      "temperaturaColoreDisponibili": ["3000K"],
+      "potenzeDisponibili": ["10W/m"],
+      "codiciProdotto": ["SLSIP20WW4CRI90"]
+    },
+    "STRIP_220V_COB_IP20_MINI": {
+      "nome": "STRIP 220V COB IP20",
+      "nomeCommerciale": "XSOLIS 220V IP20 MINI",
+      "tipo": "COB",
+      "tensione": "220V",
+      "ip": "IP20",
+      "temperaturaColoreDisponibili": ["4000K", "6000K"],
+      "potenzeDisponibili": ["10W/m"],
+      "codiciProdotto": ["XXXXXXXXX", "YYYYYYYYYY"]
+    },
     "STRIP_24V_SMD_IP20": {
       "nome": "STRIP 24V SMD IP20",
       "nomeCommerciale": "XRIBO 24V IP20",
       "tipo": "SMD",
       "tensione": "24V",
       "ip": "IP20",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K", "CCT"],
-      "potenzeDisponibili": ["6W/m", "12W/m CRI90", "18W/m", "18W/m CRI90", "22W/m", "14W/m SMD"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K", "6000K"],
+      "potenzeDisponibili": ["6W/m", "12W/m", "12W/m CRI90", "18W/m", "18W/m CRI90", "22W/m"],
       "codiciProdotto": ["RB26420", "RB212820", "RB219220", "RB224020"]
     },
     "STRIP_24V_SMD_IP66": {
@@ -620,8 +640,8 @@
       "tipo": "SMD",
       "tensione": "24V",
       "ip": "IP66",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K", "CCT"],
-      "potenzeDisponibili": ["6W/m", "12W/m CRI90", "18W/m", "18W/m CRI90", "22W/m", "14W/m SMD"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K", "6000K"],
+      "potenzeDisponibili": ["6W/m", "12W/m", "18W/m", "20W/m"],
       "codiciProdotto": ["RB26466", "RB212866", "RB219266", "RB224066"]
     },
     "STRIP_24V_COB_IP20": {
@@ -630,8 +650,8 @@
       "tipo": "COB",
       "tensione": "24V",
       "ip": "IP20",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K", "CCT"],
-      "potenzeDisponibili": ["8W/m", "10W/m", "12W/m", "14W/m", "10W/m MINI"],
+      "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
+      "potenzeDisponibili": ["8W/m", "10W/m", "12W/m", "14W/m"],
       "codiciProdotto": ["SLS01WW", "SLS02WW", "SLS03WW", "SLS04WW", "SLSIP20WW4CRI90"]
     },
     "STRIP_24V_COB_IP66": {
@@ -640,7 +660,7 @@
       "tipo": "COB",
       "tensione": "24V",
       "ip": "IP66",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K", "CCT"],
+      "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["8W/m", "10W/m", "12W/m", "14W/m"],
       "codiciProdotto": ["SLS01WW67CL", "SLS02WW67CL", "SLS03WW67CL", "SLS04WW67CL", "SLS01WW67FR", "SLS02WW67FR", "SLS03WW67FR", "SLS04WW67FR"]
     },
@@ -650,8 +670,8 @@
       "tipo": "SMD",
       "tensione": "48V",
       "ip": "IP20",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K"],
-      "potenzeDisponibili": ["14W/m", "20W/m", "25W/m"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K", "6000K"],
+      "potenzeDisponibili": ["5W/m", "9,6W/m", "12W/m", "20W/m"],
       "codiciProdotto": ["RB26520..48", "RB213020..48", "RB218220..48", "RB224020..48"]
     },
     "STRIP_48V_SMD_IP66": {
@@ -660,8 +680,8 @@
       "tipo": "SMD",
       "tensione": "48V",
       "ip": "IP66",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K"],
-      "potenzeDisponibili": ["14W/m", "20W/m", "25W/m"],
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K", "6000K"],
+      "potenzeDisponibili": ["5W/m", "9,6W/m", "12W/m", "20W/m"],
       "codiciProdotto": ["RB26566..48", "RB213066..48", "RB218266..48", "RB224066..48"]
     },
     "STRIP_24V_RGB_SMD_IP20": {
@@ -670,8 +690,8 @@
       "tipo": "SMD",
       "tensione": "24V",
       "ip": "IP20",
-      "temperaturaColoreDisponibili": ["RGB", "RGBW"],
-      "potenzeDisponibili": ["13W/m", "18W/m"],
+      "temperaturaColoreDisponibili": ["RGB"],
+      "potenzeDisponibili": ["14,4W/m"],
       "codiciProdotto": ["ST56020RGB", "ST56020RGB+WW"]
     },
     "STRIP_24V_RGB_SMD_IP66": {
@@ -680,8 +700,8 @@
       "tipo": "SMD",
       "tensione": "24V",
       "ip": "IP66",
-      "temperaturaColoreDisponibili": ["RGB", "RGBW"],
-      "potenzeDisponibili": ["13W/m", "18W/m"],
+      "temperaturaColoreDisponibili": ["RGB"],
+      "potenzeDisponibili": ["14,4W/m"],
       "codiciProdotto": ["ST56065RGB", "ST56065RGB+WW"]
     },
     "STRIP_24V_RGB_COB_IP20": {
@@ -691,7 +711,7 @@
       "tensione": "24V",
       "ip": "IP20",
       "temperaturaColoreDisponibili": ["RGB"],
-      "potenzeDisponibili": ["15W/m", "20W/m"],
+      "potenzeDisponibili": ["13W/m"],
       "codiciProdotto": ["SLS01RGB"]
     },
     "STRIP_24V_RGB_COB_IP66": {
@@ -701,17 +721,8 @@
       "tensione": "24V",
       "ip": "IP66",
       "temperaturaColoreDisponibili": ["RGB"],
-      "potenzeDisponibili": ["15W/m", "20W/m"],
+      "potenzeDisponibili": ["13W/m"],
       "codiciProdotto": ["SLS01RGB67"]
-    },
-    "STRIP_220V_COB_IP20": {
-      "nome": "STRIP 220V COB IP20",
-      "nomeCommerciale": "XTAP 220V IP20",
-      "tipo": "COB",
-      "tensione": "220V",
-      "ip": "IP20",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K"],
-      "potenzeDisponibili": ["15W/m", "20W/m", "25W/m"]
     },
     "STRIP_220V_COB_IP66": {
       "nome": "STRIP 220V COB IP66",
@@ -719,9 +730,9 @@
       "tipo": "COB",
       "tensione": "220V",
       "ip": "IP66",
-      "temperaturaColoreDisponibili": ["2700K", "3000K", "6000K"],
-      "potenzeDisponibili": ["15W/m", "20W/m", "25W/m"],
-      "codiciProdotto": ["XTP01..65", "XTP02..65"]
+      "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
+      "potenzeDisponibili": ["12W/m"],
+      "codiciProdotto": ["XTP01WW65", "XTP01NW65", "XTP01CW65"]
     }
   },
   "opzioniStripLed": {
@@ -730,7 +741,8 @@
   "mappaturaCommerciale": {
     "XSOLIS IP20": "STRIP_24V_COB_IP20",
     "XSOLIS IP67": "STRIP_24V_COB_IP66",
-    "XSOLIS MINI": "STRIP_24V_COB_IP20",
+    "XSOLIS MINI 24V": "STRIP_24V_COB_IP20_MINI",
+    "XSOLIS MINI 220V": "STRIP_220V_COB_IP20_MINI",
     "XSOLIS RGB": "STRIP_24V_RGB_COB_IP20",
     "XTAP": "STRIP_220V_COB_IP66",
     "XRIBO 24V": "STRIP_24V_SMD_IP20",
@@ -744,7 +756,7 @@
     "XMAGIS": "STRIP_24V_SMD_IP20"
   },
   "temperaturaColore": {
-    "opzioni": ["2700K", "3000K", "6000K", "CCT", "RGB", "RGBW"]
+    "opzioni": ["2700K", "3000K", "4000K", "6000K", "CCT", "RGB", "RGBW"]
   },
   "dettagliPotenze": {
     "6W/m": {
@@ -806,6 +818,18 @@
     "13W/m": {
       "codice": "ST56020RGB",
       "specifiche": "24V DC · 13W/m · RGB · 60 LED/m"
+    },
+    "5W/m": {
+      "codice": "STXXXXXXXX",
+      "specifiche": "48V DC · 5W/m · SMD · 60 LED/m"
+    },
+    "9,6W/m": {
+      "codice": "JJXXXXXXXX",
+      "specifiche": "48V DC · 9,6W/m · SMD · 60 LED/m"
+    },
+    "14,4W/m": {
+      "codice": "EEXXXXXXXX",
+      "specifiche": "24V DC · 14,4W/m · COB · 60 LED/m"
     }
   },
   "alimentazione": {
