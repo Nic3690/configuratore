@@ -525,7 +525,6 @@ export function caricaOpzioniPotenza(profiloId, temperatura) {
               <div class="card-body">
                 <h5 class="card-title">${potenza.nome}</h5>
                 <p class="card-text small text-muted">${potenza.specifiche}</p>
-                <p class="card-text small">Codice: <strong>${potenza.codice}</strong></p>
               </div>
             </div>
           </div>
