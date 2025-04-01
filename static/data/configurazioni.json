@@ -324,7 +324,7 @@
       "note": "",
       "immagine": "/static/img/prf170.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
-      "finitureDisponibili": ["ALLUMINIO"],
+      "finitureDisponibili": ["BIANCO"],
       "lunghezzaMassima": 3000,
       "stripLedCompatibili": [
         "STRIP_24V_COB_IP20", "STRIP_24V_COB_IP66", "STRIP_24V_RGB_COB_IP20",
@@ -339,7 +339,7 @@
       "note": "",
       "immagine": "/static/img/prf171.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
-      "finitureDisponibili": ["ALLUMINIO"],
+      "finitureDisponibili": ["BIANCO"],
       "lunghezzaMassima": 3000,
       "stripLedCompatibili": [
         "STRIP_24V_COB_IP20", "STRIP_24V_COB_IP66", "STRIP_24V_RGB_COB_IP20",
@@ -354,7 +354,7 @@
       "note": "",
       "immagine": "/static/img/prf172.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
-      "finitureDisponibili": ["ALLUMINIO"],
+      "finitureDisponibili": ["BIANCO"],
       "lunghezzaMassima": 3000,
       "stripLedCompatibili": [
         "STRIP_24V_COB_IP20", "STRIP_24V_COB_IP66", "STRIP_24V_RGB_COB_IP20",
