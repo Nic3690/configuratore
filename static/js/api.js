@@ -564,8 +564,8 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
   
   configurazione.stripLedSceltaFinale = null;
   $('#btn-continua-step3-strip').prop('disabled', true);
-  var potenzaNew = potenza.replace(' ', '_');
-  var potenzaFinale = potenzaNew.replace('/', '%');
+  var potenzaNew = potenza.replace(' ', '-');
+  var potenzaFinale = potenzaNew.replace('/', '_');
   
   $.ajax({
     url: `/get_strip_led_filtrate/${profiloId}/${tensione}/${ip}/${temperatura}/${potenzaFinale}`,

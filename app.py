@@ -295,8 +295,10 @@ def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipol
         print(f"Chiamata a get_strip_led_filtrate con: {profilo_id}, {tensione}, {ip}, {temperatura}, {potenza}")
         
         # Decodifica il parametro potenza (in caso sia codificato)
-        potenza = potenza.replace('_', ' ')
-        potenza = potenza.replace('%', '/')
+        potenza = potenza.replace('-', ' ')
+        potenza = potenza.replace('_', '/')
+
+        print(potenza)
         
         profili = CONFIG_DATA.get('profili', [])
         profilo = next((p for p in profili if p.get('id') == profilo_id), None)
