@@ -73,6 +73,7 @@ export function generaPDF(codiceProdotto, configurazione) {
 		'parete': 'Profili a Parete',
 		'particolari': 'Profili Particolari',
 		'scalino': 'Profili a Scalino',
+		'wall_washer': 'Profili Wallwasher',
 		
 		// Tipologie
 		'taglio_misura': 'Taglio su misura',

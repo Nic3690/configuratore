@@ -10,7 +10,7 @@
       "id": "incasso",
       "nome": "Incasso",
       "immagine": "/static/img/categorie/incasso.jpg",
-      "sottofamiglie": ["incasso", "wallwasher", "battiscopa"]
+      "sottofamiglie": ["incasso", "wall_washer", "battiscopa"]
     },
     {
       "id": "sospensione",
@@ -41,6 +41,12 @@
       "nome": "Scalino",
       "immagine": "/static/img/categorie/scalino.jpg",
       "sottofamiglie": ["scalino"]
+    },
+    {
+      "id": "wall_washer",
+      "nome": "Wallwasher",
+      "immagine": "/static/img/categorie/wall_washer.jpg",
+      "sottofamiglie": ["wall_washer"]
     }
   ],
   "profili": [
@@ -303,7 +309,7 @@
     {
       "id": "PRF044",
       "nome": "PRF044",
-      "categoria": "wallwasher",
+      "categoria": "wall_washer",
       "note": "",
       "immagine": "/static/img/prf044.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -314,7 +320,7 @@
     {
       "id": "PRF170",
       "nome": "PRF170",
-      "categoria": "wallwasher",
+      "categoria": "wall_washer",
       "note": "",
       "immagine": "/static/img/prf170.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -329,7 +335,7 @@
     {
       "id": "PRF171",
       "nome": "PRF171",
-      "categoria": "wallwasher",
+      "categoria": "wall_washer",
       "note": "",
       "immagine": "/static/img/prf171.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -344,7 +350,7 @@
     {
       "id": "PRF172",
       "nome": "PRF172",
-      "categoria": "wallwasher",
+      "categoria": "wall_washer",
       "note": "",
       "immagine": "/static/img/prf172.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -486,7 +492,7 @@
     {
       "id": "PRF174",
       "nome": "PRF174",
-      "categoria": "wallwasher",
+      "categoria": "wall_washer",
       "note": "",
       "immagine": "/static/img/prf174.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],

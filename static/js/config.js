@@ -34,7 +34,8 @@ const configurazione = {
 	'plafone': 'Profili a Plafone',
 	'parete': 'Profili a Parete',
 	'particolari': 'Profili Particolari',
-	'scalino': 'Profili a Scalino'
+	'scalino': 'Profili a Scalino',
+	'wall_washer': 'Profili Wallwasher',
   };
   
   const mappaTipologieVisualizzazione = {
