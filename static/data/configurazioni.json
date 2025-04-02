@@ -53,7 +53,7 @@
     {
       "id": "PRF014_200SET",
       "nome": "PRF014_200SET",
-      "categoria": "plafone",
+      "categoria": "nanoprofili",
       "note": "NANO PROFILI",
       "immagine": "/static/img/prf014_200set.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -64,7 +64,7 @@
     {
       "id": "PRF017_200SET",
       "nome": "PRF017_200SET",
-      "categoria": "plafone",
+      "categoria": "nanoprofili",
       "note": "ANGOLARE",
       "immagine": "/static/img/prf017_200set.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -230,7 +230,7 @@
     {
       "id": "PRF020",
       "nome": "PRF020",
-      "categoria": "incasso",
+      "categoria": "nanoprofili",
       "note": "",
       "immagine": "/static/img/prf020.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -241,7 +241,7 @@
     {
       "id": "PRF018",
       "nome": "PRF018",
-      "categoria": "incasso",
+      "categoria": "nanoprofili",
       "note": "",
       "immagine": "/static/img/prf018.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -252,7 +252,7 @@
     {
       "id": "PRF019",
       "nome": "PRF019",
-      "categoria": "incasso",
+      "categoria": "nanoprofili",
       "note": "",
       "immagine": "/static/img/prf019.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -261,9 +261,20 @@
       "stripLedCompatibili": ["STRIP_24V_COB_IP20_MINI"]
     },
     {
+      "id": "PRF016_200SET",
+      "nome": "PRF016_200SET",
+      "categoria": "nanoprofili",
+      "note": "",
+      "immagine": "/static/img/prf016_200set.jpg",
+      "tipologie": ["taglio_misura", "profilo_intero"],
+      "finitureDisponibili": ["BIANCO"],
+      "lunghezzaMassima": 3000,
+      "stripLedCompatibili": ["STRIP_24V_COB_IP20_MINI"]
+    },
+    {
       "id": "PRF015_200SET",
       "nome": "PRF015_200SET",
-      "categoria": "incasso",
+      "categoria": "nanoprofili",
       "note": "",
       "immagine": "/static/img/prf015_200set.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
