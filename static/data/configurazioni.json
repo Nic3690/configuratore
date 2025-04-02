@@ -711,7 +711,7 @@
       "nomeCommerciale": "XSOLIS IP67 CLEAR",
       "tipo": "COB",
       "tensione": "24V",
-      "ip": "IP66",
+      "ip": "IP67",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["8W/m", "10W/m", "12W/m", "14W/m"],
       "codiciProdotto": ["SLS01WW67CL", "SLS02WW67CL", "SLS03WW67CL", "SLS04WW67CL"]
@@ -721,7 +721,7 @@
       "nomeCommerciale": "XSOLIS IP67 FROST",
       "tipo": "COB",
       "tensione": "24V",
-      "ip": "IP66",
+      "ip": "IP67",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["8W/m", "10W/m", "12W/m", "14W/m"],
       "codiciProdotto": ["SLS01WW67FR", "SLS02WW67FR", "SLS03WW67FR", "SLS04WW67FR"]
@@ -761,7 +761,7 @@
       "nomeCommerciale": "XTRIP RGB IP65",
       "tipo": "SMD",
       "tensione": "24V",
-      "ip": "IP66",
+      "ip": "IP65",
       "temperaturaColoreDisponibili": ["RGB", "RGBW"],
       "potenzeDisponibili": ["14,4W/m"],
       "codiciProdotto": ["ST56065RGB", "ST56065RGB+WW"]
@@ -781,7 +781,7 @@
       "nomeCommerciale": "XSOLIS RGB IP67",
       "tipo": "COB",
       "tensione": "24V",
-      "ip": "IP66",
+      "ip": "IP67",
       "temperaturaColoreDisponibili": ["RGB"],
       "potenzeDisponibili": ["13W/m"],
       "codiciProdotto": ["SLS01RGB67"]
