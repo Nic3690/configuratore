@@ -163,7 +163,202 @@ export function vaiAllaTipologiaStrip() {
   
   $("#step2-option-strip").fadeOut(300, function() {
     $("#step2-tipologia-strip").fadeIn(300);
-    prepareTipologiaStripListeners();
+    // Analizziamo e mostriamo solo le tipologie compatibili
+    analizzaEMostraTipologieCompatibili();
+  });
+}
+
+// Nuova funzione per analizzare e mostrare solo le tipologie compatibili
+function analizzaEMostraTipologieCompatibili() {
+  // Nascondi tutte le tipologie inizialmente
+  $('.tipologia-strip-card').parent().hide();
+  
+  // Mostra un loader mentre carichiamo i dati
+  $('#tipologia-strip-container').prepend(`
+    <div id="tipologia-loading" class="text-center">
+      <div class="spinner-border" role="status"></div>
+      <p class="mt-3">Analisi tipologie compatibili...</p>
+    </div>
+  `);
+  
+  // Ottieni le strip compatibili dal backend
+  $.ajax({
+    url: `/get_profili/${configurazione.categoriaSelezionata}`,
+    method: 'GET',
+    success: function(data) {
+      // Rimuovi il loader
+      $('#tipologia-loading').remove();
+      
+      // Trova il profilo selezionato
+      const profiloSelezionato = data.find(p => p.id === configurazione.profiloSelezionato);
+      
+      if (!profiloSelezionato || !profiloSelezionato.stripLedCompatibili || profiloSelezionato.stripLedCompatibili.length === 0) {
+        // Nessuna strip compatibile trovata, mostra un messaggio
+        $('#tipologia-strip-container').html(`
+          <div class="alert alert-warning">
+            <p>Nessuna strip LED compatibile trovata per questo profilo.</p>
+          </div>
+        `);
+        return;
+      }
+      
+      // Controlla quali tipologie sono compatibili
+      const hasCOB = profiloSelezionato.stripLedCompatibili.some(id => id.includes('COB'));
+      const hasSMD = profiloSelezionato.stripLedCompatibili.some(id => id.includes('SMD'));
+      const hasSpecial = profiloSelezionato.stripLedCompatibili.some(id => 
+        !id.includes('COB') && !id.includes('SMD') || 
+        id.includes('ZIGZAG') || 
+        id.includes('XFLEX') || 
+        id.includes('RUNNING') || 
+        id.includes('XNAKE') || 
+        id.includes('XMAGIS'));
+      
+      // Mostra solo le tipologie compatibili
+      if (hasCOB) {
+        $('.tipologia-strip-card[data-tipologia-strip="COB"]').parent().show();
+      }
+      
+      if (hasSMD) {
+        $('.tipologia-strip-card[data-tipologia-strip="SMD"]').parent().show();
+      }
+      
+      if (hasSpecial) {
+        $('.tipologia-strip-card[data-tipologia-strip="SPECIAL"]').parent().show();
+      }
+      
+      // Se c'è solo una tipologia compatibile, selezionala automaticamente
+      const tipologieVisibili = $('.tipologia-strip-card').parent(':visible').length;
+      
+      if (tipologieVisibili === 0) {
+        $('#tipologia-strip-container').html(`
+          <div class="alert alert-warning">
+            <p>Nessuna strip LED compatibile trovata per questo profilo.</p>
+          </div>
+        `);
+      } else if (tipologieVisibili === 1) {
+        // Seleziona automaticamente l'unica tipologia disponibile
+        const $unica = $('.tipologia-strip-card').parent(':visible').find('.tipologia-strip-card');
+        $unica.addClass('selected');
+        configurazione.tipologiaStripSelezionata = $unica.data('tipologia-strip');
+        
+        // Se è "SPECIAL", mostra il container special-strip
+        if (configurazione.tipologiaStripSelezionata === 'SPECIAL') {
+          $('#special-strip-container').fadeIn(300);
+          // Filtriamo anche i tipi di special strip compatibili
+          filtraSpecialStripCompatibili(profiloSelezionato.stripLedCompatibili);
+        } else {
+          // Altrimenti, abilitiamo direttamente il pulsante continua
+          $('#btn-continua-tipologia-strip').prop('disabled', false);
+        }
+      }
+      
+      // Reimposta i listener per le card
+      prepareTipologiaStripListeners();
+    },
+    error: function(error) {
+      // Rimuovi il loader e mostra un errore
+      $('#tipologia-loading').remove();
+      console.error("Errore nel caricamento delle strip compatibili:", error);
+      $('#tipologia-strip-container').html(`
+        <div class="alert alert-danger">
+          <p>Errore nel caricamento delle strip LED compatibili. Riprova più tardi.</p>
+        </div>
+      `);
+    }
+  });
+}
+
+// Nuova funzione per filtrare i tipi di special strip compatibili
+function filtraSpecialStripCompatibili(stripCompatibili) {
+  // Nascondi tutte le special strip inizialmente
+  $('.special-strip-card').parent().hide();
+  
+  // Mappa delle special strip ai rispettivi ID o nomi commerciali
+  const specialStripMap = {
+    'XFLEX': ['XFLEX', 'FLEX'],
+    'RUNNING': ['RUNNING'],
+    'ZIG_ZAG': ['ZIGZAG', 'ZIG_ZAG', 'ZIGZAG'],
+    'XNAKE': ['XNAKE', 'XSNAKE', 'SNAKE'],
+    'XMAGIS': ['XMAGIS', 'MAGIS']
+  };
+  
+  // Verifica quali special strip sono compatibili
+  for (const [specialType, keywords] of Object.entries(specialStripMap)) {
+    const isCompatible = stripCompatibili.some(stripId => 
+      keywords.some(keyword => stripId.toUpperCase().includes(keyword))
+    );
+    
+    if (isCompatible) {
+      $(`.special-strip-card[data-special-strip="${specialType}"]`).parent().show();
+    }
+  }
+  
+  // Se c'è solo una special strip compatibile, selezionala automaticamente
+  const specialVisibili = $('.special-strip-card').parent(':visible').length;
+  
+  if (specialVisibili === 1) {
+    const $unica = $('.special-strip-card').parent(':visible').find('.special-strip-card');
+    $unica.addClass('selected');
+    configurazione.specialStripSelezionata = $unica.data('special-strip');
+    $('#btn-continua-tipologia-strip').prop('disabled', false);
+  } else if (specialVisibili === 0) {
+    // Nessuna special strip compatibile trovata, mostra un messaggio
+    $('#special-strip-container').html(`
+      <h3 class="mb-3">Tipo di Special Strip</h3>
+      <div class="alert alert-warning">
+        <p>Nessuna special strip compatibile trovata per questo profilo.</p>
+      </div>
+    `);
+    // Rimuovi la selezione di SPECIAL come tipologia
+    $('.tipologia-strip-card').removeClass('selected');
+    configurazione.tipologiaStripSelezionata = null;
+    $('#btn-continua-tipologia-strip').prop('disabled', true);
+  }
+}
+
+export function prepareTipologiaStripListeners() {
+  $('.tipologia-strip-card').on('click', function() {
+    $('.tipologia-strip-card').removeClass('selected');
+    $(this).addClass('selected');
+    
+    const tipologiaStrip = $(this).data('tipologia-strip');
+    configurazione.tipologiaStripSelezionata = tipologiaStrip;
+    
+    // Resetta la selezione special strip se l'utente cambia tipologia
+    if (tipologiaStrip !== 'SPECIAL') {
+      configurazione.specialStripSelezionata = null;
+      $('#special-strip-container').hide();
+      
+      // Abilita subito il pulsante continua se non è special strip
+      $('#btn-continua-tipologia-strip').prop('disabled', false);
+    } else {
+      // Mostra il sottomenu per special strip
+      $('#special-strip-container').fadeIn(300);
+      $('#btn-continua-tipologia-strip').prop('disabled', true);
+      
+      // Filtra le special strip compatibili quando si seleziona SPECIAL
+      $.ajax({
+        url: `/get_profili/${configurazione.categoriaSelezionata}`,
+        method: 'GET',
+        success: function(data) {
+          const profiloSelezionato = data.find(p => p.id === configurazione.profiloSelezionato);
+          if (profiloSelezionato && profiloSelezionato.stripLedCompatibili) {
+            filtraSpecialStripCompatibili(profiloSelezionato.stripLedCompatibili);
+          }
+        },
+        error: function(error) {
+          console.error("Errore nel caricamento delle strip compatibili:", error);
+        }
+      });
+    }
+  });
+  
+  $('.special-strip-card').on('click', function() {
+    $('.special-strip-card').removeClass('selected');
+    $(this).addClass('selected');
+    
+    configurazione.specialStripSelezionata = $(this).data('special-strip');
+    $('#btn-continua-tipologia-strip').prop('disabled', false);
   });
 }
 
@@ -614,38 +809,6 @@ function renderizzaOpzioniTensione(tensioni) {
     
     caricaOpzioniIP(configurazione.profiloSelezionato, configurazione.tensioneSelezionato);
     checkParametriCompletion();
-  });
-}
-
-export function prepareTipologiaStripListeners() {
-  $('.tipologia-strip-card').on('click', function() {
-    $('.tipologia-strip-card').removeClass('selected');
-    $(this).addClass('selected');
-    
-    const tipologiaStrip = $(this).data('tipologia-strip');
-    configurazione.tipologiaStripSelezionata = tipologiaStrip;
-    
-    // Resetta la selezione special strip se l'utente cambia tipologia
-    if (tipologiaStrip !== 'SPECIAL') {
-      configurazione.specialStripSelezionata = null;
-      $('#special-strip-container').hide();
-      $('.special-strip-card').removeClass('selected');
-      
-      // Abilita subito il pulsante continua se non è special strip
-      $('#btn-continua-tipologia-strip').prop('disabled', false);
-    } else {
-      // Mostra il sottomenu per special strip
-      $('#special-strip-container').fadeIn(300);
-      $('#btn-continua-tipologia-strip').prop('disabled', true);
-    }
-  });
-  
-  $('.special-strip-card').on('click', function() {
-    $('.special-strip-card').removeClass('selected');
-    $(this).addClass('selected');
-    
-    configurazione.specialStripSelezionata = $(this).data('special-strip');
-    $('#btn-continua-tipologia-strip').prop('disabled', false);
   });
 }
 
