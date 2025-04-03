@@ -1,6 +1,6 @@
 import { configurazione, mappaTipologieVisualizzazione, mappaFormeTaglio, mappaFiniture, mappaTensioneVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione } from '../config.js';
 import { updateProgressBar, checkStep2Completion, checkPersonalizzazioneCompletion, formatTemperatura, checkParametriCompletion } from '../utils.js';
-import { caricaOpzioniParametri, caricaStripLedFiltrate, caricaFinitureDisponibili, calcolaProposte, finalizzaConfigurazione, caricaOpzioniIP } from '../api.js';
+import { caricaOpzioniParametri, caricaStripLedFiltrate, caricaFinitureDisponibili, finalizzaConfigurazione, caricaOpzioniIP } from '../api.js';
 import { vaiAllaTemperaturaEPotenza } from './step3.js';
 
 export function initStep2Listeners() {
@@ -234,30 +234,11 @@ export function preparePersonalizzazioneListeners() {
 
   $('#lunghezza-personalizzata').on('input', function() {
     configurazione.lunghezzaRichiesta = parseInt($(this).val(), 10) || null;
-    
-    if (configurazione.lunghezzaRichiesta && configurazione.lunghezzaRichiesta > 0) {
-      calcolaProposte(configurazione.lunghezzaRichiesta);
-    } else {
-      $('#proposte-container').hide();
-    }
-    
     checkPersonalizzazioneCompletion();
   });
   
-  $('.btn-seleziona-proposta').on('click', function() {
-    const proposta = $(this).data('proposta');
-    const valore = parseInt($(this).data('valore'), 10);
-    
-    if (proposta === 1) {
-      configurazione.lunghezzaRichiesta = valore;
-      $('#lunghezza-personalizzata').val(valore);
-    } else if (proposta === 2) {
-      configurazione.lunghezzaRichiesta = valore;
-      $('#lunghezza-personalizzata').val(valore);
-    }
-    
-    checkPersonalizzazioneCompletion();
-  });
+  // RIMOSSO: Listener per i pulsanti delle proposte
+  // Non includiamo più questa parte
   
   // NUOVA FUNZIONALITÀ: Verifica se è stato selezionato profilo intero o taglio su misura
   // Se è profilo intero, nascondi la sezione di personalizzazione lunghezza
@@ -326,7 +307,7 @@ export function updateIstruzioniMisurazione(forma) {
   misurazioneContainer.empty();
 
   $('.lunghezza-personalizzata-container').remove();
-  configurazione.lunghezzaMultiple = {};
+  configurazione.lunghezzeMultiple = {};
   
   switch(forma) {
     case 'DRITTO_SEMPLICE':
@@ -349,17 +330,13 @@ export function updateIstruzioniMisurazione(forma) {
 
       $('#lunghezza-personalizzata').on('input', function() {
         configurazione.lunghezzaRichiesta = parseInt($(this).val(), 10) || null;
-        
-        if (configurazione.lunghezzaRichiesta && configurazione.lunghezzaRichiesta > 0) {
-          calcolaProposte(configurazione.lunghezzaRichiesta);
-        } else {
-          $('#proposte-container').hide();
-        }
-        
         checkPersonalizzazioneCompletion();
       });
+      
+      // RIMOSSO: Non calcoliamo più le proposte qui
+      // RIMOSSO: Non mostriamo più il container delle proposte
+      
       $('#non-assemblato-warning').hide();
-      $('#proposte-container').hide();
       break;
       
     case 'FORMA_L_DX':
@@ -505,8 +482,6 @@ export function updateIstruzioniMisurazione(forma) {
     
     if (tuttiValoriPresenti) {
       configurazione.lunghezzaRichiesta = sommaLunghezze;
-      // Non mostriamo più le proposte per le forme complesse
-      $('#proposte-container').hide();
     } else {
       configurazione.lunghezzaRichiesta = null;
     }

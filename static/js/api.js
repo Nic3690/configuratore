@@ -908,48 +908,6 @@ export function caricaFinitureDisponibili(profiloId) {
 }
 
 /**
- * Calcola le proposte di lunghezza
- * @param {number} lunghezzaRichiesta - Lunghezza richiesta dall'utente
- */
-export function calcolaProposte(lunghezzaRichiesta) {
-  $.ajax({
-    url: '/calcola_lunghezze',
-    method: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify({
-      lunghezzaRichiesta: lunghezzaRichiesta
-    }),
-    success: function(data) {
-      
-      if (!data.success) {
-        $('#proposte-container').hide();
-        return;
-      }
-      
-      configurazione.proposta1 = data.proposte.proposta1;
-      configurazione.proposta2 = data.proposte.proposta2;
-      configurazione.spazioProduzione = data.spazioProduzione || 5;
-      
-      $('#proposta1-valore').text(data.proposte.proposta1 + 'mm');
-      $('#proposta2-valore').text(data.proposte.proposta2 + 'mm');
-      $('#spazio-produzione').text(data.spazioProduzione);
-      
-      $('.btn-seleziona-proposta[data-proposta="1"]').data('valore', data.proposte.proposta1);
-      $('.btn-seleziona-proposta[data-proposta="2"]').data('valore', data.proposte.proposta2);
-      
-      $('#proposte-container').show();
-      
-      // Ricalcola la potenza consigliata dell'alimentatore quando la lunghezza cambia
-      calcolaPotenzaAlimentatoreConsigliata();
-    },
-    error: function(error) {
-      console.error("Errore nel calcolo delle proposte:", error);
-      $('#proposte-container').hide();
-    }
-  });
-}
-
-/**
  * Finalizza la configurazione e genera il riepilogo
  */
 export function finalizzaConfigurazione() {
