@@ -324,17 +324,123 @@ export function prepareControlloListeners() {
   // Carica i dimmer compatibili
   caricaDimmerCompatibili();
   
+  // MODIFICA: Applicazione delle regole specifiche per le opzioni di alimentazione in base alla tensione e lunghezza
+  
+  // Ottieni la lunghezza attuale in mm
+  const lunghezzaRichiesta = configurazione.lunghezzaRichiesta || 0;
+  
+  // Container per le opzioni di alimentazione
+  const alimentazioneCavoContainer = $('#alimentazione-cavo-container');
+  alimentazioneCavoContainer.empty();
+  
+  // Regole specifiche in base alla tensione
+  if (configurazione.tensioneSelezionato === '24V' && lunghezzaRichiesta > 5000) {
+    // Per sistemi 24V > 5000mm, obbligatorio due alimentatori
+    alimentazioneCavoContainer.html(`
+      <div class="col-md-12 mb-3">
+        <div class="alert alert-warning">
+          <strong>Nota:</strong> Per sistemi a 24V che superano i 5000mm di lunghezza è obbligatorio utilizzare l'alimentazione doppia.
+        </div>
+      </div>
+      <div class="col-md-12 mb-3">
+        <div class="card option-card alimentazione-cavo-card selected" data-alimentazione-cavo="ALIMENTAZIONE_DOPPIA">
+          <div class="card-body text-center">
+            <h5 class="card-title">Alimentazione doppia</h5>
+            <p class="card-text small text-muted">Due punti di alimentazione (obbligatorio per questa configurazione)</p>
+          </div>
+        </div>
+      </div>
+    `);
+    
+    // Imposta automaticamente l'alimentazione doppia
+    configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_DOPPIA";
+    $('#lunghezza-cavo-uscita-container').show();
+    
+  } else if (configurazione.tensioneSelezionato === '48V' && lunghezzaRichiesta <= 15000) {
+    // Per sistemi 48V fino a 15000mm, solo alimentazione unica
+    alimentazioneCavoContainer.html(`
+      <div class="col-md-12 mb-3">
+        <div class="alert alert-info">
+          <strong>Nota:</strong> Per sistemi a 48V fino a 15000mm di lunghezza è prevista solo l'alimentazione unica.
+        </div>
+      </div>
+      <div class="col-md-12 mb-3">
+        <div class="card option-card alimentazione-cavo-card selected" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
+          <div class="card-body text-center">
+            <h5 class="card-title">Alimentazione unica</h5>
+            <p class="card-text small text-muted">Singolo punto di alimentazione (consigliato per questa configurazione)</p>
+          </div>
+        </div>
+      </div>
+    `);
+    
+    // Imposta automaticamente l'alimentazione unica
+    configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_UNICA";
+    $('#lunghezza-cavo-uscita-container').hide();
+    
+  } else if (configurazione.tensioneSelezionato === '220V') {
+    // Per sistemi 220V, nessun limite e solo alimentazione unica
+    alimentazioneCavoContainer.html(`
+      <div class="col-md-12 mb-3">
+        <div class="alert alert-info">
+          <strong>Nota:</strong> Per sistemi a 220V è prevista solo l'alimentazione unica senza limiti di lunghezza.
+        </div>
+      </div>
+      <div class="col-md-12 mb-3">
+        <div class="card option-card alimentazione-cavo-card selected" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
+          <div class="card-body text-center">
+            <h5 class="card-title">Alimentazione unica</h5>
+            <p class="card-text small text-muted">Singolo punto di alimentazione (obbligatorio per questa configurazione)</p>
+          </div>
+        </div>
+      </div>
+    `);
+    
+    // Imposta automaticamente l'alimentazione unica
+    configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_UNICA";
+    $('#lunghezza-cavo-uscita-container').hide();
+    
+  } else {
+    // Caso normale, mostra entrambe le opzioni
+    alimentazioneCavoContainer.html(`
+      <div class="col-md-6 mb-3">
+        <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
+          <div class="card-body text-center">
+            <h5 class="card-title">Alimentazione unica</h5>
+            <p class="card-text small text-muted">Singolo punto di alimentazione</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 mb-3">
+        <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_DOPPIA">
+          <div class="card-body text-center">
+            <h5 class="card-title">Alimentazione doppia</h5>
+            <p class="card-text small text-muted">Due punti di alimentazione</p>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
+  // Re-attacca gli event listeners per le card di alimentazione cavo
   $('.alimentazione-cavo-card').on('click', function() {
-    $('.alimentazione-cavo-card').removeClass('selected');
-    $(this).addClass('selected');
-    
-    const alimentazioneCavo = $(this).data('alimentazione-cavo');
-    configurazione.tipoAlimentazioneCavo = alimentazioneCavo;
-    
-    if (alimentazioneCavo === 'ALIMENTAZIONE_DOPPIA') {
-      $('#lunghezza-cavo-uscita-container').show();
-    } else {
-      $('#lunghezza-cavo-uscita-container').hide();
+    // Solo nei casi in cui non c'è un'opzione obbligatoria
+    if (!(configurazione.tensioneSelezionato === '24V' && lunghezzaRichiesta > 5000) && 
+        !(configurazione.tensioneSelezionato === '48V' && lunghezzaRichiesta <= 15000) && 
+        !(configurazione.tensioneSelezionato === '220V')) {
+      
+      $('.alimentazione-cavo-card').removeClass('selected');
+      $(this).addClass('selected');
+      
+      const alimentazioneCavo = $(this).data('alimentazione-cavo');
+      configurazione.tipoAlimentazioneCavo = alimentazioneCavo;
+      
+      if (alimentazioneCavo === 'ALIMENTAZIONE_DOPPIA') {
+        $('#lunghezza-cavo-uscita-container').show();
+      } else {
+        $('#lunghezza-cavo-uscita-container').hide();
+      }
     }
     
     checkStep5Completion();

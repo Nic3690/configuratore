@@ -294,6 +294,7 @@ def get_opzioni_potenza(profilo_id, tensione, ip, temperatura, tipologia_strip=N
 
 
 @app.route('/get_strip_led_filtrate/<profilo_id>/<tensione>/<ip>/<temperatura>/<potenza>')
+@app.route('/get_strip_led_filtrate/<profilo_id>/<tensione>/<ip>/<temperatura>/<potenza>/<tipologia_strip>')
 def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipologia_strip = None):
     try:
         print(f"Chiamata a get_strip_led_filtrate con: {profilo_id}, {tensione}, {ip}, {temperatura}, {potenza}")
@@ -475,11 +476,61 @@ def get_strip_led_by_nome_commerciale(nome_commerciale):
 def calcola_lunghezze():
     data = request.json
     dim_richiesta = data.get('lunghezzaRichiesta', 0)
+    strip_id = data.get('stripLedSelezionata')
+    potenza_selezionata = data.get('potenzaSelezionata')
     
-    proposta1 = round(dim_richiesta * 0.98)
-    proposta2 = round(dim_richiesta * 1.01)
-    
+    # Default values
+    taglio_minimo = 1  # Default se non troviamo un valore specifico
     spazio_produzione = CONFIG_DATA.get('spazioProduzione', 5)
+    
+    # Ottieni il taglio minimo per la strip e la potenza selezionata
+    if strip_id and strip_id != 'NO_STRIP' and potenza_selezionata:
+        # Ottieni la configurazione della strip
+        strip_info = CONFIG_DATA.get('stripLed', {}).get(strip_id, {})
+        
+        # Ottieni le opzioni di potenza e i tagli minimi
+        potenze_disponibili = strip_info.get('potenzeDisponibili', [])
+        tagli_minimi = strip_info.get('taglioMinimo', [])
+        
+        # Trova l'indice dell'opzione di potenza selezionata
+        potenza_index = -1
+        for i, potenza in enumerate(potenze_disponibili):
+            if potenza == potenza_selezionata:
+                potenza_index = i
+                break
+        
+        # Ottieni il taglio minimo corrispondente
+        if potenza_index >= 0 and potenza_index < len(tagli_minimi):
+            taglio_minimo_str = tagli_minimi[potenza_index]
+            
+            # Analizza il valore del taglio minimo
+            # Il formato potrebbe essere "62,5mm" o "41.7mm"
+            import re
+            match = re.search(r'(\d+(?:[.,]\d+)?)', taglio_minimo_str)
+            if match:
+                # Sostituisci la virgola con il punto per il parsing corretto del float
+                taglio_minimo_val = match.group(1).replace(',', '.')
+                try:
+                    taglio_minimo = float(taglio_minimo_val)
+                except ValueError:
+                    print(f"Errore nel parsing del valore del taglio minimo: {taglio_minimo_str}")
+    
+    # Se la lunghezza richiesta è fornita
+    if dim_richiesta > 0:
+        # Calcola il multiplo più vicino minore o uguale alla lunghezza richiesta
+        proposta1 = int(dim_richiesta // taglio_minimo * taglio_minimo)
+        
+        # Calcola il multiplo più vicino maggiore o uguale alla lunghezza richiesta
+        proposta2 = int(((dim_richiesta + taglio_minimo - 0.01) // taglio_minimo) * taglio_minimo)
+        
+        # Assicurati che proposta2 sia maggiore di proposta1
+        # Questo gestisce il caso in cui la lunghezza richiesta è già un multiplo di taglio_minimo
+        if proposta2 <= proposta1:
+            proposta2 = int(proposta1 + taglio_minimo)
+    else:
+        # Valori predefiniti se non viene fornita una dimensione
+        proposta1 = 0
+        proposta2 = 0
     
     return jsonify({
         'success': True,

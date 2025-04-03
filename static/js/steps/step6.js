@@ -47,7 +47,9 @@ function calcolaProposte(lunghezzaRichiesta) {
       method: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({
-        lunghezzaRichiesta: lunghezzaRichiesta
+        lunghezzaRichiesta: lunghezzaRichiesta,
+        stripLedSelezionata: configurazione.stripLedSelezionata,
+        potenzaSelezionata: configurazione.potenzaSelezionata
       }),
       success: function(data) {
         if (!data.success) {
@@ -101,7 +103,6 @@ export function vaiAlleProposte() {
         $('#step6-proposte-container').html(`
           <h5>Proposte di lunghezza standard</h5>
           <p>Il sistema ha calcolato delle proposte di lunghezza standard più adatte per la tua installazione.</p>
-          <p><strong style="color:#ff0000;">ATTENZIONE:</strong> se viene utilizzata la lunghezza personalizzata si verificherà uno spazio buio di <span id="step6-spazio-produzione">${data.spazioProduzione || 5}</span>mm.</p>
           
           <div class="row mt-3">
             <div class="col-md-6 mb-2">

@@ -240,6 +240,12 @@ export function caricaOpzioniIP(profiloId, tensione) {
         $('#ip-options').html('<p>Nessuna opzione IP disponibile per questa combinazione.</p>');
         return;
       }
+
+      data.ip.sort((a, b) => {
+        const ipNumA = parseInt(a.replace('IP', ''));
+        const ipNumB = parseInt(b.replace('IP', ''));
+        return ipNumA - ipNumB;
+      });
       
       data.ip.forEach(function(ip) {
         $('#ip-options').append(`
@@ -525,6 +531,14 @@ export function caricaOpzioniPotenza(profiloId, temperatura) {
         $('#potenza-container').html('<div class="col-12 text-center"><p>Nessuna opzione di potenza disponibile per questa combinazione.</p></div>');
         return;
       }
+
+      data.potenze.sort((a, b) => {
+        const getWattValue = (potenza) => {
+          const match = potenza.id.match(/(\d+(?:\.\d+)?)/);
+          return match ? parseFloat(match[1]) : 0;
+        };
+        return getWattValue(a) - getWattValue(b);
+      });
       
       data.potenze.forEach(function(potenza) {
         $('#potenza-container').append(`
@@ -556,7 +570,7 @@ export function caricaOpzioniPotenza(profiloId, temperatura) {
   });
 }
 
-export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, potenza) {
+export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, potenza, tipologia_strip) {
   
   // Verifica che tutti i parametri siano definiti
   if (!profiloId || !tensione || !ip || !temperatura || !potenza) {
@@ -575,7 +589,7 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
   var potenzaFinale = potenzaNew.replace('/', '_');
   
   $.ajax({
-    url: `/get_strip_led_filtrate/${profiloId}/${tensione}/${ip}/${temperatura}/${potenzaFinale}`,
+    url: `/get_strip_led_filtrate/${profiloId}/${tensione}/${ip}/${temperatura}/${potenzaFinale}/${tipologia_strip}`,
     method: 'GET',
     success: function(data) {
       
@@ -1085,7 +1099,7 @@ export function finalizzaConfigurazione() {
             riepilogoHtml += `
                       <tr>
                         <th scope="row">Potenza</th>
-                        <td>${riepilogo.potenzaSelezionata}${riepilogo.codicePotenza ? ' - ' + riepilogo.codicePotenza : ''}</td>
+                        <td>${riepilogo.potenzaSelezionata}</td>
                       </tr>
             `;
           }

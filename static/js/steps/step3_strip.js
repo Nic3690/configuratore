@@ -52,7 +52,8 @@ export function vaiAllaSelezioneLedStrip() {
     configurazione.tensioneSelezionato,
     configurazione.ipSelezionato,
     configurazione.temperaturaSelezionata,
-    configurazione.potenzaSelezionata
+    configurazione.potenzaSelezionata,
+    configurazione.tipologiaStripSelezionata
   );
   
   // Manteniamo la barra di progresso a 3 perché è ancora parte dello step 3
