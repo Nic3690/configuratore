@@ -570,7 +570,6 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
     url: `/get_strip_led_filtrate/${profiloId}/${tensione}/${ip}/${temperatura}/${potenzaFinale}`,
     method: 'GET',
     success: function(data) {
-      console.log("Risposta da get_strip_led_filtrate:", data);
       
       if (!data.success) {
         $('#strip-led-compatibili-container').html(`<div class="col-12 text-center"><p class="text-danger">Errore: ${data.message || 'Errore sconosciuto'}</p></div>`);
