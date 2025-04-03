@@ -49,7 +49,7 @@ export function generaPDF(codiceProdotto, configurazione) {
 	  try {
 		const logoImg = new Image();
 		logoImg.src = '/static/img/logo-redo-nero.png';
-		doc.addImage(logoImg, 'PNG', 15, 10, 30, 10);
+		doc.addImage(logoImg, 'PNG', 15, 10, 30, 15);
 	  } catch (e) {
 		console.warn('Logo non disponibile');
 	  }
@@ -252,11 +252,12 @@ export function generaPDF(codiceProdotto, configurazione) {
 		  textColor: [255, 255, 255],
 		  fontSize: 12,
 		  fontStyle: 'bold',
-		  halign: 'left'
+		  halign: 'left',
+		  cellPadding: 3
 		},
 		styles: {
 		  fontSize: 10,
-		  cellPadding: 5,
+		  cellPadding: 2,
 		  overflow: 'linebreak',
 		  halign: 'left'
 		},

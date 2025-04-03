@@ -15,6 +15,15 @@ h1, h2, h3, h4 {
 }
 
 /* Header e logo */
+.col-md-3.text-start a {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.col-md-3.text-start a:hover {
+  opacity: 0.9;
+}
+
 .site-logo {
   width: 170px;
   height: auto;
