@@ -588,7 +588,7 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
         const nomeVisualizzato = strip.nomeCommerciale || strip.nome;
         
         // Percorso immagine per il modello di strip LED
-        const imgPath = `/static/img/strip/${strip.id.toLowerCase()}.jpg`;
+        const imgPath = `/static/img/strip/${strip.id}.jpg`;
         
         stripHtml += `
           <div class="col-md-4 mb-3">
