@@ -103,7 +103,8 @@ def get_opzioni_tensione(profilo_id, tipologia_strip=None):
                 continue
             elif tipologia_strip == 'SPECIAL':
                 # Per SPECIAL, definisci qui la logica di filtro specifica
-                if 'COB' in strip_id or 'SMD' in strip_id:
+                strip_info = strip_led_data.get(strip_id, {})
+                if strip_info.get('tipo') != 'SPECIAL':
                     continue
             
         tensione = strip_info.get('tensione')
@@ -138,7 +139,8 @@ def get_opzioni_ip(profilo_id, tensione, tipologia_strip=None):
             elif tipologia_strip == 'SMD' and 'SMD' not in strip_id:
                 continue
             elif tipologia_strip == 'SPECIAL':
-                if 'COB' in strip_id or 'SMD' in strip_id:
+                strip_info = strip_led_data.get(strip_id, {})
+                if strip_info.get('tipo') != 'SPECIAL':
                     continue
                 
         if strip_info.get('tensione') == tensione:
@@ -174,7 +176,8 @@ def get_opzioni_temperatura_iniziale(profilo_id, tensione, ip, tipologia_strip=N
             elif tipologia_strip == 'SMD' and 'SMD' not in strip_id:
                 continue
             elif tipologia_strip == 'SPECIAL':
-                if 'COB' in strip_id or 'SMD' in strip_id:
+                strip_info = strip_led_data.get(strip_id, {})
+                if strip_info.get('tipo') != 'SPECIAL':
                     continue
                 
         if strip_info.get('tensione') == tensione and strip_info.get('ip') == ip:
@@ -251,7 +254,8 @@ def get_opzioni_potenza(profilo_id, tensione, ip, temperatura, tipologia_strip=N
             elif tipologia_strip == 'SMD' and 'SMD' not in strip_id:
                 continue
             elif tipologia_strip == 'SPECIAL':
-                if 'COB' in strip_id or 'SMD' in strip_id:
+                strip_info = strip_led_data.get(strip_id, {})
+                if strip_info.get('tipo') != 'SPECIAL':
                     continue
         
         # Verifica se la strip soddisfa i parametri selezionati
@@ -320,7 +324,8 @@ def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipol
                 elif tipologia_strip == 'SMD' and 'SMD' not in strip_id:
                     continue
                 elif tipologia_strip == 'SPECIAL':
-                    if 'COB' in strip_id or 'SMD' in strip_id:
+                    strip_info = strip_led_data.get(strip_id, {})
+                    if strip_info.get('tipo') != 'SPECIAL':
                         continue
 
             # Verifica la compatibilità con tutti i parametri

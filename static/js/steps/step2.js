@@ -210,7 +210,7 @@ function analizzaEMostraTipologieCompatibili() {
         id.includes('ZIGZAG') || 
         id.includes('XFLEX') || 
         id.includes('RUNNING') || 
-        id.includes('XNAKE') || 
+        id.includes('XSNAKE') || 
         id.includes('XMAGIS'));
       
       // Mostra solo le tipologie compatibili
@@ -278,7 +278,7 @@ function filtraSpecialStripCompatibili(stripCompatibili) {
     'XFLEX': ['XFLEX', 'FLEX'],
     'RUNNING': ['RUNNING'],
     'ZIG_ZAG': ['ZIGZAG', 'ZIG_ZAG', 'ZIGZAG'],
-    'XNAKE': ['XNAKE', 'XSNAKE', 'SNAKE'],
+    'XSNAKE': ['XSNAKE', 'XSNAKE', 'SNAKE'],
     'XMAGIS': ['XMAGIS', 'MAGIS']
   };
   

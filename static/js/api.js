@@ -156,7 +156,7 @@ export function caricaOpzioniParametri(profiloId, potenza = null) {
   $('#btn-continua-parametri').prop('disabled', true);
   
   let url = `/get_opzioni_tensione/${profiloId}`;
-  if (tipologiaStrip) {
+  if (configurazione.tipologiaStripSelezionata) {
     url += `/${configurazione.tipologiaStripSelezionata}`;
   }
 
@@ -469,11 +469,19 @@ function filterStripsByType(strips) {
     // Per le special strip
     else if (configurazione.tipologiaStripSelezionata === 'SPECIAL') {
       // Mappa delle special strip ai rispettivi ID o nomi commerciali
+      if (!configurazione.specialStripSelezionata) {
+        const allSpecialKeywords = ['XMAGIS', 'ZIGZAG', 'XFLEX', 'XSNAKE', 'RUNNING'];
+        return allSpecialKeywords.some(keyword => 
+          (strip.nomeCommerciale && strip.nomeCommerciale.toUpperCase().includes(keyword)) ||
+          (strip.id && strip.id.toUpperCase().includes(keyword))
+        );
+      }
+
       const specialStripMap = {
         'XFLEX': ['XFLEX'],
         'RUNNING': ['RUNNING'],
         'ZIG_ZAG': ['ZIG_ZAG'],
-        'XNAKE': ['XNAKE', 'XSNAKE'],
+        'XSNAKE': ['XSNAKE'],
         'XMAGIS': ['XMAGIS']
       };
       

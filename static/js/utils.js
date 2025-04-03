@@ -56,6 +56,16 @@ export function getTemperaturaColor(temperatura) {
       return 'linear-gradient(to right, red, green, blue)';
     case 'RGBW':
       return 'linear-gradient(to right, red, green, blue, white)';
+    case 'ROSSO':
+      return 'red';
+    case 'VERDE':
+      return 'green';
+    case 'BLU':
+      return 'blue';
+    case 'AMBRA':
+      return '#FFBF00';
+    case 'PINK':
+      return 'pink';
     default:
       return '#FFFFFF';
   }

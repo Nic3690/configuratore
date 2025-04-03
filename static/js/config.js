@@ -97,7 +97,7 @@ const configurazione = {
 	'XFLEX': 'XFLEX',
 	'RUNNING': 'RUNNING',
 	'ZIG_ZAG': 'ZIG ZAG',
-	'XNAKE': 'XNAKE',
+	'XSNAKE': 'XSNAKE',
 	'XMAGIS': 'XMAGIS'
   };
 

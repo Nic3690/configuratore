@@ -654,6 +654,41 @@
         "STRIP_48V_SMD_IP66", "STRIP_24V_SMD_IP66_ZIGZAG", "STRIP_48V_SMD_IP66_ZIGZAG", "STRIP_24V_RGB_SMD_IP20", "STRIP_24V_RGB_SMD_IP66",
         "STRIP_24V_COB_IP20_MINI", "STRIP_220V_COB_IP20_MINI", "STRIP_24V_SMD_IP20_CCT", "STRIP_24V_SMD_IP66_CCT"
       ]
+    },
+    {
+      "id": "FWPF",
+      "nome": "FWPF",
+      "categoria": "parete",
+      "note": "",
+      "immagine": "/static/img/fwpf.jpg",
+      "tipologie": ["taglio_misura", "profilo_intero"],
+      "finitureDisponibili": ["ALLUMINIO"],
+      "lunghezzaMassima": 5000,
+      "stripLedCompatibili": ["STRIP_24V_SMD_IP66_XFLEX"]
+    },
+    {
+      "id": "MG12X17PF",
+      "nome": "MG12X17PF",
+      "categoria": "parete",
+      "note": "",
+      "immagine": "/static/img/mg12x17pf.jpg",
+      "tipologie": ["taglio_misura", "profilo_intero"],
+      "finitureDisponibili": ["ALLUMINIO"],
+      "lunghezzaMassima": 2000,
+      "stripLedCompatibili": ["STRIP_24V_SMD_IP66_XMAGIS_12X17", "STRIP_24V_SMD_IP66_XMAGIS_12X17_RGB",
+        "STRIP_24V_SMD_IP66_XMAGIS_12X17_RGBW", "STRIP_24V_SMD_IP66_XMAGIS_12X17_CCT"
+      ]
+    },
+    {
+      "id": "SNK6X12PF",
+      "nome": "SNK6X12PF",
+      "categoria": "parete",
+      "note": "",
+      "immagine": "/static/img/snk6x12pf.jpg",
+      "tipologie": ["taglio_misura", "profilo_intero"],
+      "finitureDisponibili": ["ALLUMINIO"],
+      "lunghezzaMassima": 2000,
+      "stripLedCompatibili": ["STRIP_24V_SMD_IP66_XSNAKE_6X12"]
     }
   ],
   "stripLed": {
@@ -854,10 +889,120 @@
       "potenzeDisponibili": ["14,4W/m"],
       "codiciProdotto": ["ST56065TWCRI90"],
       "taglioMinimo" : ["50mm"]
+    },
+    "STRIP_24V_SMD_IP66_XFLEX": {
+      "nome": "STRIP 24V SMD IP66 XFLEX",
+      "nomeCommerciale": "XFLEX",
+      "tipo": "SPECIAL",
+      "tensione": "24V",
+      "ip": "IP67",
+      "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K", "RGB"],
+      "potenzeDisponibili": ["20W/m"],
+      "codiciProdotto": ["FW24267WW20S", "FW24267NW20S", "FW24267CW20S"],
+      "taglioMinimo" : ["166,67mm"]
+    },
+    "STRIP_24V_SMD_IP66_XMAGIS_13X12": {
+      "nome": "STRIP 24V SMD IP66 XMAGIS 13X12",
+      "nomeCommerciale": "XMAGIS 13X12",
+      "tipo": "SPECIAL",
+      "tensione": "24V",
+      "ip": "IP67",
+      "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
+      "potenzeDisponibili": ["9,6W/m"],
+      "codiciProdotto": ["MG13X12WW", "MG13X12NW", "MG13X12CW"],
+      "taglioMinimo" : ["50mm"]
+    },
+    "STRIP_24V_SMD_IP66_XMAGIS_13X12_RGB": {
+      "nome": "STRIP 24V RGB SMD IP66 XMAGIS 13X12",
+      "nomeCommerciale": "XMAGIS 13X12 RGB",
+      "tipo": "SPECIAL",
+      "tensione": "24V",
+      "ip": "IP67",
+      "temperaturaColoreDisponibili": ["RGB"],
+      "potenzeDisponibili": ["18W/m"],
+      "codiciProdotto": ["MG13X12RGBDMX"],
+      "taglioMinimo" : ["71,43mm"]
+    },
+    "STRIP_24V_SMD_IP66_XMAGIS_13X12_RGBW": {
+      "nome": "STRIP 24V RGBW SMD IP66 XMAGIS 13X12",
+      "nomeCommerciale": "XMAGIS 13X12 RGBW",
+      "tipo": "SPECIAL",
+      "tensione": "24V",
+      "ip": "IP67",
+      "temperaturaColoreDisponibili": ["RGBW"],
+      "potenzeDisponibili": ["14,4W/m"],
+      "codiciProdotto": ["MG13X12RGBW"],
+      "taglioMinimo" : ["62,5mm"]
+    },
+    "STRIP_24V_SMD_IP66_XMAGIS_13X12_CCT": {
+      "nome": "STRIP 24V CCT SMD IP66 XMAGIS 13X12",
+      "nomeCommerciale": "XMAGIS 13X12 CCT",
+      "tipo": "SPECIAL",
+      "tensione": "24V",
+      "ip": "IP67",
+      "temperaturaColoreDisponibili": ["CCT"],
+      "potenzeDisponibili": ["12W/m"],
+      "codiciProdotto": ["MG13X12CCT"],
+      "taglioMinimo" : ["31,25mm"]
+    },
+    "STRIP_24V_SMD_IP66_XMAGIS_12X17": {
+      "nome": "STRIP 24V SMD IP66",
+      "nomeCommerciale": "XMAGIS 12X17",
+      "tipo": "SPECIAL",
+      "tensione": "24V",
+      "ip": "IP67",
+      "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
+      "potenzeDisponibili": ["9,6W/m"],
+      "codiciProdotto": ["MG12X17WW", "MG12X17NW", "MG12X17CW"],
+      "taglioMinimo" : ["50mm"]
+    },
+    "STRIP_24V_SMD_IP66_XMAGIS_12X17_RGB": {
+      "nome": "STRIP 24V RGB SMD IP66 XMAGIS 12X17",
+      "nomeCommerciale": "XMAGIS 12X17 RGB",
+      "tipo": "SPECIAL",
+      "tensione": "24V",
+      "ip": "IP67",
+      "temperaturaColoreDisponibili": ["RGB"],
+      "potenzeDisponibili": ["18W/m"],
+      "codiciProdotto": ["MG12X17RGBDMX"],
+      "taglioMinimo" : ["71,5mm"]
+    },
+    "STRIP_24V_SMD_IP66_XMAGIS_12X17_RGBW": {
+      "nome": "STRIP 24V RGBW SMD IP66 XMAGIS 12X17",
+      "nomeCommerciale": "XMAGIS 12X17 RGBW",
+      "tipo": "SPECIAL",
+      "tensione": "24V",
+      "ip": "IP67",
+      "temperaturaColoreDisponibili": ["RGBW"],
+      "potenzeDisponibili": ["14,4W/m"],
+      "codiciProdotto": ["MG12X17RGBW"],
+      "taglioMinimo" : ["62,5mm"]
+    },
+    "STRIP_24V_SMD_IP66_XMAGIS_12X17_CCT": {
+      "nome": "STRIP 24V CCT SMD IP66 XMAGIS 12X17",
+      "nomeCommerciale": "XMAGIS 12X17 CCT",
+      "tipo": "SPECIAL",
+      "tensione": "24V",
+      "ip": "IP67",
+      "temperaturaColoreDisponibili": ["CCT"],
+      "potenzeDisponibili": ["12W/m"],
+      "codiciProdotto": ["MG12X17CCT"],
+      "taglioMinimo" : ["100mm"]
+    },
+    "STRIP_24V_SMD_IP66_XSNAKE_6X12": {
+      "nome": "STRIP 24V SMD IP66 XSNAKE 6X12",
+      "nomeCommerciale": "XSNAKE 6X12",
+      "tipo": "SPECIAL",
+      "tensione": "24V",
+      "ip": "IP67",
+      "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K", "ROSSO", "VERDE", "BLU", "AMBRA", "PINK"],
+      "potenzeDisponibili": ["9,6W/m"],
+      "codiciProdotto": ["SNK6X12WW", "SNK6X12NW", "SNK6X12CW"],
+      "taglioMinimo" : ["50mm"]
     }
   },
   "opzioniStripLed": {
-    "tipi": ["NO_STRIP", "STRIP_24V_SMD_IP20", "STRIP_24V_SMD_IP66", "STRIP_24V_SMD_IP66_ZIGZAG", "STRIP_48V_SMD_IP66_ZIGZAG","STRIP_24V_COB_IP20", "STRIP_24V_COB_IP66_CL", "STRIP_24V_COB_IP66_FR", "STRIP_48V_SMD_IP20", "STRIP_48V_SMD_IP66", "STRIP_24V_RGB_SMD_IP20", "STRIP_24V_RGB_SMD_IP66", "STRIP_24V_RGB_COB_IP20", "STRIP_24V_RGB_COB_IP66", "STRIP_220V_COB_IP20", "STRIP_220V_COB_IP66", "STRIP_24V_COB_IP20_MINI", "STRIP_220V_COB_IP20_MINI", "STRIP_24V_SMD_IP20_CCT", "STRIP_24V_SMD_IP66_CCT"]
+    "tipi": ["NO_STRIP", "STRIP_24V_SMD_IP66_XFLEX", "STRIP_24V_SMD_IP66_XMAGIS_12X17", "STRIP_24V_SMD_IP66_XSNAKE_6X12", "STRIP_24V_SMD_IP20", "STRIP_24V_SMD_IP66", "STRIP_24V_SMD_IP66_ZIGZAG", "STRIP_48V_SMD_IP66_ZIGZAG","STRIP_24V_COB_IP20", "STRIP_24V_COB_IP66_CL", "STRIP_24V_COB_IP66_FR", "STRIP_48V_SMD_IP20", "STRIP_48V_SMD_IP66", "STRIP_24V_RGB_SMD_IP20", "STRIP_24V_RGB_SMD_IP66", "STRIP_24V_RGB_COB_IP20", "STRIP_24V_RGB_COB_IP66", "STRIP_220V_COB_IP20", "STRIP_220V_COB_IP66", "STRIP_24V_COB_IP20_MINI", "STRIP_220V_COB_IP20_MINI", "STRIP_24V_SMD_IP20_CCT", "STRIP_24V_SMD_IP66_CCT"]
   },
   "mappaturaCommerciale": {
     "XSOLIS IP20": "STRIP_24V_COB_IP20",
@@ -877,10 +1022,16 @@
     "CCT IP65": "STRIP_24V_SMD_IP66_CCT",
     "GRB": "STRIP_24V_RGB_SMD_IP20",
     "GRB IP65": "STRIP_24V_RGB_SMD_IP66",
-    "XFLEX": "STRIP_24V_COB_IP20",
-    "XFLEX RGB": "STRIP_24V_RGB_COB_IP20",
-    "XSNAKE": "STRIP_24V_SMD_IP20",
-    "XMAGIS": "STRIP_24V_SMD_IP20"
+    "XFLEX": "STRIP_24V_SMD_IP66_XFLEX",
+    "XMAGIS 13X12": "STRIP_24V_SMD_IP66_XMAGIS_13X12",
+    "XMAGIS 13X12 RGB": "STRIP_24V_SMD_IP66_XMAGIS_13X12_RGB",
+    "XMAGIS 13X12 RGBW": "STRIP_24V_SMD_IP66_XMAGIS_13X12_RGBW",
+    "XMAGIS 13X12 CCT": "STRIP_24V_SMD_IP66_XMAGIS_13X12_CCT",
+    "XMAGIS 12X17" : "STRIP_24V_SMD_IP66_XMAGIS_12X17",
+    "XMAGIS 12X17 RGB" : "STRIP_24V_SMD_IP66_XMAGIS_12X17_RGB",
+    "XMAGIS 12X17 RGBW" : "STRIP_24V_SMD_IP66_XMAGIS_12X17_RGBW",
+    "XMAGIS 12X17 CCT" : "STRIP_24V_SMD_IP66_XMAGIS_12X17_CCT",
+    "XSNAKE 6X12": "STRIP_24V_SMD_IP66_XSNAKE_6X12"
   },
   "temperaturaColore": {
     "opzioni": ["2700K", "3000K", "4000K", "6000K", "CCT", "RGB", "RGBW"]
