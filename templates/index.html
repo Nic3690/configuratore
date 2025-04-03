@@ -47,6 +47,10 @@
       </div>
       <div class="step-item" id="progress-step6">
         <div class="step-number">6</div>
+        <div class="step-title">Proposte</div>
+      </div>
+      <div class="step-item" id="progress-step7">
+        <div class="step-number">7</div>
         <div class="step-title">Riepilogo</div>
       </div>
     </div>
@@ -850,8 +854,73 @@
       </div>
     </div>
 
+    <!-- Nuovo step 6 per le proposte di lunghezza standard -->
+    <div class="step-section" id="step6-proposte">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="text-center mb-3">Proposte di lunghezza standard</h2>
+          
+          <div class="selection-badges">
+            <span class="badge bg-primary selection-badge">Modello: <span id="profilo-nome-step6">Profilo</span></span>
+            <span class="badge bg-success selection-badge">Tipologia: <span id="tipologia-nome-step6">Tipologia</span></span>
+            <span class="badge bg-info selection-badge">Strip LED: <span id="strip-nome-step6">Strip LED</span></span>
+          </div>
+          
+          <p class="text-center mb-4 text-muted">
+            <small>Scegli tra le proposte di lunghezza standard o conferma la lunghezza personalizzata</small>
+          </p>
+        </div>
+      </div>
+      
+      <div class="container mb-5">
+        <div class="alert alert-info mb-4">
+          <h5>Riepilogo misure</h5>
+          <p>Lunghezza personalizzata attuale: <strong><span id="lunghezza-attuale">0</span> mm</strong></p>
+        </div>
+        
+        <div id="step6-proposte-container" class="alert alert-warning">
+          <h5>Proposte di lunghezza standard</h5>
+          <p>Il sistema ha calcolato delle proposte di lunghezza standard più adatte per la tua installazione.</p>
+          <p><strong style="color:#ff0000;">ATTENZIONE:</strong> se viene utilizzata la lunghezza personalizzata si verificherà uno spazio buio di <span id="step6-spazio-produzione">5</span>mm.</p>
+          
+          <div class="row mt-3">
+            <div class="col-md-6 mb-2">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Proposta 1</h5>
+                  <p class="card-text"><span id="step6-proposta1-valore">1771mm</span></p>
+                  <button class="btn btn-outline-primary btn-seleziona-proposta" data-proposta="1" data-valore="1771">Seleziona</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6 mb-2">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Proposta 2</h5>
+                  <p class="card-text"><span id="step6-proposta2-valore">1804mm</span></p>
+                  <button class="btn btn-outline-primary btn-seleziona-proposta" data-proposta="2" data-valore="1804">Seleziona</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="alert alert-success mt-4">
+          <strong>Lunghezza selezionata:</strong> <span id="step6-lunghezza-finale">0</span> mm
+        </div>
+      </div>
+      
+      <div class="row mt-4">
+        <div class="col-12 text-center">
+          <button class="btn btn-secondary" id="btn-torna-step5-from-proposte">Indietro</button>
+          <button class="btn btn-primary ms-2" id="btn-continua-step6" disabled>Continua al riepilogo</button>
+        </div>
+      </div>
+    </div>
+
     <!-- MODIFICA: Rinominato da step7-riepilogo a step6-riepilogo -->
-    <div class="step-section" id="step6-riepilogo">
+    <div class="step-section" id="step7-riepilogo">
       <div class="row">
         <div class="col-12">
           <h2 class="text-center mb-3">Riepilogo configurazione</h2>
@@ -867,7 +936,7 @@
       <div class="row mt-4">
         <div class="col-12 text-center">
           <!-- MODIFICA: Ora torna allo step 5 invece dello step 6 -->
-          <button class="btn btn-secondary" id="btn-torna-step5">Modifica configurazione</button>
+          <button class="btn btn-secondary" id="btn-torna-step6">Modifica configurazione</button>
         </div>
       </div>
     </div>

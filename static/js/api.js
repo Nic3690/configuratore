@@ -1,6 +1,6 @@
 import { configurazione, mappaTipologieVisualizzazione, mappaTensioneVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione, mappaFormeTaglio, mappaFiniture, mappaCategorieVisualizzazione, mappaTipologiaStripVisualizzazione, mappaSpecialStripVisualizzazione } from './config.js';
 import { formatTemperatura, getTemperaturaColor, checkParametriCompletion, checkStep2Completion, updateProgressBar } from './utils.js';
-import { initRiepilogoOperationsListeners } from './steps/step6.js';
+import { initRiepilogoOperationsListeners } from './steps/step7.js';
 
 /**
  * Carica i profili per la categoria selezionata
@@ -956,10 +956,10 @@ export function finalizzaConfigurazione() {
   
   $('#riepilogo-container').html('<div class="text-center my-5"><div class="spinner-border" role="status"></div><p class="mt-3">Generazione riepilogo...</p></div>');
   
-  $("#step5-controllo").fadeOut(300, function() {
-    $("#step6-riepilogo").fadeIn(300);
+  $("#step6-proposte").fadeOut(300, function() {
+    $("#step7-riepilogo").fadeIn(300);
     
-    updateProgressBar(6);
+    updateProgressBar(7);
     
     // Assicurati che dimmer e alimentazione siano correttamente formattati per il riepilogo
     if (configurazione.dimmerSelezionato) {

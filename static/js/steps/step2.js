@@ -2,7 +2,6 @@ import { configurazione, mappaTipologieVisualizzazione, mappaFormeTaglio, mappaF
 import { updateProgressBar, checkStep2Completion, checkPersonalizzazioneCompletion, formatTemperatura, checkParametriCompletion } from '../utils.js';
 import { caricaOpzioniParametri, caricaStripLedFiltrate, caricaFinitureDisponibili, calcolaProposte, finalizzaConfigurazione, caricaOpzioniIP } from '../api.js';
 import { vaiAllaTemperaturaEPotenza } from './step3.js';
-import { vaiAllAlimentazione } from './step4.js';
 
 export function initStep2Listeners() {
   $('#btn-continua-step2').on('click', function(e) {
@@ -360,6 +359,7 @@ export function updateIstruzioniMisurazione(forma) {
         checkPersonalizzazioneCompletion();
       });
       $('#non-assemblato-warning').hide();
+      $('#proposte-container').hide();
       break;
       
     case 'FORMA_L_DX':
