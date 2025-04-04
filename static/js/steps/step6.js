@@ -87,10 +87,15 @@ export function vaiAlleProposte() {
     $('#strip-nome-step6').text('Senza Strip LED');
   }
   
-  $('#lunghezza-attuale').text(configurazione.lunghezzaRichiesta || 0);
-  $('#step6-lunghezza-finale').text(configurazione.lunghezzaRichiesta || 0);
+  // Memorizza la lunghezza originale richiesta dall'utente
+  const lunghezzaOriginale = configurazione.lunghezzaRichiesta || 0;
+  $('#lunghezza-attuale').text(lunghezzaOriginale);
+  $('#step6-lunghezza-finale').text(lunghezzaOriginale);
 
-  if (configurazione.lunghezzaRichiesta && configurazione.lunghezzaRichiesta > 0) {
+  // Rimuove eventuali avvisi precedenti
+  $('#spazio-buio-warning').remove();
+
+  if (lunghezzaOriginale && lunghezzaOriginale > 0) {
     $('#step6-proposte-container').html(`
       <div class="text-center mt-3 mb-3">
         <div class="spinner-border" role="status"></div>
@@ -98,56 +103,114 @@ export function vaiAlleProposte() {
       </div>
     `);
 
-    calcolaProposte(configurazione.lunghezzaRichiesta)
+    calcolaProposte(lunghezzaOriginale)
       .then(data => {
-        $('#step6-proposte-container').html(`
+        // Imposta lo spazio di produzione in base ai dati ricevuti o utilizza il valore di default 5mm
+        const spazioProduzione = data.spazioProduzione || 5;
+        
+        // Verifica se la lunghezza originale coincide con una delle proposte
+        const coincideConProposta1 = lunghezzaOriginale === data.proposte.proposta1;
+        const coincideConProposta2 = lunghezzaOriginale === data.proposte.proposta2;
+        const coincideConProposte = coincideConProposta1 || coincideConProposta2;
+        
+        // Calcola lo spazio buio (lunghezza originale - proposta per difetto)
+        // La proposta per difetto è sempre proposta1 (la più piccola)
+        const spazioBuio = lunghezzaOriginale - data.proposte.proposta1;
+        
+        // Crea l'avviso dello spazio buio, ma non lo mostra ancora
+        if (spazioBuio > 0) {
+          $('<div id="spazio-buio-warning" class="assembly-warning" style="display: none;">' +
+            `<strong>ATTENZIONE:</strong> Con la lunghezza originale, avremo uno spazio buio di ${spazioBuio}mm` +
+            '</div>').insertBefore('#step6-proposte-container');
+        }
+        
+        // Determina quante colonne mostrare (2 o 3)
+        const numeroCols = coincideConProposte ? 6 : 4;
+        
+        let proposteHTML = `
           <h5>Proposte di lunghezza standard</h5>
           <p>Il sistema ha calcolato delle proposte di lunghezza standard più adatte per la tua installazione.</p>
-          
           <div class="row mt-3">
-            <div class="col-md-6 mb-2">
+            <div class="col-md-${numeroCols} mb-2">
               <div class="card">
                 <div class="card-body text-center">
                   <h5 class="card-title">Proposta 1</h5>
                   <p class="card-text"><span id="step6-proposta1-valore">${data.proposte.proposta1}mm</span></p>
                   <button class="btn btn-outline-primary btn-seleziona-proposta" data-proposta="1" data-valore="${data.proposte.proposta1}">Seleziona</button>
+                  ${coincideConProposta1 ? '<div class="mt-2"><small class="text-success">Corrisponde alla lunghezza originale</small></div>' : ''}
                 </div>
               </div>
             </div>
             
-            <div class="col-md-6 mb-2">
+            <div class="col-md-${numeroCols} mb-2">
               <div class="card">
                 <div class="card-body text-center">
                   <h5 class="card-title">Proposta 2</h5>
                   <p class="card-text"><span id="step6-proposta2-valore">${data.proposte.proposta2}mm</span></p>
                   <button class="btn btn-outline-primary btn-seleziona-proposta" data-proposta="2" data-valore="${data.proposte.proposta2}">Seleziona</button>
+                  ${coincideConProposta2 ? '<div class="mt-2"><small class="text-success">Corrisponde alla lunghezza originale</small></div>' : ''}
                 </div>
               </div>
-            </div>
-          </div>
-        `);
+            </div>`;
+        
+        // Aggiungi la terza opzione solo se la lunghezza originale è diversa dalle proposte
+        if (!coincideConProposte) {
+          proposteHTML += `
+            <div class="col-md-${numeroCols} mb-2">
+              <div class="card">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Lunghezza Originale</h5>
+                  <p class="card-text"><span id="step6-lunghezza-originale">${lunghezzaOriginale}mm</span></p>
+                  <button class="btn btn-outline-danger btn-seleziona-proposta" data-proposta="originale" data-valore="${lunghezzaOriginale}">Seleziona</button>
+                </div>
+              </div>
+            </div>`;
+        }
+        
+        proposteHTML += `</div>`;
+        
+        $('#step6-proposte-container').html(proposteHTML);
 
         $('.btn-seleziona-proposta').on('click', function() {
+          // Rimuove la classe "active" da tutti i bottoni
+          $('.btn-seleziona-proposta').removeClass('active');
+          // Aggiunge classe "active" solo al bottone cliccato
+          $(this).addClass('active');
+          
           const proposta = $(this).data('proposta');
           const valore = parseInt($(this).data('valore'), 10);
           
-          if (proposta === 1) {
-            configurazione.lunghezzaRichiesta = valore;
-            $('#step6-lunghezza-finale').text(valore);
-          } else if (proposta === 2) {
-            configurazione.lunghezzaRichiesta = valore;
-            $('#step6-lunghezza-finale').text(valore);
+          configurazione.lunghezzaRichiesta = valore;
+          $('#step6-lunghezza-finale').text(valore);
+          
+          // Nascondi sempre l'avviso dello spazio buio prima
+          $('#spazio-buio-warning').hide();
+          
+          // Mostra l'avviso dello spazio buio solo se è selezionata la lunghezza originale
+          // e se questa è maggiore della proposta1 (quindi c'è uno spazio buio)
+          if (proposta === 'originale' && spazioBuio > 0) {
+            $('#spazio-buio-warning').show();
           }
 
           $('#btn-continua-step6').prop('disabled', false);
         });
+        
+        // Se c'è corrispondenza con una delle proposte, seleziona automaticamente quella proposta
+        if (coincideConProposta1) {
+          $('.btn-seleziona-proposta[data-proposta="1"]').addClass('active').trigger('click');
+        } else if (coincideConProposta2) {
+          $('.btn-seleziona-proposta[data-proposta="2"]').addClass('active').trigger('click');
+        }
       })
       .catch(error => {
+        console.error("Errore nel calcolo delle proposte:", error);
         $('#step6-proposte-container').html(`
           <div class="alert alert-danger">
             <p>Non è stato possibile calcolare le proposte di lunghezza. Verrà utilizzata la lunghezza originale.</p>
           </div>
         `);
+        // In caso di errore, abilita comunque il pulsante continua
+        $('#btn-continua-step6').prop('disabled', false);
       });
   } else {
     $('#step6-proposte-container').html(`
