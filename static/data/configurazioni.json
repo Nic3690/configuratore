@@ -1207,7 +1207,7 @@
   "alimentazione": {
     "tipi": ["ON-OFF", "DIMMERABILE_TRIAC", "DIMMERABILE_DALI_PUSH", "SENZA_ALIMENTATORE"],
     "alimentatori": {
-      "ON-OFF": ["SERIE_AT24", "SERIE_ATN24", "SERIE_ATS", "SERIE_ATUS", "SERIE_ATSIP44"],
+      "ON-OFF": ["SERIE_AT24", "SERIE_ATUS", "SERIE_ATSIP44"],
       "DIMMERABILE_TRIAC": ["SERIE_ATD24"],
       "DIMMERABILE_DALI_PUSH": ["SERIE_ATD24", "SERIE_AT24"]
     }
@@ -1217,16 +1217,6 @@
       "nome": "SERIE AT24",
       "descrizione": "Carcassa in lamiera forata di acciaio zincato, per assicurare una corretta ventilazione.",
       "potenze": [30, 60, 100, 150, 200, 320]
-    },
-    "SERIE_ATN24": {
-      "nome": "SERIE ATN24",
-      "descrizione": "Scatola in allumino anodizzato, con profili laterali in alluminio estruso per garantire il raffreddamento dei componenti elettronici di potenza. Coperchio frontale in lamiera di alluminio anodizzato, con fessure, per il raffreddamento e la libera circolazione dell'aria.",
-      "potenze": [30, 60, 100, 150, 200]
-    },
-    "SERIE_ATS": {
-      "nome": "SERIE ATS",
-      "descrizione": "Alimentatore in tensione costante 24V, forma slim, per interni (IP20). Carcassa in policarbonato bianco.",
-      "potenze": [30, 60, 100]
     },
     "SERIE_ATUS": {
       "nome": "SERIE ATUS",
