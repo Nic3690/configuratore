@@ -49,6 +49,7 @@ export function getTemperaturaColor(temperatura) {
       return '#FFFBE3';
     case '6000K':
     case '6500K':
+    case '6700K':
       return '#F5FBFF';
     case 'CCT':
       return 'linear-gradient(to right, #FFE9C0, #F5FBFF)';
