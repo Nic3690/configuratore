@@ -120,7 +120,7 @@ export function vaiAlleProposte() {
         // Crea l'avviso dello spazio buio, ma non lo mostra ancora
         if (spazioBuio > 0) {
           $('<div id="spazio-buio-warning" class="assembly-warning" style="display: none;">' +
-            `<strong>ATTENZIONE:</strong> Con la lunghezza originale, avremo uno spazio buio di ${spazioBuio}mm` +
+            `<strong>ATTENZIONE:</strong> se si sceglie questa misura si verificherà uno spazio buio nel profilo di ${spazioBuio}mm` +
             '</div>').insertBefore('#step6-proposte-container');
         }
         
@@ -137,7 +137,6 @@ export function vaiAlleProposte() {
                   <h5 class="card-title">Proposta 1</h5>
                   <p class="card-text"><span id="step6-proposta1-valore">${data.proposte.proposta1}mm</span></p>
                   <button class="btn btn-outline-primary btn-seleziona-proposta" data-proposta="1" data-valore="${data.proposte.proposta1}">Seleziona</button>
-                  ${coincideConProposta1 ? '<div class="mt-2"><small class="text-success">Corrisponde alla lunghezza originale</small></div>' : ''}
                 </div>
               </div>
             </div>
@@ -148,7 +147,6 @@ export function vaiAlleProposte() {
                   <h5 class="card-title">Proposta 2</h5>
                   <p class="card-text"><span id="step6-proposta2-valore">${data.proposte.proposta2}mm</span></p>
                   <button class="btn btn-outline-primary btn-seleziona-proposta" data-proposta="2" data-valore="${data.proposte.proposta2}">Seleziona</button>
-                  ${coincideConProposta2 ? '<div class="mt-2"><small class="text-success">Corrisponde alla lunghezza originale</small></div>' : ''}
                 </div>
               </div>
             </div>`;

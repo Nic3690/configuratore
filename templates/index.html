@@ -945,5 +945,67 @@
   <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Aggiungi questo script alla fine del documento HTML prima della chiusura di body -->
+
+<script>
+  // Script autonomo per il controllo dello scroll nei cambi di step
+  document.addEventListener('DOMContentLoaded', function() {
+    // Funzione per scrollare all'inizio della pagina
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+    
+    // Aggiungi il listener a tutti i pulsanti di navigazione
+    const allButtons = document.querySelectorAll('button[id^="btn-"]');
+    allButtons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        // Piccolo ritardo per permettere l'esecuzione di altri codici
+        setTimeout(scrollToTop, 50);
+      });
+    });
+    
+    // Controlla i cambiamenti di visibilità delle sezioni
+    setInterval(function() {
+      const visibleSection = document.querySelector('.step-section[style*="display: block"]');
+      if (visibleSection && !visibleSection.hasAttribute('data-scrolled')) {
+        scrollToTop();
+        visibleSection.setAttribute('data-scrolled', 'true');
+        
+        // Rimuovi l'attributo dagli altri elementi
+        document.querySelectorAll('.step-section:not([style*="display: block"])').forEach(function(section) {
+          section.removeAttribute('data-scrolled');
+        });
+      }
+    }, 300);
+    
+    // Estendi jQuery per includere lo scroll nelle funzioni di transizione
+    if (typeof jQuery !== 'undefined') {
+      const $ = jQuery;
+      
+      // Salva il riferimento al metodo originale
+      const originalFadeOut = $.fn.fadeOut;
+      
+      // Sovrascrivi il metodo fadeOut per includere lo scroll
+      $.fn.fadeOut = function(speed, callback) {
+        // Se speed è una funzione, considerala come callback
+        if (typeof speed === 'function') {
+          callback = speed;
+          speed = null;
+        }
+        
+        // Esegui lo scroll all'inizio
+        scrollToTop();
+        
+        // Chiama il metodo originale
+        return originalFadeOut.apply(this, arguments);
+      };
+    }
+  });
+</script>
+
 </body>
 </html>
