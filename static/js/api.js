@@ -746,7 +746,6 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
   const tipoAlimentazioneBackend = {
     'ON-OFF': 'ON-OFF',
     'DIMMERABILE_TRIAC': 'DIMMERABILE_TRIAC',
-    'DIMMERABILE_DALI_PUSH': 'DIMMERABILE_DALI_PUSH',
     'SENZA_ALIMENTATORE': 'SENZA_ALIMENTATORE'
   }[tipoAlimentazione] || tipoAlimentazione;
   
@@ -958,7 +957,6 @@ export function finalizzaConfigurazione() {
       const mappaAlimentazioneText = {
         'ON-OFF': 'ON/OFF',
         'DIMMERABILE_TRIAC': 'Dimmerabile TRIAC',
-        'DIMMERABILE_DALI_PUSH': 'Dimmerabile DALI/PUSH',
         'SENZA_ALIMENTATORE': 'Senza alimentatore'
       };
       configurazione.alimentazioneText = mappaAlimentazioneText[configurazione.alimentazioneSelezionata] || configurazione.alimentazioneSelezionata;

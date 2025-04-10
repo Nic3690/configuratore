@@ -1193,11 +1193,10 @@
     }
   },
   "alimentazione": {
-    "tipi": ["ON-OFF", "DIMMERABILE_TRIAC", "DIMMERABILE_DALI_PUSH", "SENZA_ALIMENTATORE"],
+    "tipi": ["ON-OFF", "DIMMERABILE_TRIAC", "SENZA_ALIMENTATORE"],
     "alimentatori": {
       "ON-OFF": ["SERIE_AT24", "SERIE_ATUS", "SERIE_ATSIP44"],
-      "DIMMERABILE_TRIAC": ["SERIE_ATD24"],
-      "DIMMERABILE_DALI_PUSH": ["SERIE_ATD24", "SERIE_AT24"]
+      "DIMMERABILE_TRIAC": ["SERIE_ATD24"]
     }
   },
   "dettagliAlimentatori": {
@@ -1307,12 +1306,6 @@
       "DIMMERABILE_TRIAC": [
         "NESSUN_DIMMER",
         "DIMMER_A_PULSANTE_SEMPLICE",
-        "TOUCH_SU_PROFILO"
-      ],
-      "DIMMERABILE_DALI_PUSH": [
-        "NESSUN_DIMMER",
-        "DIMMER_A_PULSANTE_SEMPLICE",
-        "DIMMERABILE_DALI",
         "TOUCH_SU_PROFILO"
       ],
       "SENZA_ALIMENTATORE": [

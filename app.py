@@ -357,13 +357,8 @@ def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipol
 @app.route('/get_opzioni_alimentatore/<tipo_alimentazione>')
 def get_opzioni_alimentatore(tipo_alimentazione):
     alimentazione_data = CONFIG_DATA.get('alimentazione', {})
-    
-    # Gestire il caso DIMMERABILE_DALI_PUSH se non è già nel JSON
-    if tipo_alimentazione == 'DIMMERABILE_DALI_PUSH' and 'DIMMERABILE_DALI_PUSH' not in alimentazione_data.get('alimentatori', {}):
-        # Usa gli stessi alimentatori di DIMMERABILE_TRIAC se non è definito
-        alimentatori_ids = alimentazione_data.get('alimentatori', {}).get('DIMMERABILE_TRIAC', [])
-    else:
-        alimentatori_ids = alimentazione_data.get('alimentatori', {}).get(tipo_alimentazione, [])
+
+    alimentatori_ids = alimentazione_data.get('alimentatori', {}).get(tipo_alimentazione, [])
     
     dettagli_alimentatori = CONFIG_DATA.get('dettagliAlimentatori', {})
     

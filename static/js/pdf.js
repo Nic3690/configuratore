@@ -95,7 +95,6 @@ export function generaPDF(codiceProdotto, configurazione) {
 		// Alimentazione
 		'ON-OFF': 'ON/OFF',
 		'DIMMERABILE_TRIAC': 'Dimmerabile TRIAC',
-		'DIMMERABILE_DALI_PUSH': 'Dimmerabile DALI/PUSH',
 		'SENZA_ALIMENTATORE': 'Senza alimentatore',
 		
 		// Dimmer

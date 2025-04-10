@@ -185,15 +185,6 @@ export function prepareAlimentazioneListeners() {
     </div>
     
     <div class="col-md-4 mb-3">
-      <div class="card option-card alimentazione-card" data-alimentazione="DIMMERABILE_DALI_PUSH">
-        <div class="card-body text-center">
-          <h5 class="card-title">Dimmerabile DALI/PUSH</h5>
-          <p class="card-text small text-muted">Alimentazione con protocollo DALI o pulsante PUSH</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="col-md-4 mb-3">
       <div class="card option-card alimentazione-card" data-alimentazione="SENZA_ALIMENTATORE">
         <div class="card-body text-center">
           <h5 class="card-title">Senza alimentatore</h5>
@@ -232,7 +223,6 @@ export function prepareAlimentazioneListeners() {
   configurazione.compatibilitaAlimentazioneDimmer = {
     'ON-OFF': ['NESSUN_DIMMER'],
     'DIMMERABILE_TRIAC': ['NESSUN_DIMMER', 'DIMMER_A_PULSANTE_SEMPLICE'],
-    'DIMMERABILE_DALI_PUSH': ['NESSUN_DIMMER', 'DIMMER_A_PULSANTE_SEMPLICE', 'DIMMERABILE_DALI'],
     'SENZA_ALIMENTATORE': ['NESSUN_DIMMER']
   };
   
@@ -244,7 +234,6 @@ export function prepareAlimentazioneListeners() {
     
     configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
     configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
-    configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_DALI_PUSH'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
     configurazione.compatibilitaAlimentazioneDimmer['SENZA_ALIMENTATORE'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
   }
   
@@ -256,7 +245,6 @@ export function prepareAlimentazioneListeners() {
     
     configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('TOUCH_SU_PROFILO');
     configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('TOUCH_SU_PROFILO');
-    configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_DALI_PUSH'].push('TOUCH_SU_PROFILO');
   }
 }
 

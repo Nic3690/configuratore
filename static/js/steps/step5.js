@@ -293,7 +293,6 @@ export function prepareControlloListeners() {
     configurazione.compatibilitaAlimentazioneDimmer = {
       'ON-OFF': ['NESSUN_DIMMER'],
       'DIMMERABILE_TRIAC': ['NESSUN_DIMMER', 'DIMMER_A_PULSANTE_SEMPLICE'],
-      'DIMMERABILE_DALI_PUSH': ['NESSUN_DIMMER', 'DIMMER_A_PULSANTE_SEMPLICE', 'DIMMERABILE_DALI'],
       'SENZA_ALIMENTATORE': ['NESSUN_DIMMER']
     };
     
@@ -305,7 +304,6 @@ export function prepareControlloListeners() {
       
       configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
       configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
-      configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_DALI_PUSH'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
       configurazione.compatibilitaAlimentazioneDimmer['SENZA_ALIMENTATORE'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
     }
     
@@ -317,7 +315,6 @@ export function prepareControlloListeners() {
       
       configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('TOUCH_SU_PROFILO');
       configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('TOUCH_SU_PROFILO');
-      configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_DALI_PUSH'].push('TOUCH_SU_PROFILO');
     }
   }
   
