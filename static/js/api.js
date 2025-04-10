@@ -235,6 +235,16 @@ export function caricaOpzioniParametri(profiloId, potenza = null) {
         `);
       });
       
+      // Auto-selezione se c'è una sola opzione di tensione
+      if (data.voltaggi.length === 1) {
+        const $unicaTensione = $('.tensione-card');
+        $unicaTensione.addClass('selected');
+        configurazione.tensioneSelezionato = data.voltaggi[0];
+        
+        // Carica automaticamente le opzioni IP per questa tensione
+        caricaOpzioniIP(profiloId, configurazione.tensioneSelezionato);
+      }
+      
       $('.tensione-card').on('click', function() {
         $('.tensione-card').removeClass('selected');
         $(this).addClass('selected');
@@ -298,6 +308,16 @@ export function caricaOpzioniIP(profiloId, tensione) {
           </div>
         `);
       });
+      
+      // Auto-selezione se c'è una sola opzione IP
+      if (data.ip.length === 1) {
+        const $unicoIP = $('.ip-card');
+        $unicoIP.addClass('selected');
+        configurazione.ipSelezionato = data.ip[0];
+        
+        // Carica automaticamente le opzioni temperatura per questa IP
+        caricaOpzioniTemperaturaIniziale(profiloId, tensione, configurazione.ipSelezionato);
+      }
       
       $('.ip-card').on('click', function() {
         $('.ip-card').removeClass('selected');
@@ -385,6 +405,14 @@ export function caricaOpzioniTemperaturaIniziale(profiloId, tensione, ip) {
           border: 1px solid #ddd;
         }
       `).appendTo('head');
+      
+      // Auto-selezione se c'è una sola opzione temperatura
+      if (data.temperature.length === 1) {
+        const $unicaTemperatura = $('.temperatura-iniziale-card');
+        $unicaTemperatura.addClass('selected');
+        configurazione.temperaturaSelezionata = data.temperature[0];
+        checkParametriCompletion();
+      }
       
       $('.temperatura-iniziale-card').on('click', function() {
         $('.temperatura-iniziale-card').removeClass('selected');
@@ -592,6 +620,17 @@ export function caricaOpzioniPotenza(profiloId, temperatura) {
           </div>
         `);
       });
+      
+      // Auto-selezione se c'è una sola opzione potenza
+      if (data.potenze.length === 1) {
+        const $unicaPotenza = $('.potenza-card');
+        $unicaPotenza.addClass('selected');
+        configurazione.potenzaSelezionata = data.potenze[0].id;
+        configurazione.codicePotenza = data.potenze[0].codice;
+        
+        // Abilita il pulsante continua
+        $('#btn-continua-step3').prop('disabled', false);
+      }
       
       $(document).off('click', '.potenza-card').on('click', '.potenza-card', function() {
         $('.potenza-card').removeClass('selected');
@@ -833,6 +872,16 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
         `);
       });
       
+      // Auto-selezione se c'è un solo alimentatore disponibile
+      if (alimentatori.length === 1) {
+        const $unicoAlimentatore = $('.alimentatore-card');
+        $unicoAlimentatore.addClass('selected');
+        configurazione.tipologiaAlimentatoreSelezionata = alimentatori[0].id;
+        
+        // Carica automaticamente le potenze per questo alimentatore
+        caricaPotenzeAlimentatore(alimentatori[0].id);
+      }
+      
       $('.alimentatore-card').on('click', function() {
         $('.alimentatore-card').removeClass('selected');
         $(this).addClass('selected');
@@ -910,6 +959,24 @@ export function caricaPotenzeAlimentatore(alimentatoreId) {
           `);
         }
       });
+
+      // Auto-selezione se c'è una sola potenza disponibile
+      const potenzeMostrate = $('.potenza-alimentatore-card');
+      if (potenzeMostrate.length === 1) {
+        const $unicaPotenza = $(potenzeMostrate[0]);
+        $unicaPotenza.addClass('selected');
+        configurazione.potenzaAlimentatoreSelezionata = $unicaPotenza.data('potenza');
+        $('#btn-continua-step4').prop('disabled', false);
+      }
+      // Se c'è una potenza consigliata tra quelle disponibili, selezionala automaticamente
+      else if (potenzaConsigliata) {
+        const $potenzaConsigliata = $(`.potenza-alimentatore-card[data-potenza="${potenzaConsigliata}"]`);
+        if ($potenzaConsigliata.length > 0) {
+          $potenzaConsigliata.addClass('selected');
+          configurazione.potenzaAlimentatoreSelezionata = potenzaConsigliata;
+          $('#btn-continua-step4').prop('disabled', false);
+        }
+      }
       
       // Aggiungi i listener per la selezione della potenza
       $('.potenza-alimentatore-card').on('click', function() {

@@ -69,6 +69,11 @@ function caricaDimmerCompatibili() {
     `;
     
     $('#dimmer-container').html(dimmerHtml);
+    // Auto-selezione dimmer
+    const $dimmerCard = $('.dimmer-card');
+    $dimmerCard.addClass('selected');
+    configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+    
     bindDimmerCardListeners();
     return;
   }
@@ -161,8 +166,29 @@ function caricaDimmerCompatibili() {
         // Aggiorniamo il contenitore con le opzioni di dimmer
         $('#dimmer-container').html(dimmerHtml);
         
+        // Auto-selezione se c'è un solo dimmer disponibile
+        if (opzioniDimmer.length === 1) {
+          const $unicoDimmer = $('.dimmer-card');
+          $unicoDimmer.addClass('selected');
+          configurazione.dimmerSelezionato = opzioniDimmer[0];
+          
+          // Se il dimmer è TOUCH_SU_PROFILO, mostra l'avviso
+          if (opzioniDimmer[0] === 'TOUCH_SU_PROFILO') {
+            $('#dimmer-warning').show();
+          }
+        } 
+        // Altrimenti, seleziona NESSUN_DIMMER come opzione di default se disponibile
+        else if (opzioniDimmer.includes('NESSUN_DIMMER')) {
+          const $nessunDimmer = $('.dimmer-card[data-dimmer="NESSUN_DIMMER"]');
+          $nessunDimmer.addClass('selected');
+          configurazione.dimmerSelezionato = 'NESSUN_DIMMER';
+        }
+        
         // Ripristiniamo gli event listener per le card di dimmer
         bindDimmerCardListeners();
+        
+        // Verifica completamento passo
+        checkStep5Completion();
       } else {
         // In caso di errore, mostriamo solo l'opzione "nessun dimmer"
         console.error("Errore nel caricamento dei dimmer compatibili:", response.message);
@@ -180,7 +206,14 @@ function caricaDimmerCompatibili() {
           </div>`;
         
         $('#dimmer-container').html(dimmerHtml);
+        
+        // Auto-seleziona l'opzione
+        const $dimmerCard = $('.dimmer-card');
+        $dimmerCard.addClass('selected');
+        configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+        
         bindDimmerCardListeners();
+        checkStep5Completion();
       }
       
       // Nascondiamo il loader
@@ -203,8 +236,15 @@ function caricaDimmerCompatibili() {
         </div>`;
       
       $('#dimmer-container').html(dimmerHtml);
+      
+      // Auto-seleziona l'opzione
+      const $dimmerCard = $('.dimmer-card');
+      $dimmerCard.addClass('selected');
+      configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+      
       $('#dimmer-loading').hide();
       bindDimmerCardListeners();
+      checkStep5Completion();
     }
   });
 }
@@ -418,7 +458,18 @@ export function prepareControlloListeners() {
         </div>
       </div>
     `);
+
+    // Auto-selezione se c'è una sola opzione di alimentazione cavo
+    // In questo caso, seleziona l'alimentazione unica come default
+    const $primaAlimentazioneCavo = $('.alimentazione-cavo-card').first();
+    $primaAlimentazioneCavo.addClass('selected');
+    configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_UNICA";
   }
+
+  // Auto-selezione per uscita cavo - seleziona per default DRITTA
+  const $uscitaCavoDritta = $('.uscita-cavo-card[data-uscita-cavo="DRITTA"]');
+  $uscitaCavoDritta.addClass('selected');
+  configurazione.uscitaCavoSelezionata = "DRITTA";
 
   // Re-attacca gli event listeners per le card di alimentazione cavo
   $('.alimentazione-cavo-card').on('click', function() {
@@ -462,4 +513,7 @@ export function prepareControlloListeners() {
       configurazione.lunghezzaCavoUscita = valore;
     }
   });
+
+  // Controllo iniziale di completamento
+  checkStep5Completion();
 }
