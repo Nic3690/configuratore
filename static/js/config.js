@@ -84,7 +84,7 @@ const configurazione = {
 	'IP20': 'IP20 (Interni)',
 	'IP65': 'IP65 (Resistente all\'umidità)',
 	'IP66': 'IP66 (Resistente all\'acqua)',
-	'IP67': 'IP67 (Molto resistente all\'acqua)'
+	'IP67': 'IP67 (Esterni)'
   };
 
   const mappaTipologiaStripVisualizzazione = {
