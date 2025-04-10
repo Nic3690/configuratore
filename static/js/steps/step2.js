@@ -362,36 +362,6 @@ export function prepareTipologiaStripListeners() {
   });
 }
 
-/**
- * Aggiunge i badge di compatibilità alle card dei profili
- * @param {Object} profilo - Oggetto profilo da visualizzare
- * @param {jQuery} $cardBody - Elemento jQuery del corpo della card
- */
-export function aggiungiCompatibilitaBadge(profilo, $cardBody) {
-  // Aggiungi il badge di compatibilità con le strip LED
-  if (profilo.stripLedCompatibiliInfo && profilo.stripLedCompatibiliInfo.length > 0) {
-    const stripCount = profilo.stripLedCompatibiliInfo.length;
-    
-    const $compatibilityBadge = $('<div class="compatibility-badge mt-2">')
-      .append($('<span class="badge bg-success">').text(`Strip LED compatibili: ${stripCount}`));
-    
-    let tooltipContent = "Strip LED compatibili: ";
-    const stripNomi = profilo.stripLedCompatibiliInfo
-      .filter(s => s.nomeCommerciale)
-      .map(s => s.nomeCommerciale)
-      .filter((v, i, a) => a.indexOf(v) === i);
-    
-    if (stripNomi.length > 0) {
-      tooltipContent += stripNomi.join(", ");
-      $compatibilityBadge.attr('title', tooltipContent)
-        .attr('data-bs-toggle', 'tooltip')
-        .attr('data-bs-placement', 'top');
-    }
-    
-    $cardBody.append($compatibilityBadge);
-  }
-}
-
 // NUOVO: Funzione per andare alla personalizzazione 
 export function vaiAllaPersonalizzazione() {
   $('#profilo-nome-step2-personalizzazione').text(configurazione.nomeModello);

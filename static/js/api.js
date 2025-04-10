@@ -37,32 +37,6 @@ export function caricaProfili(categoria) {
           </div>
         `);
         
-        // Aggiungi badge di compatibilità con strip LED se disponibile
-        if (profilo.stripLedCompatibiliInfo && profilo.stripLedCompatibiliInfo.length > 0) {
-          const stripCount = profilo.stripLedCompatibiliInfo.length;
-          const $cardBody = profiloCard.find('.card-body');
-          
-          // Crea badge di compatibilità
-          const $badge = $('<div class="compatibility-badge mt-2">')
-            .append($('<span class="badge bg-success">').text(`Strip LED compatibili: ${stripCount}`));
-          
-          // Aggiungi tooltip con informazioni sulle strip compatibili
-          let tooltipContent = "Strip LED compatibili: ";
-          const stripNomi = profilo.stripLedCompatibiliInfo
-            .filter(s => s.nomeCommerciale)
-            .map(s => s.nomeCommerciale)
-            .filter((v, i, a) => a.indexOf(v) === i); // Rimuovi duplicati
-          
-          if (stripNomi.length > 0) {
-            tooltipContent += stripNomi.join(", ");
-            $badge.attr('title', tooltipContent)
-              .attr('data-bs-toggle', 'tooltip')
-              .attr('data-bs-placement', 'top');
-          }
-          
-          $cardBody.append($badge);
-        }
-        
         grid.append(profiloCard);
       });
       
