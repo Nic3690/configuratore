@@ -195,41 +195,35 @@ export function prepareAlimentazioneListeners() {
   `);
 
   // Se c'è una sola opzione di alimentazione disponibile (caso raro ma possibile)
-  const opzioniAlimentazione = $('.alimentazione-card');
-  if (opzioniAlimentazione.length === 1) {
-    const $unicaAlimentazione = $(opzioniAlimentazione[0]);
-    $unicaAlimentazione.addClass('selected');
-    const alimentazione = $unicaAlimentazione.data('alimentazione');
-    configurazione.alimentazioneSelezionata = alimentazione;
+const opzioniAlimentazione = $('.alimentazione-card');
+if (opzioniAlimentazione.length === 1) {
+  const $unicaAlimentazione = $(opzioniAlimentazione[0]);
+  $unicaAlimentazione.addClass('selected');
+  const alimentazione = $unicaAlimentazione.data('alimentazione');
+  configurazione.alimentazioneSelezionata = alimentazione;
+  
+  if (alimentazione === 'SENZA_ALIMENTATORE') {
+    $('#alimentatore-section').hide();
+    $('#potenza-alimentatore-section').hide(); // Nascondi anche la sezione potenza
+    configurazione.tipologiaAlimentatoreSelezionata = null;
+    configurazione.potenzaAlimentatoreSelezionata = null;
     
-    if (alimentazione === 'SENZA_ALIMENTATORE') {
-      $('#alimentatore-section').hide();
-      $('#potenza-alimentatore-section').hide(); // Nascondi anche la sezione potenza
-      configurazione.tipologiaAlimentatoreSelezionata = null;
-      configurazione.potenzaAlimentatoreSelezionata = null;
-      
-      $('#btn-continua-step4').prop('disabled', false);
-    } else {
-      caricaOpzioniAlimentatore(alimentazione);
-      
-      $('#alimentatore-section').show();
-      $('#potenza-alimentatore-section').hide(); // Nascondi la sezione potenza fino a quando non viene scelto un alimentatore
-      $('#btn-continua-step4').prop('disabled', true);
-    }
+    $('#btn-continua-step4').prop('disabled', false);
   } else {
-    // Se ci sono multiple opzioni, seleziona di default "ON-OFF" (opzione più comune)
-    const $defaultAlimentazione = $('.alimentazione-card[data-alimentazione="ON-OFF"]');
-    if ($defaultAlimentazione.length > 0) {
-      $defaultAlimentazione.addClass('selected');
-      configurazione.alimentazioneSelezionata = "ON-OFF";
-      
-      // Carica automaticamente le opzioni alimentatore per ON-OFF
-      caricaOpzioniAlimentatore("ON-OFF");
-      
-      $('#alimentatore-section').show();
-      $('#potenza-alimentatore-section').hide();
-    }
+    caricaOpzioniAlimentatore(alimentazione);
+    
+    $('#alimentatore-section').show();
+    $('#potenza-alimentatore-section').hide(); // Nascondi la sezione potenza fino a quando non viene scelto un alimentatore
+    $('#btn-continua-step4').prop('disabled', true);
   }
+} else {
+  // Se ci sono più opzioni, non selezionare nessuna opzione di default
+  configurazione.alimentazioneSelezionata = null;
+  $('#alimentatore-section').hide();
+  $('#potenza-alimentatore-section').hide();
+  $('#btn-continua-step4').prop('disabled', true);
+}
+
   
   // Riattiva i listener per le card di alimentazione
   $('.alimentazione-card').on('click', function() {
