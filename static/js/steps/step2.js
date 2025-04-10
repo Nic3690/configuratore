@@ -437,12 +437,18 @@ function togglePersonalizzazioneLunghezza() {
     // Nasconde la sezione di personalizzazione lunghezza
     personalizzazioneLunghezzaContainer.hide();
     
+    // Determina la lunghezza massima da utilizzare
+    const lunghezzaMassima = configurazione.lunghezzaMassimaProfilo || 3000;
+    
+    // Converti da mm a m per la visualizzazione
+    const lunghezzaMetri = lunghezzaMassima / 1000;
+    
     // Aggiungi un messaggio informativo
     const infoMessage = `
       <div class="container mb-5" id="lunghezza-info-container">
         <h3 class="mb-3">Lunghezza profilo</h3>
         <div class="alert alert-info">
-          <p>Hai selezionato un profilo intero che ha una lunghezza standard predefinita.</p>
+          <p>Hai selezionato un profilo intero che ha una lunghezza standard di ${lunghezzaMetri}m.</p>
         </div>
       </div>
     `;
@@ -450,8 +456,8 @@ function togglePersonalizzazioneLunghezza() {
     // Inserisci il messaggio dopo la sezione della finitura
     $('#finitura-container').closest('.container').after(infoMessage);
     
-    // Impostazione automatica per la lunghezza richiesta per passare la validazione
-    configurazione.lunghezzaRichiesta = 3000; // lunghezza standard di default
+    // Impostazione automatica della lunghezza richiesta usando la lunghezza massima specifica del profilo
+    configurazione.lunghezzaRichiesta = lunghezzaMassima;
   } else {
     // Per taglio su misura, mostra la sezione di personalizzazione lunghezza
     personalizzazioneLunghezzaContainer.show();

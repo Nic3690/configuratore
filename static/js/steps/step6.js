@@ -95,7 +95,24 @@ export function vaiAlleProposte() {
   // Rimuove eventuali avvisi precedenti
   $('#spazio-buio-warning').remove();
 
-  if (lunghezzaOriginale && lunghezzaOriginale > 0) {
+  // Per i profili interi, utilizziamo un approccio diverso
+  if (configurazione.tipologiaSelezionata === 'profilo_intero') {
+    // Per profili interi, mostriamo un messaggio che indica la lunghezza fissa
+    $('#step6-proposte-container').html(`
+      <div class="alert alert-info">
+        <h5>Profilo intero con lunghezza standard</h5>
+        <p>Hai selezionato un profilo intero con una lunghezza standard di ${lunghezzaOriginale}mm.</p>
+        <p>Non sono necessarie proposte di lunghezza per i profili interi.</p>
+      </div>
+    `);
+    
+    // Aggiorna la lunghezza finale
+    $('#step6-lunghezza-finale').text(lunghezzaOriginale);
+    
+    // Abilita il pulsante continua
+    $('#btn-continua-step6').prop('disabled', false);
+  } 
+  else if (lunghezzaOriginale && lunghezzaOriginale > 0) {
     $('#step6-proposte-container').html(`
       <div class="text-center mt-3 mb-3">
         <div class="spinner-border" role="status"></div>

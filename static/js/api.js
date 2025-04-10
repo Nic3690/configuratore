@@ -73,42 +73,108 @@ export function caricaOpzioniProfilo(profiloId) {
   configurazione.tipologiaSelezionata = null;
   configurazione.stripLedSelezionata = null;
   
+  // Prima otteniamo i dettagli del profilo selezionato per la lunghezza massima
   $.ajax({
-    url: `/get_opzioni_profilo/${profiloId}`,
+    url: `/get_profili/${configurazione.categoriaSelezionata}`,
     method: 'GET',
-    success: function(data) {
+    success: function(profili) {
+      // Cerca il profilo selezionato tra i risultati
+      const profiloSelezionato = profili.find(p => p.id === profiloId);
       
-      $('#tipologie-options').empty();
-      
-      $('#tipologia-container').show();
-      
-      if (!data.tipologie || data.tipologie.length === 0) {
-        $('#tipologie-options').html('<div class="col-12 text-center"><p>Nessuna tipologia disponibile per questo profilo.</p></div>');
-      } else {
-        data.tipologie.forEach(function(tipologia) {
-          $('#tipologie-options').append(`
-            <div class="col-md-6 mb-3">
-              <div class="card option-card tipologia-card" data-id="${tipologia}">
-                <div class="card-body text-center">
-                  <h5 class="card-title">${mappaTipologieVisualizzazione[tipologia] || tipologia}</h5>
-                </div>
-              </div>
-            </div>
-          `);
-        });
+      // Memorizza la lunghezza massima nella configurazione
+      if (profiloSelezionato && profiloSelezionato.lunghezzaMassima) {
+        configurazione.lunghezzaMassimaProfilo = profiloSelezionato.lunghezzaMassima;
       }
       
-      $('.tipologia-card').on('click', function() {
-        $('.tipologia-card').removeClass('selected');
-        $(this).addClass('selected');
-        configurazione.tipologiaSelezionata = $(this).data('id');
-        
-        checkStep2Completion();
+      // Continua con il caricamento delle opzioni di tipologia
+      $.ajax({
+        url: `/get_opzioni_profilo/${profiloId}`,
+        method: 'GET',
+        success: function(data) {
+          
+          $('#tipologie-options').empty();
+          
+          $('#tipologia-container').show();
+          
+          if (!data.tipologie || data.tipologie.length === 0) {
+            $('#tipologie-options').html('<div class="col-12 text-center"><p>Nessuna tipologia disponibile per questo profilo.</p></div>');
+          } else {
+            data.tipologie.forEach(function(tipologia) {
+              // Aggiungi la lunghezza massima solo per "profilo_intero"
+              let lunghezzaInfo = '';
+              if (tipologia === 'profilo_intero' && configurazione.lunghezzaMassimaProfilo) {
+                // Converti da mm a m
+                const lunghezzaMetri = configurazione.lunghezzaMassimaProfilo / 1000;
+                lunghezzaInfo = ` (${lunghezzaMetri}m)`;
+              }
+              
+              $('#tipologie-options').append(`
+                <div class="col-md-6 mb-3">
+                  <div class="card option-card tipologia-card" data-id="${tipologia}">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">${mappaTipologieVisualizzazione[tipologia] || tipologia}${lunghezzaInfo}</h5>
+                    </div>
+                  </div>
+                </div>
+              `);
+            });
+          }
+          
+          $('.tipologia-card').on('click', function() {
+            $('.tipologia-card').removeClass('selected');
+            $(this).addClass('selected');
+            configurazione.tipologiaSelezionata = $(this).data('id');
+            
+            checkStep2Completion();
+          });
+        },
+        error: function(error) {
+          console.error("Errore nel caricamento delle opzioni:", error);
+          $('#tipologie-options').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle opzioni. Riprova più tardi.</p></div>');
+        }
       });
     },
     error: function(error) {
-      console.error("Errore nel caricamento delle opzioni:", error);
-      $('#tipologie-options').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle opzioni. Riprova più tardi.</p></div>');
+      console.error("Errore nel caricamento dei dettagli del profilo:", error);
+      // Continua comunque con il caricamento delle opzioni di tipologia senza lunghezza massima
+      $.ajax({
+        url: `/get_opzioni_profilo/${profiloId}`,
+        method: 'GET',
+        success: function(data) {
+          
+          $('#tipologie-options').empty();
+          
+          $('#tipologia-container').show();
+          
+          if (!data.tipologie || data.tipologie.length === 0) {
+            $('#tipologie-options').html('<div class="col-12 text-center"><p>Nessuna tipologia disponibile per questo profilo.</p></div>');
+          } else {
+            data.tipologie.forEach(function(tipologia) {
+              $('#tipologie-options').append(`
+                <div class="col-md-6 mb-3">
+                  <div class="card option-card tipologia-card" data-id="${tipologia}">
+                    <div class="card-body text-center">
+                      <h5 class="card-title">${mappaTipologieVisualizzazione[tipologia] || tipologia}</h5>
+                    </div>
+                  </div>
+                </div>
+              `);
+            });
+          }
+          
+          $('.tipologia-card').on('click', function() {
+            $('.tipologia-card').removeClass('selected');
+            $(this).addClass('selected');
+            configurazione.tipologiaSelezionata = $(this).data('id');
+            
+            checkStep2Completion();
+          });
+        },
+        error: function(error) {
+          console.error("Errore nel caricamento delle opzioni:", error);
+          $('#tipologie-options').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle opzioni. Riprova più tardi.</p></div>');
+        }
+      });
     }
   });
 }
