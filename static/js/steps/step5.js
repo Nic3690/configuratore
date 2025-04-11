@@ -106,6 +106,16 @@ function caricaDimmerCompatibili() {
     'DIMMERABILE_DALI': 'Controllo tramite protocollo DALI'
   };
   
+  // Mappatura tra codici dimmer e percorsi immagini
+  const dimmerImages = {
+    'TOUCH_SU_PROFILO': '/static/img/touch_su_profilo.jpg',
+    'CON_TELECOMANDO': '/static/img/con_telecomando.jpg',
+    'CENTRALINA_TUYA': '/static/img/centralina_tuya.jpg',
+    'DIMMER_A_PULSANTE_SEMPLICE': '/static/img/dimmer_pulsante.jpg',
+    'DIMMERABILE_PWM': '/static/img/dimmer_pwm.jpg',
+    'DIMMERABILE_DALI': '/static/img/dimmer_dali.jpg'
+  };
+  
   // Chiamiamo l'API per ottenere i dimmer compatibili
   $.ajax({
     url: `/get_opzioni_dimmerazione/${configurazione.stripLedSelezionata}`,
@@ -142,17 +152,33 @@ function caricaDimmerCompatibili() {
           // Controlla se questo dimmer ha spazi non illuminati
           const spazioNonIlluminato = response.spaziNonIlluminati && response.spaziNonIlluminati[dimmer];
           
-          // Crea la card per questo dimmer
-          dimmerHtml += `
-            <div class="col-md-4 mb-3">
-              <div class="card option-card dimmer-card" data-dimmer="${dimmer}">
-                <div class="card-body text-center">
-                  <h5 class="card-title">${dimmerText}</h5>
-                  <p class="card-text small text-muted">${dimmerDescription}</p>
-                  ${spazioNonIlluminato ? `<p class="card-text small text-danger">Spazio non illuminato: ${spazioNonIlluminato}mm</p>` : ''}
+          // Crea una card diversa in base al tipo di dimmer
+          if (dimmer === 'NESSUN_DIMMER') {
+            // Per "NESSUN_DIMMER", non mostriamo l'immagine, solo il testo
+            dimmerHtml += `
+              <div class="col-md-4 mb-3">
+                <div class="card option-card dimmer-card" data-dimmer="${dimmer}">
+                  <div class="card-body text-center">
+                    <h5 class="card-title">${dimmerText}</h5>
+                    <p class="card-text small text-muted">${dimmerDescription}</p>
+                  </div>
                 </div>
-              </div>
-            </div>`;
+              </div>`;
+          } else {
+            // Per tutti gli altri dimmer, includiamo l'immagine
+            const imgPath = dimmerImages[dimmer] || '/static/img/placeholder_logo.jpg';
+            dimmerHtml += `
+              <div class="col-md-4 mb-3">
+                <div class="card option-card dimmer-card" data-dimmer="${dimmer}">
+                  <img src="${imgPath}" class="card-img-top" alt="${dimmerText}" style="height: 180px; object-fit: cover;" onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px'">
+                  <div class="card-body text-center">
+                    <h5 class="card-title">${dimmerText}</h5>
+                    <p class="card-text small text-muted">${dimmerDescription}</p>
+                    ${spazioNonIlluminato ? `<p class="card-text small text-danger">Spazio non illuminato: ${spazioNonIlluminato}mm</p>` : ''}
+                  </div>
+                </div>
+              </div>`;
+          }
         });
         
         dimmerHtml += `</div>`;

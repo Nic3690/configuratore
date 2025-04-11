@@ -164,66 +164,100 @@ export function prepareAlimentazioneListeners() {
   
   $('.alimentazione-card').removeClass('selected');
   
+  // Verifica se la strip LED selezionata è di tipo RGB o RGBWW
+  const isRGBStrip = 
+    (configurazione.stripLedSelezionata && configurazione.stripLedSelezionata.includes('RGB')) || 
+    configurazione.temperaturaColoreSelezionata === 'RGB' || 
+    configurazione.temperaturaColoreSelezionata === 'RGBW';
+  
+  // Prepara l'HTML in base al tipo di strip LED
+  let alimentazioneHtml = '';
+  
+  if (isRGBStrip) {
+    // Per strip RGB/RGBWW, mostra solo ON-OFF e SENZA_ALIMENTATORE
+    alimentazioneHtml = `
+      <div class="col-md-6 mb-3">
+        <div class="card option-card alimentazione-card" data-alimentazione="ON-OFF">
+          <div class="card-body text-center">
+            <h5 class="card-title">ON/OFF</h5>
+            <p class="card-text small text-muted">Alimentazione standard ON/OFF</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 mb-3">
+        <div class="card option-card alimentazione-card" data-alimentazione="SENZA_ALIMENTATORE">
+          <div class="card-body text-center">
+            <h5 class="card-title">Senza alimentatore</h5>
+            <p class="card-text small text-muted">Configurazione senza alimentatore incluso</p>
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    // Per tutte le altre strip, mostra tutte le opzioni
+    alimentazioneHtml = `
+      <div class="col-md-4 mb-3">
+        <div class="card option-card alimentazione-card" data-alimentazione="ON-OFF">
+          <div class="card-body text-center">
+            <h5 class="card-title">ON/OFF</h5>
+            <p class="card-text small text-muted">Alimentazione standard ON/OFF</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-3">
+        <div class="card option-card alimentazione-card" data-alimentazione="DIMMERABILE_TRIAC">
+          <div class="card-body text-center">
+            <h5 class="card-title">Dimmerabile TRIAC</h5>
+            <p class="card-text small text-muted">Alimentazione con controllo dell'intensità luminosa TRIAC</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-3">
+        <div class="card option-card alimentazione-card" data-alimentazione="SENZA_ALIMENTATORE">
+          <div class="card-body text-center">
+            <h5 class="card-title">Senza alimentatore</h5>
+            <p class="card-text small text-muted">Configurazione senza alimentatore incluso</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
   // Aggiorna il container delle opzioni di alimentazione
-  $('#alimentazione-container').html(`
-    <div class="col-md-4 mb-3">
-      <div class="card option-card alimentazione-card" data-alimentazione="ON-OFF">
-        <div class="card-body text-center">
-          <h5 class="card-title">ON/OFF</h5>
-          <p class="card-text small text-muted">Alimentazione standard ON/OFF</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="col-md-4 mb-3">
-      <div class="card option-card alimentazione-card" data-alimentazione="DIMMERABILE_TRIAC">
-        <div class="card-body text-center">
-          <h5 class="card-title">Dimmerabile TRIAC</h5>
-          <p class="card-text small text-muted">Alimentazione con controllo dell'intensità luminosa TRIAC</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="col-md-4 mb-3">
-      <div class="card option-card alimentazione-card" data-alimentazione="SENZA_ALIMENTATORE">
-        <div class="card-body text-center">
-          <h5 class="card-title">Senza alimentatore</h5>
-          <p class="card-text small text-muted">Configurazione senza alimentatore incluso</p>
-        </div>
-      </div>
-    </div>
-  `);
+  $('#alimentazione-container').html(alimentazioneHtml);
 
   // Se c'è una sola opzione di alimentazione disponibile (caso raro ma possibile)
-const opzioniAlimentazione = $('.alimentazione-card');
-if (opzioniAlimentazione.length === 1) {
-  const $unicaAlimentazione = $(opzioniAlimentazione[0]);
-  $unicaAlimentazione.addClass('selected');
-  const alimentazione = $unicaAlimentazione.data('alimentazione');
-  configurazione.alimentazioneSelezionata = alimentazione;
-  
-  if (alimentazione === 'SENZA_ALIMENTATORE') {
-    $('#alimentatore-section').hide();
-    $('#potenza-alimentatore-section').hide(); // Nascondi anche la sezione potenza
-    configurazione.tipologiaAlimentatoreSelezionata = null;
-    configurazione.potenzaAlimentatoreSelezionata = null;
+  const opzioniAlimentazione = $('.alimentazione-card');
+  if (opzioniAlimentazione.length === 1) {
+    const $unicaAlimentazione = $(opzioniAlimentazione[0]);
+    $unicaAlimentazione.addClass('selected');
+    const alimentazione = $unicaAlimentazione.data('alimentazione');
+    configurazione.alimentazioneSelezionata = alimentazione;
     
-    $('#btn-continua-step4').prop('disabled', false);
+    if (alimentazione === 'SENZA_ALIMENTATORE') {
+      $('#alimentatore-section').hide();
+      $('#potenza-alimentatore-section').hide(); // Nascondi anche la sezione potenza
+      configurazione.tipologiaAlimentatoreSelezionata = null;
+      configurazione.potenzaAlimentatoreSelezionata = null;
+      
+      $('#btn-continua-step4').prop('disabled', false);
+    } else {
+      caricaOpzioniAlimentatore(alimentazione);
+      
+      $('#alimentatore-section').show();
+      $('#potenza-alimentatore-section').hide(); // Nascondi la sezione potenza fino a quando non viene scelto un alimentatore
+      $('#btn-continua-step4').prop('disabled', true);
+    }
   } else {
-    caricaOpzioniAlimentatore(alimentazione);
-    
-    $('#alimentatore-section').show();
-    $('#potenza-alimentatore-section').hide(); // Nascondi la sezione potenza fino a quando non viene scelto un alimentatore
+    // Se ci sono più opzioni, non selezionare nessuna opzione di default
+    configurazione.alimentazioneSelezionata = null;
+    $('#alimentatore-section').hide();
+    $('#potenza-alimentatore-section').hide();
     $('#btn-continua-step4').prop('disabled', true);
   }
-} else {
-  // Se ci sono più opzioni, non selezionare nessuna opzione di default
-  configurazione.alimentazioneSelezionata = null;
-  $('#alimentatore-section').hide();
-  $('#potenza-alimentatore-section').hide();
-  $('#btn-continua-step4').prop('disabled', true);
-}
-
   
   // Riattiva i listener per le card di alimentazione
   $('.alimentazione-card').on('click', function() {
