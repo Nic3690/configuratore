@@ -165,24 +165,35 @@ export function generaPDF(codiceProdotto, configurazione) {
 		datiTabella.push(['Strip LED', 'Senza Strip LED']);
 	  }
 	  
-	  // Alimentazione
-	  if (configurazione.alimentazioneSelezionata) {
+	  // Alimentazione - MODIFICATO PER STRIP 220V
+	  if (configurazione.tensioneSelezionato === '220V') {
+		// Per strip 220V, mostriamo un'etichetta speciale
+		datiTabella.push(['Alimentazione', 'Strip 220V (no alimentatore)']);
+	  } else if (configurazione.alimentazioneSelezionata) {
 		datiTabella.push(['Alimentazione', getNomeVisualizzabile(configurazione.alimentazioneSelezionata)]);
 	  }
 	  
-	  // Alimentatore
-	  if (configurazione.tipologiaAlimentatoreSelezionata && configurazione.alimentazioneSelezionata !== 'SENZA_ALIMENTATORE') {
+	  // Alimentatore - MODIFICATO PER STRIP 220V
+	  if (configurazione.tipologiaAlimentatoreSelezionata && 
+		  configurazione.alimentazioneSelezionata !== 'SENZA_ALIMENTATORE' &&
+		  configurazione.tensioneSelezionato !== '220V') {
 		datiTabella.push(['Alimentatore', configurazione.tipologiaAlimentatoreSelezionata]);
 	  }
 	  
-	  // Potenza consigliata
-	  if (configurazione.potenzaConsigliataAlimentatore) {
+	  // Potenza consigliata - MODIFICATO PER STRIP 220V
+	  if (configurazione.potenzaConsigliataAlimentatore && 
+		  configurazione.tensioneSelezionato !== '220V') {
 		datiTabella.push(['Potenza consigliata', `${configurazione.potenzaConsigliataAlimentatore}W`]);
 	  }
 	  
 	  // Dimmer
 	  if (configurazione.dimmerSelezionato) {
-		datiTabella.push(['Dimmer', getNomeVisualizzabile(configurazione.dimmerSelezionato)]);
+		if (configurazione.tensioneSelezionato === '220V' && configurazione.dimmerSelezionato === 'DIMMER_A_PULSANTE_SEMPLICE') {
+		// Per strip 220V, mostriamo specificatamente il modello CTR130
+		  datiTabella.push(['Dimmer', 'CTR130 - Dimmerabile TRIAC tramite pulsante e sistema TUYA']);
+		} else {
+		  datiTabella.push(['Dimmer', getNomeVisualizzabile(configurazione.dimmerSelezionato)]);
+		}
 	  }
 	  
 	  // Alimentazione cavo

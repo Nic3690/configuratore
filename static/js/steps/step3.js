@@ -2,6 +2,7 @@ import { configurazione, mappaTipologieVisualizzazione, mappaStripLedVisualizzaz
 import { updateProgressBar } from '../utils.js';
 import { caricaOpzioniPotenza, caricaStripLedCompatibili } from '../api.js';
 import { vaiAllAlimentazione } from './step4.js';
+import { vaiAlControllo } from './step5.js';
 
 export function initStep3Listeners() {
   $('#btn-torna-step2').on('click', function(e) {
@@ -18,10 +19,25 @@ export function initStep3Listeners() {
     e.preventDefault();
     
     if (configurazione.potenzaSelezionata && configurazione.stripLedSceltaFinale) {
-      // Ora passiamo direttamente all'alimentazione, saltando la selezione strip
-      $("#step3-temperatura-potenza").fadeOut(300, function() {
-        vaiAllAlimentazione();
-      });
+      // Verifica se la tensione selezionata è 220V
+      if (configurazione.tensioneSelezionato === '220V') {
+        // Se è 220V, impostiamo automaticamente "SENZA_ALIMENTATORE"
+        configurazione.alimentazioneSelezionata = 'SENZA_ALIMENTATORE';
+        
+        // Saltiamo direttamente al controllo (step5)
+        $("#step3-temperatura-potenza").fadeOut(300, function() {
+          // Aggiorna la progress bar a 5 (controllo)
+          updateProgressBar(5);
+          
+          // Vai direttamente alla sezione controllo
+          vaiAlControllo();
+        });
+      } else {
+        // Altrimenti, procediamo normalmente all'alimentazione (step4)
+        $("#step3-temperatura-potenza").fadeOut(300, function() {
+          vaiAllAlimentazione();
+        });
+      }
     } else {
       if (!configurazione.potenzaSelezionata) {
         alert("Seleziona una potenza prima di continuare");

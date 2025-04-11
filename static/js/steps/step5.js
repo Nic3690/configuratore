@@ -8,9 +8,15 @@ export function initStep5Listeners() {
     e.preventDefault();
     
     $("#step5-controllo").fadeOut(300, function() {
-      $("#step4-alimentazione").fadeIn(300);
-      
-      updateProgressBar(4);
+      // Se la strip è 220V, torniamo direttamente allo step 3 (temperatura e potenza)
+      if (configurazione.tensioneSelezionato === '220V') {
+        $("#step3-temperatura-potenza").fadeIn(300);
+        updateProgressBar(3);
+      } else {
+        // Altrimenti torniamo allo step 4 (alimentazione)
+        $("#step4-alimentazione").fadeIn(300);
+        updateProgressBar(4);
+      }
     });
   });
   
@@ -49,7 +55,41 @@ function caricaDimmerCompatibili() {
     </div>
   `);
   
-  // Se non c'è strip LED selezionata o è "senza strip", mostriamo solo l'opzione "nessun dimmer"
+  // GESTIONE SPECIALE PER STRIP 220V
+  if (configurazione.tensioneSelezionato === '220V') {
+    // Per strip 220V, mostriamo solo l'opzione CTR130 ma in formato a colonne
+    const dimmerHtml = `
+      <h3 class="mb-3">Dimmer</h3>
+      <div class="alert alert-info mb-3">
+        <strong>Nota:</strong> Per strip LED 220V è disponibile solo il dimmer CTR130 (dimmerabile TRIAC tramite pulsante e sistema TUYA).
+      </div>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <div class="card option-card dimmer-card" data-dimmer="DIMMER_A_PULSANTE_SEMPLICE">
+            <img src="/static/img/dimmer_pulsante.jpg" class="card-img-top" alt="CTR130" style="height: 180px; object-fit: cover;" onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px'">
+            <div class="card-body text-center">
+              <h5 class="card-title">CTR130 - Dimmer a pulsante</h5>
+              <p class="card-text small text-muted">Dimmerabile TRIAC tramite pulsante e compatibile con sistema TUYA</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    $('#dimmer-container').html(dimmerHtml);
+    
+    // Auto-selezione immediata dato che c'è solo un'opzione
+    $('.dimmer-card').addClass('selected');
+    configurazione.dimmerSelezionato = "DIMMER_A_PULSANTE_SEMPLICE";
+    configurazione.dimmerModeloSpecifico = "CTR130"; // Aggiungiamo questa proprietà per identificare il modello specifico
+    
+    // Abilitiamo il listener
+    bindDimmerCardListeners();
+    checkStep5Completion();
+    return;
+  }
+
+  // Se non è strip LED selezionata o è "senza strip", mostriamo solo l'opzione "nessun dimmer"
   if (!configurazione.stripLedSelezionata || 
       configurazione.stripLedSelezionata === 'senza_strip' || 
       configurazione.stripLedSelezionata === 'NO_STRIP') {
@@ -298,7 +338,10 @@ export function vaiAlControllo() {
     $('#strip-nome-step5').text('Senza Strip LED');
   }
   
-  if (configurazione.alimentazioneSelezionata === 'SENZA_ALIMENTATORE') {
+  // Gestiamo il caso delle strip 220V
+  if (configurazione.tensioneSelezionato === '220V') {
+    $('#alimentazione-nome-step5').text('Strip 220V (no alimentatore)');
+  } else if (configurazione.alimentazioneSelezionata === 'SENZA_ALIMENTATORE') {
     $('#alimentazione-nome-step5').text('Senza alimentatore');
   } else {
     let alimentazioneText = configurazione.alimentazioneSelezionata === 'ON-OFF' ? 'ON-OFF' : 'Dimmerabile TRIAC';
@@ -307,11 +350,18 @@ export function vaiAlControllo() {
   
   updateProgressBar(5);
   
-  $("#step4-alimentazione").fadeOut(300, function() {
-    $("#step5-controllo").fadeIn(300);
-    
-    prepareControlloListeners();
-  });
+  // Aggiorniamo questa parte per gestire entrambi i casi di provenienza (da step3 o step4)
+  if (configurazione.tensioneSelezionato === '220V') {
+    $("#step3-temperatura-potenza").fadeOut(300, function() {
+      $("#step5-controllo").fadeIn(300);
+      prepareControlloListeners();
+    });
+  } else {
+    $("#step4-alimentazione").fadeOut(300, function() {
+      $("#step5-controllo").fadeIn(300);
+      prepareControlloListeners();
+    });
+  }
 }
 
 function bindDimmerCardListeners() {
@@ -362,31 +412,49 @@ export function prepareControlloListeners() {
   // Configurazione delle opzioni di compatibilità tra alimentazioni e dimmer
   // se non è già impostata in prepareAlimentazioneListeners
   if (!configurazione.compatibilitaAlimentazioneDimmer) {
-    configurazione.compatibilitaAlimentazioneDimmer = {
-      'ON-OFF': ['NESSUN_DIMMER'],
-      'DIMMERABILE_TRIAC': ['NESSUN_DIMMER', 'DIMMER_A_PULSANTE_SEMPLICE'],
-      'SENZA_ALIMENTATORE': ['NESSUN_DIMMER']
-    };
-    
-    // Aggiungi opzioni speciali se c'è una strip RGB
-    if (configurazione.stripLedSelezionata && 
-        (configurazione.stripLedSelezionata.includes('RGB') || 
-         configurazione.temperaturaColoreSelezionata === 'RGB' || 
-         configurazione.temperaturaColoreSelezionata === 'RGBW')) {
+    // Per le strip 220V, impostiamo automaticamente SENZA_ALIMENTATORE
+    if (configurazione.tensioneSelezionato === '220V') {
+      configurazione.alimentazioneSelezionata = 'SENZA_ALIMENTATORE';
+      configurazione.compatibilitaAlimentazioneDimmer = {
+        'SENZA_ALIMENTATORE': ['NESSUN_DIMMER']
+      };
       
-      configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
-      configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
-      configurazione.compatibilitaAlimentazioneDimmer['SENZA_ALIMENTATORE'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
-    }
-    
-    // Aggiungi TOUCH_SU_PROFILO per strip non-RGB compatibili
-    if (configurazione.stripLedSelezionata &&
-        !configurazione.stripLedSelezionata.includes('RGB') &&
-        configurazione.temperaturaColoreSelezionata !== 'RGB' &&
-        configurazione.temperaturaColoreSelezionata !== 'RGBW') {
+      // Per le strip 220V RGB (se esistono), aggiungiamo opzioni speciali
+      if (configurazione.stripLedSelezionata && 
+          (configurazione.stripLedSelezionata.includes('RGB') || 
+           configurazione.temperaturaColoreSelezionata === 'RGB' || 
+           configurazione.temperaturaColoreSelezionata === 'RGBW')) {
+        
+        configurazione.compatibilitaAlimentazioneDimmer['SENZA_ALIMENTATORE'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
+      }
+    } else {
+      // Configurazione normale per altre tensioni
+      configurazione.compatibilitaAlimentazioneDimmer = {
+        'ON-OFF': ['NESSUN_DIMMER'],
+        'DIMMERABILE_TRIAC': ['NESSUN_DIMMER', 'DIMMER_A_PULSANTE_SEMPLICE'],
+        'SENZA_ALIMENTATORE': ['NESSUN_DIMMER']
+      };
       
-      configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('TOUCH_SU_PROFILO');
-      configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('TOUCH_SU_PROFILO');
+      // Aggiungi opzioni speciali se c'è una strip RGB
+      if (configurazione.stripLedSelezionata && 
+          (configurazione.stripLedSelezionata.includes('RGB') || 
+           configurazione.temperaturaColoreSelezionata === 'RGB' || 
+           configurazione.temperaturaColoreSelezionata === 'RGBW')) {
+        
+        configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
+        configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
+        configurazione.compatibilitaAlimentazioneDimmer['SENZA_ALIMENTATORE'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
+      }
+      
+      // Aggiungi TOUCH_SU_PROFILO per strip non-RGB compatibili
+      if (configurazione.stripLedSelezionata &&
+          !configurazione.stripLedSelezionata.includes('RGB') &&
+          configurazione.temperaturaColoreSelezionata !== 'RGB' &&
+          configurazione.temperaturaColoreSelezionata !== 'RGBW') {
+        
+        configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('TOUCH_SU_PROFILO');
+        configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('TOUCH_SU_PROFILO');
+      }
     }
   }
   
@@ -406,16 +474,16 @@ export function prepareControlloListeners() {
   if (configurazione.tensioneSelezionato === '24V' && lunghezzaRichiesta > 5000) {
     // Per sistemi 24V > 5000mm, obbligatorio due alimentatori
     alimentazioneCavoContainer.html(`
-      <div class="col-md-12 mb-3">
-        <div class="alert alert-warning">
-          <strong>Nota:</strong> Per sistemi a 24V che superano i 5000mm di lunghezza è obbligatorio utilizzare l'alimentazione doppia.
-        </div>
+      <div class="alert alert-warning mb-3">
+        <strong>Nota:</strong> Per sistemi a 24V che superano i 5000mm di lunghezza è obbligatorio utilizzare l'alimentazione doppia.
       </div>
-      <div class="col-md-12 mb-3">
-        <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_DOPPIA">
-          <div class="card-body text-center">
-            <h5 class="card-title">Alimentazione doppia</h5>
-            <p class="card-text small text-muted">Due punti di alimentazione (obbligatorio per questa configurazione)</p>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_DOPPIA">
+            <div class="card-body text-center">
+              <h5 class="card-title">Alimentazione doppia</h5>
+              <p class="card-text small text-muted">Due punti di alimentazione (obbligatorio per questa configurazione)</p>
+            </div>
           </div>
         </div>
       </div>
@@ -433,16 +501,16 @@ export function prepareControlloListeners() {
   } else if (configurazione.tensioneSelezionato === '48V' && lunghezzaRichiesta <= 15000) {
     // Per sistemi 48V fino a 15000mm, solo alimentazione unica
     alimentazioneCavoContainer.html(`
-      <div class="col-md-12 mb-3">
-        <div class="alert alert-info">
-          <strong>Nota:</strong> Per sistemi a 48V fino a 15000mm di lunghezza è prevista solo l'alimentazione unica.
-        </div>
+      <div class="alert alert-info mb-3">
+        <strong>Nota:</strong> Per sistemi a 48V fino a 15000mm di lunghezza è prevista solo l'alimentazione unica.
       </div>
-      <div class="col-md-12 mb-3">
-        <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
-          <div class="card-body text-center">
-            <h5 class="card-title">Alimentazione unica</h5>
-            <p class="card-text small text-muted">Singolo punto di alimentazione (consigliato per questa configurazione)</p>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
+            <div class="card-body text-center">
+              <h5 class="card-title">Alimentazione unica</h5>
+              <p class="card-text small text-muted">Singolo punto di alimentazione (consigliato per questa configurazione)</p>
+            </div>
           </div>
         </div>
       </div>
@@ -458,18 +526,18 @@ export function prepareControlloListeners() {
     }
     
   } else if (configurazione.tensioneSelezionato === '220V') {
-    // Per sistemi 220V, nessun limite e solo alimentazione unica
+    // Per sistemi 220V, layout a colonne per l'alimentazione unica
     alimentazioneCavoContainer.html(`
-      <div class="col-md-12 mb-3">
-        <div class="alert alert-info">
-          <strong>Nota:</strong> Per sistemi a 220V è prevista solo l'alimentazione unica senza limiti di lunghezza.
-        </div>
+      <div class="alert alert-info mb-3">
+        <strong>Nota:</strong> Per sistemi a 220V è prevista solo l'alimentazione unica senza limiti di lunghezza.
       </div>
-      <div class="col-md-12 mb-3">
-        <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
-          <div class="card-body text-center">
-            <h5 class="card-title">Alimentazione unica</h5>
-            <p class="card-text small text-muted">Singolo punto di alimentazione (obbligatorio per questa configurazione)</p>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
+            <div class="card-body text-center">
+              <h5 class="card-title">Alimentazione unica</h5>
+              <p class="card-text small text-muted">Singolo punto di alimentazione (obbligatorio per questa configurazione)</p>
+            </div>
           </div>
         </div>
       </div>
@@ -483,24 +551,27 @@ export function prepareControlloListeners() {
     } else {
       configurazione.tipoAlimentazioneCavo = null;
     }
+  }
     
-  } else {
+  else {
     // Caso normale, mostra entrambe le opzioni
     alimentazioneCavoContainer.html(`
-      <div class="col-md-6 mb-3">
-        <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
-          <div class="card-body text-center">
-            <h5 class="card-title">Alimentazione unica</h5>
-            <p class="card-text small text-muted">Singolo punto di alimentazione</p>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
+            <div class="card-body text-center">
+              <h5 class="card-title">Alimentazione unica</h5>
+              <p class="card-text small text-muted">Singolo punto di alimentazione</p>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div class="col-md-6 mb-3">
-        <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_DOPPIA">
-          <div class="card-body text-center">
-            <h5 class="card-title">Alimentazione doppia</h5>
-            <p class="card-text small text-muted">Due punti di alimentazione</p>
+        
+        <div class="col-md-4 mb-3">
+          <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_DOPPIA">
+            <div class="card-body text-center">
+              <h5 class="card-title">Alimentazione doppia</h5>
+              <p class="card-text small text-muted">Due punti di alimentazione</p>
+            </div>
           </div>
         </div>
       </div>

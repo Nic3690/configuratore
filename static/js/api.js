@@ -1102,9 +1102,6 @@ export function caricaFinitureDisponibili(profiloId) {
   });
 }
 
-/**
- * Finalizza la configurazione e genera il riepilogo
- */
 export function finalizzaConfigurazione() {
   
   $('#riepilogo-container').html('<div class="text-center my-5"><div class="spinner-border" role="status"></div><p class="mt-3">Generazione riepilogo...</p></div>');
@@ -1114,28 +1111,37 @@ export function finalizzaConfigurazione() {
     
     updateProgressBar(6);
     
-    // Assicurati che dimmer e alimentazione siano correttamente formattati per il riepilogo
-    if (configurazione.dimmerSelezionato) {
-      const mappaDimmerText = {
-        'NESSUN_DIMMER': 'Nessun dimmer',
-        'TOUCH_SU_PROFILO': 'Touch su profilo',
-        'CON_TELECOMANDO': 'Con telecomando',
-        'CENTRALINA_TUYA': 'Centralina TUYA',
-        'DIMMER_A_PULSANTE_SEMPLICE': 'Dimmer a pulsante semplice',
-        'DIMMERABILE_PWM': 'Dimmerabile PWM',
-        'DIMMERABILE_DALI': 'Dimmerabile DALI'
-      };
+  // Assicurati che dimmer e alimentazione siano correttamente formattati per il riepilogo
+  if (configurazione.dimmerSelezionato) {
+    const mappaDimmerText = {
+      'NESSUN_DIMMER': 'Nessun dimmer',
+      'TOUCH_SU_PROFILO': 'Touch su profilo',
+      'CON_TELECOMANDO': 'Con telecomando',
+      'CENTRALINA_TUYA': 'Centralina TUYA',
+      'DIMMER_A_PULSANTE_SEMPLICE': 'Dimmer a pulsante semplice',
+      'DIMMERABILE_PWM': 'Dimmerabile PWM',
+      'DIMMERABILE_DALI': 'Dimmerabile DALI'
+    };
+    
+    // Gestione speciale per strip 220V con dimmer CTR130
+    if (configurazione.tensioneSelezionato === '220V' && configurazione.dimmerSelezionato === 'DIMMER_A_PULSANTE_SEMPLICE') {
+      configurazione.dimmerText = 'CTR130 - Dimmerabile TRIAC tramite pulsante e sistema TUYA';
+    } else {
       configurazione.dimmerText = mappaDimmerText[configurazione.dimmerSelezionato] || configurazione.dimmerSelezionato;
     }
-    
-    if (configurazione.alimentazioneSelezionata) {
-      const mappaAlimentazioneText = {
-        'ON-OFF': 'ON/OFF',
-        'DIMMERABILE_TRIAC': 'Dimmerabile TRIAC',
-        'SENZA_ALIMENTATORE': 'Senza alimentatore'
-      };
-      configurazione.alimentazioneText = mappaAlimentazioneText[configurazione.alimentazioneSelezionata] || configurazione.alimentazioneSelezionata;
-    }
+  }
+
+  // MODIFICA: Gestire il caso specifico delle strip 220V
+  if (configurazione.tensioneSelezionato === '220V') {
+    configurazione.alimentazioneText = 'Strip 220V (no alimentatore)';
+  } else if (configurazione.alimentazioneSelezionata) {
+    const mappaAlimentazioneText = {
+      'ON-OFF': 'ON/OFF',
+      'DIMMERABILE_TRIAC': 'Dimmerabile TRIAC',
+      'SENZA_ALIMENTATORE': 'Senza alimentatore'
+    };
+    configurazione.alimentazioneText = mappaAlimentazioneText[configurazione.alimentazioneSelezionata] || configurazione.alimentazioneSelezionata;
+  }
     
     $.ajax({
       url: '/finalizza_configurazione',
@@ -1279,7 +1285,15 @@ export function finalizzaConfigurazione() {
         }
         
         // Informazioni sull'alimentazione
-        if (riepilogo.alimentazioneSelezionata) {
+        if (riepilogo.tensioneSelezionato === '220V') {
+          // Per strip 220V, mostriamo un messaggio dedicato
+          riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Alimentazione</th>
+                        <td>Strip 220V (no alimentatore)</td>
+                      </tr>
+          `;
+        } else if (riepilogo.alimentazioneSelezionata) {
           // Usa il testo formattato se disponibile
           const alimentazioneText = riepilogo.alimentazioneText || 
                                   (riepilogo.alimentazioneSelezionata === 'SENZA_ALIMENTATORE' ? 'Senza alimentatore' : 
@@ -1447,7 +1461,6 @@ export function finalizzaConfigurazione() {
     });
   });
 }
-
 
 /**
  * Richiede un preventivo per il prodotto configurato
