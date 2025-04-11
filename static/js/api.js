@@ -649,6 +649,7 @@ export function caricaOpzioniPotenza(profiloId, temperatura) {
   });
 }
 
+// Updated function for api.js
 export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, potenza, tipologia_strip) {
   
   // Verifica che tutti i parametri siano definiti
@@ -691,6 +692,55 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
         // Percorso immagine per il modello di strip LED
         const imgPath = `/static/img/strip/${strip.id}.jpg`;
         
+        // Verifica se il nome commerciale contiene già un'indicazione dell'IP
+        const ipAlreadyInName = nomeVisualizzato && 
+                             (nomeVisualizzato.includes('IP65') || 
+                              nomeVisualizzato.includes('IP66') || 
+                              nomeVisualizzato.includes('IP67') || 
+                              nomeVisualizzato.includes('IP20') ||
+                              nomeVisualizzato.includes('IP44'));
+        
+        // Estrai l'IP che è effettivamente nel nome commerciale (se presente)
+        let ipInCommercialName = '';
+        if (ipAlreadyInName) {
+          const ipMatch = nomeVisualizzato.match(/IP(20|44|65|66|67)/);
+          if (ipMatch && ipMatch[0]) {
+            ipInCommercialName = ipMatch[0];
+          }
+        }
+        
+        // Determina se mostrare il nome tecnico e come visualizzare l'IP nelle informazioni
+        let showTechnicalName = true;
+        let technicalNameDisplay = strip.nome;
+        
+        // Se il nome commerciale contiene un IP diverso da quello che c'è nel nome tecnico,
+        // modifica il nome tecnico per rimuovere o sostituire l'IP
+        if (ipAlreadyInName && ipInCommercialName && strip.nome.includes('IP')) {
+          // Sostituisci l'IP nel nome tecnico con quello del nome commerciale
+          technicalNameDisplay = strip.nome.replace(/IP(20|44|65|66|67)/, ipInCommercialName);
+          
+          // Se il nome tecnico è troppo simile al nome commerciale dopo questa sostituzione,
+          // nascondi completamente il nome tecnico
+          const commercialWords = nomeVisualizzato.replace(/\s+/g, ' ').toLowerCase().split(' ');
+          const technicalWords = technicalNameDisplay.replace(/\s+/g, ' ').toLowerCase().split(' ');
+          
+          // Conta quante parole sono in comune
+          const commonWords = commercialWords.filter(word => technicalWords.includes(word));
+          
+          // Se più della metà delle parole sono in comune, non mostrare il nome tecnico
+          if (commonWords.length >= Math.min(commercialWords.length, technicalWords.length) * 0.5) {
+            showTechnicalName = false;
+          }
+        }
+        
+        // Preparazione del testo informativo, omettendo l'IP se già presente nel nome commerciale
+        let infoText = '';
+        if (ipAlreadyInName) {
+          infoText = `Tensione: ${strip.tensione}, Temperatura: ${formatTemperatura ? formatTemperatura(strip.temperatura) : strip.temperatura}`;
+        } else {
+          infoText = `Tensione: ${strip.tensione}, IP: ${strip.ip}, Temperatura: ${formatTemperatura ? formatTemperatura(strip.temperatura) : strip.temperatura}`;
+        }
+        
         stripHtml += `
           <div class="col-md-4 mb-3">
             <div class="card option-card strip-led-compatibile-card" 
@@ -701,11 +751,9 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
                   onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px';">
               <div class="card-body">
                 <h5 class="card-title">${nomeVisualizzato}</h5>
-                ${strip.nomeCommerciale ? `<p class="card-subtitle mb-2 text-muted">${strip.nome}</p>` : ''}
+                ${showTechnicalName && strip.nomeCommerciale ? `<p class="card-subtitle mb-2 text-muted">${technicalNameDisplay}</p>` : ''}
                 <p class="card-text small">
-                  Tensione: ${strip.tensione}, 
-                  IP: ${strip.ip}, 
-                  Temperatura: ${formatTemperatura ? formatTemperatura(strip.temperatura) : strip.temperatura}
+                  ${infoText}
                 </p>
                 <p class="card-text small">Potenza: ${potenza}</p>
               </div>
