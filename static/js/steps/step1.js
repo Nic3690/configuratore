@@ -15,6 +15,7 @@ export function initStep1Listeners() {
     
     $('.categoria-selezionata').text(`Categoria: ${mappaCategorieVisualizzazione[categoria] || categoria}`);
     
+    // STEP 1 -> 2: Categoria -> Personalizzazione
     updateProgressBar(2);
     
     $("#step1-tipologia").fadeOut(300, function() {

@@ -15,6 +15,9 @@ export function updateProgressBar(step) {
   for (let i = 1; i < step; i++) {
     $(`#progress-step${i}`).addClass('completed');
   }
+  
+  // Debug per verificare quale step viene aggiornato
+  console.log(`Aggiornamento barra di progresso: step ${step}`);
 }
 
 /**
@@ -136,48 +139,75 @@ export function checkStep6Completion() {
   $('#btn-finalizza').prop('disabled', !isComplete);
 }
 
-/**
- * Controlla se la personalizzazione è completa
- */
 export function checkPersonalizzazioneCompletion() {
   let isComplete = true;
   
-  if (!configurazione.formaDiTaglioSelezionata) {
-    isComplete = false;
-  }
-  
-  if (!configurazione.finituraSelezionata) {
-    isComplete = false;
-  }
-  
-  if (configurazione.tipologiaSelezionata === 'taglio_misura') {
-    // Per il taglio dritto semplice, controlliamo solo lunghezzaRichiesta
-    if (configurazione.formaDiTaglioSelezionata === 'DRITTO_SEMPLICE') {
-      if (!configurazione.lunghezzaRichiesta) {
-        isComplete = false;
-      }
-    } 
-    // Per le altre forme, controlliamo che tutte le lunghezze multiple siano inserite
-    else if (configurazione.lunghezzeMultiple) {
-      const forma = configurazione.formaDiTaglioSelezionata;
-      const numLatiRichiesti = {
-        'FORMA_L_DX': 2,
-        'FORMA_L_SX': 2,
-        'FORMA_C': 3,
-        'RETTANGOLO_QUADRATO': 2
-      }[forma] || 0;
-      
-      // Conta quanti lati hanno un valore valido
-      const latiValidi = Object.values(configurazione.lunghezzeMultiple)
-        .filter(val => val && val > 0).length;
-      
-      if (latiValidi < numLatiRichiesti) {
-        isComplete = false;
-      }
-    } else {
+  // Per il profilo intero, impostiamo automaticamente i valori necessari
+  if (configurazione.tipologiaSelezionata === 'profilo_intero') {
+    // Imposta automaticamente la forma di taglio a DRITTO_SEMPLICE se non è già impostata
+    if (!configurazione.formaDiTaglioSelezionata) {
+      configurazione.formaDiTaglioSelezionata = 'DRITTO_SEMPLICE';
+    }
+    
+    // Verifica solo che ci sia una finitura selezionata
+    if (!configurazione.finituraSelezionata) {
       isComplete = false;
+    }
+    
+    // Assicura che la lunghezza sia impostata (usando la lunghezza massima del profilo)
+    if (!configurazione.lunghezzaRichiesta && configurazione.lunghezzaMassimaProfilo) {
+      configurazione.lunghezzaRichiesta = configurazione.lunghezzaMassimaProfilo;
+    }
+    
+    // Debug
+    console.log("Profilo intero - Validazione:", {
+      formaDiTaglio: configurazione.formaDiTaglioSelezionata,
+      finitura: configurazione.finituraSelezionata,
+      lunghezza: configurazione.lunghezzaRichiesta,
+      isComplete: isComplete
+    });
+  } else {
+    // Per il taglio su misura, controlliamo tutto
+    if (!configurazione.formaDiTaglioSelezionata) {
+      isComplete = false;
+    }
+    
+    if (!configurazione.finituraSelezionata) {
+      isComplete = false;
+    }
+    
+    // Controlli specifici per il taglio su misura
+    if (configurazione.tipologiaSelezionata === 'taglio_misura') {
+      // Per il taglio dritto semplice, controlliamo solo lunghezzaRichiesta
+      if (configurazione.formaDiTaglioSelezionata === 'DRITTO_SEMPLICE') {
+        if (!configurazione.lunghezzaRichiesta) {
+          isComplete = false;
+        }
+      } 
+      // Per le altre forme, controlliamo che tutte le lunghezze multiple siano inserite
+      else if (configurazione.lunghezzeMultiple) {
+        const forma = configurazione.formaDiTaglioSelezionata;
+        const numLatiRichiesti = {
+          'FORMA_L_DX': 2,
+          'FORMA_L_SX': 2,
+          'FORMA_C': 3,
+          'RETTANGOLO_QUADRATO': 2
+        }[forma] || 0;
+        
+        // Conta quanti lati hanno un valore valido
+        const latiValidi = Object.values(configurazione.lunghezzeMultiple)
+          .filter(val => val && val > 0).length;
+        
+        if (latiValidi < numLatiRichiesti) {
+          isComplete = false;
+        }
+      } else {
+        isComplete = false;
+      }
     }
   }
   
+  // Abilita o disabilita il pulsante in base al risultato della validazione
   $('#btn-continua-personalizzazione').prop('disabled', !isComplete);
+  return isComplete;
 }

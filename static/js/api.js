@@ -1068,7 +1068,7 @@ export function finalizzaConfigurazione() {
   $("#step6-proposte").fadeOut(300, function() {
     $("#step7-riepilogo").fadeIn(300);
     
-    updateProgressBar(7);
+    updateProgressBar(6);
     
     // Assicurati che dimmer e alimentazione siano correttamente formattati per il riepilogo
     if (configurazione.dimmerSelezionato) {

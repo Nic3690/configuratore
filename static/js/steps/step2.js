@@ -374,47 +374,96 @@ export function vaiAllaPersonalizzazione() {
   });
 }
 
-// NUOVO: Funzione di preparazione della personalizzazione (spostata da step6.js)
 export function preparePersonalizzazioneListeners() {
+  // Carica le finiture disponibili per il profilo selezionato
   caricaFinitureDisponibili(configurazione.profiloSelezionato);
   
-  $('.forma-taglio-card').on('click', function() {
-    $('.forma-taglio-card').removeClass('selected');
-    $(this).addClass('selected');
-    
-    configurazione.formaDiTaglioSelezionata = $(this).data('forma');
-    
-    updateIstruzioniMisurazione(configurazione.formaDiTaglioSelezionata);
-    checkPersonalizzazioneCompletion();
-  });
-  
+  // Imposta i listener per le card delle finiture
   $('.finitura-card').on('click', function() {
     $('.finitura-card').removeClass('selected');
     $(this).addClass('selected');
     
     configurazione.finituraSelezionata = $(this).data('finitura');
     
+    // Controlla se la personalizzazione è completa dopo la selezione
     checkPersonalizzazioneCompletion();
   });
 
+  // Listener per il campo di lunghezza personalizzata
   $('#lunghezza-personalizzata').on('input', function() {
     configurazione.lunghezzaRichiesta = parseInt($(this).val(), 10) || null;
     checkPersonalizzazioneCompletion();
   });
   
-  // RIMOSSO: Listener per i pulsanti delle proposte
-  // Non includiamo più questa parte
+  // Per profilo intero, imposta automaticamente la forma di taglio a DRITTO_SEMPLICE
+  if (configurazione.tipologiaSelezionata === 'profilo_intero') {
+    console.log("Profilo intero: impostiamo automaticamente la forma di taglio a DRITTO_SEMPLICE");
+    configurazione.formaDiTaglioSelezionata = 'DRITTO_SEMPLICE';
+    
+    // Se c'è una lunghezza massima per il profilo, usala come lunghezza richiesta
+    if (configurazione.lunghezzaMassimaProfilo) {
+      configurazione.lunghezzaRichiesta = configurazione.lunghezzaMassimaProfilo;
+    }
+  } else {
+    // Per taglio su misura, aggiungi listener per le forme di taglio
+    $('.forma-taglio-card').on('click', function() {
+      $('.forma-taglio-card').removeClass('selected');
+      $(this).addClass('selected');
+      
+      configurazione.formaDiTaglioSelezionata = $(this).data('forma');
+      
+      updateIstruzioniMisurazione(configurazione.formaDiTaglioSelezionata);
+      checkPersonalizzazioneCompletion();
+    });
+  }
   
-  // NUOVA FUNZIONALITÀ: Verifica se è stato selezionato profilo intero o taglio su misura
-  // Se è profilo intero, nascondi la sezione di personalizzazione lunghezza
-  console.log("Tipologia selezionata:", configurazione.tipologiaSelezionata);
+  // Gestisci la visibilità delle sezioni
+  toggleFormaTaglioSection();
   togglePersonalizzazioneLunghezza();
   
-  updateIstruzioniMisurazione('DRITTO_SEMPLICE');
+  // Avvia un controllo iniziale per abilitare/disabilitare il pulsante continua
   checkPersonalizzazioneCompletion();
+  
+  // Log per debugging
+  console.log("Stato configurazione dopo prepare:", {
+    tipologia: configurazione.tipologiaSelezionata,
+    forma: configurazione.formaDiTaglioSelezionata,
+    finitura: configurazione.finituraSelezionata,
+    lunghezza: configurazione.lunghezzaRichiesta
+  });
 }
 
-// Nuova funzione per gestire visibilità della sezione di personalizzazione della lunghezza
+// Nuova funzione per gestire la visibilità della sezione forma di taglio
+function toggleFormaTaglioSection() {
+  // Otteniamo la sezione di forma di taglio
+  let formaTaglioContainer = null;
+  $('.container.mb-5').each(function() {
+    const heading = $(this).find('h3.mb-3').text();
+    if (heading === 'Forma di taglio') {
+      formaTaglioContainer = $(this);
+    }
+  });
+  
+  if (!formaTaglioContainer) {
+    console.error("Impossibile trovare la sezione di forma di taglio");
+    return;
+  }
+  
+  if (configurazione.tipologiaSelezionata === 'profilo_intero') {
+    // Nascondi la sezione di forma di taglio
+    formaTaglioContainer.hide();
+    
+    // Impostiamo automaticamente la forma "Dritto semplice" quando è profilo intero
+    configurazione.formaDiTaglioSelezionata = 'DRITTO_SEMPLICE';
+    
+    // Se avevamo un listener per l'evento click sulla forma, aggiorniamo manualmente
+    $('.forma-taglio-card[data-forma="DRITTO_SEMPLICE"]').addClass('selected');
+  } else {
+    // Per taglio su misura, mostra la sezione di forma di taglio
+    formaTaglioContainer.show();
+  }
+}
+
 function togglePersonalizzazioneLunghezza() {
   // Rimuoviamo prima eventuali sezioni informative create in precedenza
   $('#lunghezza-info-container').remove();
@@ -458,6 +507,10 @@ function togglePersonalizzazioneLunghezza() {
     
     // Impostazione automatica della lunghezza richiesta usando la lunghezza massima specifica del profilo
     configurazione.lunghezzaRichiesta = lunghezzaMassima;
+    console.log("Lunghezza impostata automaticamente per profilo intero:", lunghezzaMassima);
+    
+    // Forza un controllo del completamento dopo aver impostato la lunghezza
+    setTimeout(checkPersonalizzazioneCompletion, 100);
   } else {
     // Per taglio su misura, mostra la sezione di personalizzazione lunghezza
     personalizzazioneLunghezzaContainer.show();
@@ -857,3 +910,50 @@ function checkPersonalizzazioneComplete() {
   }
   return true;
 }
+
+// Funzione per forzare lo sblocco del pulsante continua per i profili interi
+export function forceBtnProfiloIntero() {
+  if (configurazione.tipologiaSelezionata === 'profilo_intero') {
+    // Imposta tutti i valori necessari
+    if (!configurazione.formaDiTaglioSelezionata) {
+      configurazione.formaDiTaglioSelezionata = 'DRITTO_SEMPLICE';
+    }
+    
+    // Se non c'è una lunghezza impostata, usa la lunghezza massima del profilo
+    if (!configurazione.lunghezzaRichiesta && configurazione.lunghezzaMassimaProfilo) {
+      configurazione.lunghezzaRichiesta = configurazione.lunghezzaMassimaProfilo;
+    } else if (!configurazione.lunghezzaRichiesta) {
+      // Default a 3000mm se non c'è una lunghezza massima definita
+      configurazione.lunghezzaRichiesta = 3000;
+    }
+    
+    // Stampa lo stato attuale
+    console.log("Stato configurazione forzato:", {
+      tipologia: configurazione.tipologiaSelezionata,
+      forma: configurazione.formaDiTaglioSelezionata,
+      finitura: configurazione.finituraSelezionata,
+      lunghezza: configurazione.lunghezzaRichiesta
+    });
+    
+    // Abilita direttamente il pulsante
+    $('#btn-continua-personalizzazione').prop('disabled', false);
+    
+    return true;
+  }
+  return false;
+}
+
+// Aggiungi questa riga alla fine del caricamento della pagina o in document.ready
+$(document).ready(function() {
+  // Aggiungi un listener per sbloccare automaticamente il pulsante quando si è in profilo intero
+  // e si seleziona una finitura
+  $('#step2-personalizzazione').on('click', '.finitura-card', function() {
+    // Attendi un attimo per dare tempo agli altri handler di eseguire
+    setTimeout(function() {
+      if (configurazione.tipologiaSelezionata === 'profilo_intero' && configurazione.finituraSelezionata) {
+        console.log("Auto-sblocco pulsante continua per profilo intero");
+        $('#btn-continua-personalizzazione').prop('disabled', false);
+      }
+    }, 100);
+  });
+});
