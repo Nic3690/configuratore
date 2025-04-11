@@ -778,6 +778,26 @@ function renderizzaOpzioniTensione(tensioni) {
     `);
   });
   
+  // Auto-selezione se c'è una sola opzione di tensione
+  if (tensioni.length === 1) {
+    console.log("Tensione unica trovata, auto-seleziono:", tensioni[0]);
+    // Piccolo ritardo per assicurarsi che il DOM sia aggiornato
+    setTimeout(function() {
+      const $unicaTensione = $('.tensione-card');
+      console.log("Elementi tensione-card trovati:", $unicaTensione.length);
+      
+      if ($unicaTensione.length > 0) {
+        $unicaTensione.addClass('selected');
+        configurazione.tensioneSelezionato = tensioni[0];
+        console.log("Tensione selezionata:", configurazione.tensioneSelezionato);
+        
+        // Carica automaticamente le opzioni IP per questa tensione
+        caricaOpzioniIP(configurazione.profiloSelezionato, configurazione.tensioneSelezionato);
+      }
+    }, 50);
+  }
+  
+  // Aggiungi gli event listener per il click
   $('.tensione-card').on('click', function() {
     $('.tensione-card').removeClass('selected');
     $(this).addClass('selected');

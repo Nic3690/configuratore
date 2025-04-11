@@ -968,13 +968,17 @@ export function caricaPotenzeAlimentatore(alimentatoreId) {
         configurazione.potenzaAlimentatoreSelezionata = $unicaPotenza.data('potenza');
         $('#btn-continua-step4').prop('disabled', false);
       }
-      // Se c'è una potenza consigliata tra quelle disponibili, selezionala automaticamente
-      else if (potenzaConsigliata) {
-        const $potenzaConsigliata = $(`.potenza-alimentatore-card[data-potenza="${potenzaConsigliata}"]`);
-        if ($potenzaConsigliata.length > 0) {
-          $potenzaConsigliata.addClass('selected');
-          configurazione.potenzaAlimentatoreSelezionata = potenzaConsigliata;
-          $('#btn-continua-step4').prop('disabled', false);
+      // Se c'è una potenza consigliata tra quelle disponibili, NON selezionarla automaticamente
+      // quando ci sono multiple opzioni, lasciando la scelta all'utente
+      else {
+        configurazione.potenzaAlimentatoreSelezionata = null;
+        $('#btn-continua-step4').prop('disabled', true);
+        
+        // Mostra un messaggio che indica la potenza consigliata
+        if (potenzaConsigliata) {
+          $('#potenza-alimentatore-info')
+            .html(`<p>In base alla tua configurazione, la potenza consigliata è di <strong>${potenzaConsigliata}W</strong>, ma puoi selezionare la potenza che preferisci tra quelle disponibili.</p>`)
+            .show();
         }
       }
       
@@ -1025,6 +1029,26 @@ export function caricaFinitureDisponibili(profiloId) {
       
       if (finitureDisponibili.length === 0) {
         $('.finitura-card').parent().show();
+      }
+      
+      // Auto-selezione se c'è una sola finitura disponibile
+      if (finitureDisponibili.length === 1) {
+        console.log("Finitura unica trovata, auto-seleziono:", finitureDisponibili[0]);
+        
+        // Piccolo ritardo per assicurarsi che il DOM sia aggiornato
+        setTimeout(function() {
+          const $unicaFinitura = $(`.finitura-card[data-finitura="${finitureDisponibili[0]}"]`);
+          console.log("Elemento finitura-card trovato:", $unicaFinitura.length);
+          
+          if ($unicaFinitura.length > 0) {
+            $unicaFinitura.addClass('selected');
+            configurazione.finituraSelezionata = finitureDisponibili[0];
+            console.log("Finitura selezionata:", configurazione.finituraSelezionata);
+            
+            // Aggiorna lo stato del pulsante continua
+            checkPersonalizzazioneCompletion();
+          }
+        }, 50);
       }
     },
     error: function(error) {

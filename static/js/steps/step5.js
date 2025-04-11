@@ -69,10 +69,13 @@ function caricaDimmerCompatibili() {
     `;
     
     $('#dimmer-container').html(dimmerHtml);
-    // Auto-selezione dimmer
-    const $dimmerCard = $('.dimmer-card');
-    $dimmerCard.addClass('selected');
-    configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+    // Auto-selezione dimmer solo se c'è una sola opzione
+    if ($('.dimmer-card').length === 1) {
+      $('.dimmer-card').addClass('selected');
+      configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+    } else {
+      configurazione.dimmerSelezionato = null;
+    }
     
     bindDimmerCardListeners();
     return;
@@ -166,7 +169,7 @@ function caricaDimmerCompatibili() {
         // Aggiorniamo il contenitore con le opzioni di dimmer
         $('#dimmer-container').html(dimmerHtml);
         
-        // Auto-selezione se c'è un solo dimmer disponibile
+        // Auto-selezione solo se c'è una sola opzione
         if (opzioniDimmer.length === 1) {
           const $unicoDimmer = $('.dimmer-card');
           $unicoDimmer.addClass('selected');
@@ -176,12 +179,9 @@ function caricaDimmerCompatibili() {
           if (opzioniDimmer[0] === 'TOUCH_SU_PROFILO') {
             $('#dimmer-warning').show();
           }
-        } 
-        // Altrimenti, seleziona NESSUN_DIMMER come opzione di default se disponibile
-        else if (opzioniDimmer.includes('NESSUN_DIMMER')) {
-          const $nessunDimmer = $('.dimmer-card[data-dimmer="NESSUN_DIMMER"]');
-          $nessunDimmer.addClass('selected');
-          configurazione.dimmerSelezionato = 'NESSUN_DIMMER';
+        } else {
+          // Non selezionare automaticamente nessuna opzione quando ce ne sono più di una
+          configurazione.dimmerSelezionato = null;
         }
         
         // Ripristiniamo gli event listener per le card di dimmer
@@ -207,10 +207,13 @@ function caricaDimmerCompatibili() {
         
         $('#dimmer-container').html(dimmerHtml);
         
-        // Auto-seleziona l'opzione
-        const $dimmerCard = $('.dimmer-card');
-        $dimmerCard.addClass('selected');
-        configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+        // Auto-seleziona l'opzione solo se è l'unica
+        if ($('.dimmer-card').length === 1) {
+          $('.dimmer-card').addClass('selected');
+          configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+        } else {
+          configurazione.dimmerSelezionato = null;
+        }
         
         bindDimmerCardListeners();
         checkStep5Completion();
@@ -237,10 +240,13 @@ function caricaDimmerCompatibili() {
       
       $('#dimmer-container').html(dimmerHtml);
       
-      // Auto-seleziona l'opzione
-      const $dimmerCard = $('.dimmer-card');
-      $dimmerCard.addClass('selected');
-      configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+      // Auto-seleziona l'opzione solo se è l'unica
+      if ($('.dimmer-card').length === 1) {
+        $('.dimmer-card').addClass('selected');
+        configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+      } else {
+        configurazione.dimmerSelezionato = null;
+      }
       
       $('#dimmer-loading').hide();
       bindDimmerCardListeners();
@@ -380,7 +386,7 @@ export function prepareControlloListeners() {
         </div>
       </div>
       <div class="col-md-12 mb-3">
-        <div class="card option-card alimentazione-cavo-card selected" data-alimentazione-cavo="ALIMENTAZIONE_DOPPIA">
+        <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_DOPPIA">
           <div class="card-body text-center">
             <h5 class="card-title">Alimentazione doppia</h5>
             <p class="card-text small text-muted">Due punti di alimentazione (obbligatorio per questa configurazione)</p>
@@ -389,9 +395,14 @@ export function prepareControlloListeners() {
       </div>
     `);
     
-    // Imposta automaticamente l'alimentazione doppia
-    configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_DOPPIA";
-    $('#lunghezza-cavo-uscita-container').show();
+    // Auto-selezione solo se c'è una sola opzione
+    if ($('.alimentazione-cavo-card').length === 1) {
+      $('.alimentazione-cavo-card').addClass('selected');
+      configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_DOPPIA";
+      $('#lunghezza-cavo-uscita-container').show();
+    } else {
+      configurazione.tipoAlimentazioneCavo = null;
+    }
     
   } else if (configurazione.tensioneSelezionato === '48V' && lunghezzaRichiesta <= 15000) {
     // Per sistemi 48V fino a 15000mm, solo alimentazione unica
@@ -402,7 +413,7 @@ export function prepareControlloListeners() {
         </div>
       </div>
       <div class="col-md-12 mb-3">
-        <div class="card option-card alimentazione-cavo-card selected" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
+        <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
           <div class="card-body text-center">
             <h5 class="card-title">Alimentazione unica</h5>
             <p class="card-text small text-muted">Singolo punto di alimentazione (consigliato per questa configurazione)</p>
@@ -411,9 +422,14 @@ export function prepareControlloListeners() {
       </div>
     `);
     
-    // Imposta automaticamente l'alimentazione unica
-    configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_UNICA";
-    $('#lunghezza-cavo-uscita-container').hide();
+    // Auto-selezione solo se c'è una sola opzione
+    if ($('.alimentazione-cavo-card').length === 1) {
+      $('.alimentazione-cavo-card').addClass('selected');
+      configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_UNICA";
+      $('#lunghezza-cavo-uscita-container').hide();
+    } else {
+      configurazione.tipoAlimentazioneCavo = null;
+    }
     
   } else if (configurazione.tensioneSelezionato === '220V') {
     // Per sistemi 220V, nessun limite e solo alimentazione unica
@@ -424,7 +440,7 @@ export function prepareControlloListeners() {
         </div>
       </div>
       <div class="col-md-12 mb-3">
-        <div class="card option-card alimentazione-cavo-card selected" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
+        <div class="card option-card alimentazione-cavo-card" data-alimentazione-cavo="ALIMENTAZIONE_UNICA">
           <div class="card-body text-center">
             <h5 class="card-title">Alimentazione unica</h5>
             <p class="card-text small text-muted">Singolo punto di alimentazione (obbligatorio per questa configurazione)</p>
@@ -433,9 +449,14 @@ export function prepareControlloListeners() {
       </div>
     `);
     
-    // Imposta automaticamente l'alimentazione unica
-    configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_UNICA";
-    $('#lunghezza-cavo-uscita-container').hide();
+    // Auto-selezione solo se c'è una sola opzione
+    if ($('.alimentazione-cavo-card').length === 1) {
+      $('.alimentazione-cavo-card').addClass('selected');
+      configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_UNICA";
+      $('#lunghezza-cavo-uscita-container').hide();
+    } else {
+      configurazione.tipoAlimentazioneCavo = null;
+    }
     
   } else {
     // Caso normale, mostra entrambe le opzioni
@@ -459,36 +480,46 @@ export function prepareControlloListeners() {
       </div>
     `);
 
-    // Auto-selezione se c'è una sola opzione di alimentazione cavo
-    // In questo caso, seleziona l'alimentazione unica come default
-    const $primaAlimentazioneCavo = $('.alimentazione-cavo-card').first();
-    $primaAlimentazioneCavo.addClass('selected');
-    configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_UNICA";
-  }
-
-  // Auto-selezione per uscita cavo - seleziona per default DRITTA
-  const $uscitaCavoDritta = $('.uscita-cavo-card[data-uscita-cavo="DRITTA"]');
-  $uscitaCavoDritta.addClass('selected');
-  configurazione.uscitaCavoSelezionata = "DRITTA";
-
-  // Re-attacca gli event listeners per le card di alimentazione cavo
-  $('.alimentazione-cavo-card').on('click', function() {
-    // Solo nei casi in cui non c'è un'opzione obbligatoria
-    if (!(configurazione.tensioneSelezionato === '24V' && lunghezzaRichiesta > 5000) && 
-        !(configurazione.tensioneSelezionato === '48V' && lunghezzaRichiesta <= 15000) && 
-        !(configurazione.tensioneSelezionato === '220V')) {
+    // Auto-selezione alimentazione cavo - solo se c'è una sola opzione
+    const alimentazioniCavoDisponibili = $('.alimentazione-cavo-card').length;
+    if (alimentazioniCavoDisponibili === 1) {
+      const $unicaAlimentazioneCavo = $('.alimentazione-cavo-card').first();
+      $unicaAlimentazioneCavo.addClass('selected');
+      configurazione.tipoAlimentazioneCavo = $unicaAlimentazioneCavo.data('alimentazione-cavo');
       
-      $('.alimentazione-cavo-card').removeClass('selected');
-      $(this).addClass('selected');
-      
-      const alimentazioneCavo = $(this).data('alimentazione-cavo');
-      configurazione.tipoAlimentazioneCavo = alimentazioneCavo;
-      
-      if (alimentazioneCavo === 'ALIMENTAZIONE_DOPPIA') {
+      // Gestisci visibilità container lunghezza cavo uscita
+      if (configurazione.tipoAlimentazioneCavo === 'ALIMENTAZIONE_DOPPIA') {
         $('#lunghezza-cavo-uscita-container').show();
       } else {
         $('#lunghezza-cavo-uscita-container').hide();
       }
+    } else {
+      configurazione.tipoAlimentazioneCavo = null;
+    }
+  }
+
+  // Auto-selezione per uscita cavo - solo se c'è una sola opzione
+  const usciteCavoDisponibili = $('.uscita-cavo-card').length;
+  if (usciteCavoDisponibili === 1) {
+    const $unicaUscitaCavo = $('.uscita-cavo-card').first();
+    $unicaUscitaCavo.addClass('selected');
+    configurazione.uscitaCavoSelezionata = $unicaUscitaCavo.data('uscita-cavo');
+  } else {
+    configurazione.uscitaCavoSelezionata = null;
+  }
+
+  // Re-attacca gli event listeners per le card di alimentazione cavo
+  $('.alimentazione-cavo-card').on('click', function() {
+    $('.alimentazione-cavo-card').removeClass('selected');
+    $(this).addClass('selected');
+    
+    const alimentazioneCavo = $(this).data('alimentazione-cavo');
+    configurazione.tipoAlimentazioneCavo = alimentazioneCavo;
+    
+    if (alimentazioneCavo === 'ALIMENTAZIONE_DOPPIA') {
+      $('#lunghezza-cavo-uscita-container').show();
+    } else {
+      $('#lunghezza-cavo-uscita-container').hide();
     }
     
     checkStep5Completion();
@@ -502,18 +533,4 @@ export function prepareControlloListeners() {
     
     checkStep5Completion();
   });
-  
-  $('#lunghezza-cavo-ingresso, #lunghezza-cavo-uscita').on('change', function() {
-    const campo = $(this).attr('id');
-    const valore = parseInt($(this).val(), 10) || 0;
-    
-    if (campo === 'lunghezza-cavo-ingresso') {
-      configurazione.lunghezzaCavoIngresso = valore;
-    } else if (campo === 'lunghezza-cavo-uscita') {
-      configurazione.lunghezzaCavoUscita = valore;
-    }
-  });
-
-  // Controllo iniziale di completamento
-  checkStep5Completion();
 }
