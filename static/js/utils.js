@@ -15,9 +15,27 @@ export function updateProgressBar(step) {
   for (let i = 1; i < step; i++) {
     $(`#progress-step${i}`).addClass('completed');
   }
-  
-  // Debug per verificare quale step viene aggiornato
-  console.log(`Aggiornamento barra di progresso: step ${step}`);
+  let actualStep = step;
+    // Se lo step è maggiore di 5, lo riduciamo a 5 (il massimo ora è 5 invece di 6)
+    if (actualStep > 5) {
+      actualStep = 5;
+    }
+    
+    // Se lo step è 6 (proposte) o 7 (riepilogo), lo trasformiamo in 5 (riepilogo)
+    if (step >= 6) {
+      actualStep = 5;
+    }
+    
+    // Seleziona lo step corrente come attivo
+    $(`#progress-step${actualStep}`).addClass('active');
+    
+    // Imposta tutti gli step precedenti come completati
+    for (let i = 1; i < actualStep; i++) {
+      $(`#progress-step${i}`).addClass('completed');
+    }
+    
+    // Debug per verificare quale step viene aggiornato
+    console.log(`Aggiornamento barra di progresso: step originale ${step}, step effettivo ${actualStep}`);
 }
 
 /**

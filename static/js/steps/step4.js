@@ -8,16 +8,11 @@ export function initStep4Listeners() {
     e.preventDefault();
     
     $("#step4-alimentazione").fadeOut(300, function() {
-      const targetStep = configurazione.stripLedSelezionata !== 'senza_strip' && 
-                         configurazione.stripLedSelezionata !== 'NO_STRIP' ? 
-                         "#step3-temperatura-potenza" : "#step2-strip";
-      
-      // Mostra lo step target
-      $(targetStep).fadeIn(300);
+      // Ora torniamo sempre a step3-temperatura-potenza che include anche la selezione del modello strip LED
+      $("#step3-temperatura-potenza").fadeIn(300);
       
       // Aggiorna la progress bar
-      updateProgressBar(configurazione.stripLedSelezionata !== 'senza_strip' && 
-                     configurazione.stripLedSelezionata !== 'NO_STRIP' ? 3 : 2);
+      updateProgressBar(3);
     });
   });
   
@@ -117,8 +112,8 @@ export function vaiAllAlimentazione() {
   if (configurazione.stripLedSelezionata !== 'senza_strip' && configurazione.stripLedSelezionata !== 'NO_STRIP') {
     // Usa il nome commerciale se disponibile
     const nomeStripLed = configurazione.nomeCommercialeStripLed || 
-                         mappaStripLedVisualizzazione[configurazione.stripLedSelezionata] || 
-                         configurazione.stripLedSelezionata;
+                        mappaStripLedVisualizzazione[configurazione.stripLedSelezionata] || 
+                        configurazione.stripLedSelezionata;
     
     $('#strip-nome-step4').text(nomeStripLed);
     

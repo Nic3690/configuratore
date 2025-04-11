@@ -574,15 +574,22 @@ function filterStripsByType(strips) {
 
 /**
  * Carica le opzioni di potenza per la strip e temperatura selezionate
- * @param {string} stripId - ID della strip LED
+ * @param {string} profiloId - ID del profilo selezionato
  * @param {string} temperatura - Temperatura selezionata
  */
 export function caricaOpzioniPotenza(profiloId, temperatura) {
   $('#potenza-container').html('<div class="col-12 text-center"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni potenza...</p></div>');
   
-  $('#btn-continua-step3').prop('disabled', true);
+  // Nascondiamo la sezione del modello strip LED fino a quando non viene selezionata una potenza
+  $('#strip-led-model-section').hide();
+  $('#strip-led-compatibili-container').empty();
   
+  // Reset delle variabili di configurazione
   configurazione.potenzaSelezionata = null;
+  configurazione.stripLedSceltaFinale = null;
+  
+  // Disabilita il pulsante continua finché non viene selezionata sia potenza che modello
+  $('#btn-continua-step3').prop('disabled', true);
   
   $.ajax({
     url: `/get_opzioni_potenza/${profiloId}/${configurazione.tensioneSelezionato}/${configurazione.ipSelezionato}/${temperatura}/${configurazione.tipologiaStripSelezionata}`,
@@ -621,26 +628,26 @@ export function caricaOpzioniPotenza(profiloId, temperatura) {
         `);
       });
       
-      // Auto-selezione se c'è una sola opzione potenza
+      // Auto-selezione solo se c'è una sola opzione potenza
       if (data.potenze.length === 1) {
         const $unicaPotenza = $('.potenza-card');
         $unicaPotenza.addClass('selected');
         configurazione.potenzaSelezionata = data.potenze[0].id;
         configurazione.codicePotenza = data.potenze[0].codice;
         
-        // Abilita il pulsante continua
-        $('#btn-continua-step3').prop('disabled', false);
+        // Mostra la sezione di selezione modello e carica i modelli compatibili
+        $('#strip-led-model-section').show();
+        caricaStripLedCompatibili(
+          configurazione.profiloSelezionato,
+          configurazione.tensioneSelezionato,
+          configurazione.ipSelezionato,
+          configurazione.temperaturaSelezionata,
+          configurazione.potenzaSelezionata,
+          configurazione.tipologiaStripSelezionata
+        );
       }
       
-      $(document).off('click', '.potenza-card').on('click', '.potenza-card', function() {
-        $('.potenza-card').removeClass('selected');
-        $(this).addClass('selected');
-        configurazione.potenzaSelezionata = $(this).data('potenza');
-        configurazione.codicePotenza = $(this).data('codice');
-        
-        // Abilita il pulsante continua
-        $('#btn-continua-step3').prop('disabled', false);
-      });
+      // I listener per le card potenza sono gestiti in step3.js con initPotenzaListener()
     },
     error: function(error) {
       console.error("Errore nel caricamento delle opzioni potenza:", error);
@@ -649,7 +656,9 @@ export function caricaOpzioniPotenza(profiloId, temperatura) {
   });
 }
 
-// Updated function for api.js
+/**
+ * Carica le strip LED compatibili per il profilo, tensione, IP, temperatura e potenza selezionati
+ */
 export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, potenza, tipologia_strip) {
   
   // Verifica che tutti i parametri siano definiti
@@ -664,7 +673,7 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
   $('#strip-led-compatibili-container').empty().html('<div class="text-center"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento modelli di strip LED compatibili...</p></div>');
   
   configurazione.stripLedSceltaFinale = null;
-  $('#btn-continua-step3-strip').prop('disabled', true);
+  $('#btn-continua-step3').prop('disabled', true);
   var potenzaNew = potenza.replace(' ', '-');
   var potenzaFinale = potenzaNew.replace('/', '_');
   
@@ -775,23 +784,10 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
         configurazione.stripLedSelezionata = stripId;
         
         $('.strip-led-compatibile-card').addClass('selected');
-        $('#btn-continua-step3-strip').prop('disabled', false);
+        $('#btn-continua-step3').prop('disabled', false);
       }
       
-      // Aggiunge i listener per la selezione delle card
-      $('.strip-led-compatibile-card').on('click', function() {
-        $('.strip-led-compatibile-card').removeClass('selected');
-        $(this).addClass('selected');
-        
-        const stripId = $(this).data('strip-id');
-        const nomeCommerciale = $(this).data('nome-commerciale') || '';
-        
-        configurazione.stripLedSceltaFinale = stripId;
-        configurazione.nomeCommercialeStripLed = nomeCommerciale;
-        configurazione.stripLedSelezionata = stripId;
-        
-        $('#btn-continua-step3-strip').prop('disabled', false);
-      });
+      // I listener per i modelli strip LED sono gestiti in step3.js con initPotenzaListener()
     },
     error: function(error) {
       console.error("Errore dettagliato:", error);
