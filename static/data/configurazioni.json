@@ -1110,75 +1110,79 @@
   "dettagliPotenze": {
     "6W/m": {
       "codice": "RB26420WW",
-      "specifiche": "24V DC · 6W/m · 64 LED/m · 768lm/m · CRI80"
+      "specifiche": "64 LED/m · CRI80"
     },
     "12W/m CRI90": {
       "codice": "RB12820WWCRI90",
-      "specifiche": "24V DC · 12W/m · 128 LED/m · 1440lm/m· CRI90"
+      "specifiche": "128 LED/m · CRI90"
     },
     "18W/m": {
       "codice": "RB219220WW",
-      "specifiche": "24V DC · 18W/m · 192 LED/m · 2304lm/m· CRI80"
+      "specifiche": "192 LED/m · CRI80"
+    },
+    "18W/m XMAGIS": {
+      "codice": "RB219220WW",
+      "specifiche": "84 LED/m · CRI80"
     },
     "18W/m CRI90": {
       "codice": "RB219220WWCRI90",
-      "specifiche": "24V DC · 18W/m · 192 LED/m · 2246lm/m· CRI90"
+      "specifiche": "192 LED/m · CRI90"
     },
     "22W/m": {
       "codice": "RB224020WW",
-      "specifiche": "24V DC · 22W/m · 240 LED/m · 2746lm/m· CRI80"
+      "specifiche": "240 LED/m · CRI80"
     },
     "14W/m SMD": {
       "codice": "RB27265ZWW",
-      "specifiche": "24V DC · 14,4W/m · 72 LED/m · 1460lm/m· CRI80"
+      "specifiche": "72 LED/m · CRI80"
     },
     "8W/m": {
       "codice": "SLS01WW",
-      "specifiche": "24V DC · 8W/m · COB · 256 LED/m · CRI90"
+      "specifiche": "256 LED/m · CRI90"
     },
     "10W/m": {
       "codice": "SLS02WW",
-      "specifiche": "24V DC · 10W/m · COB · 352 LED/m · CRI90"
+      "specifiche": "352 LED/m · CRI90"
     },
     "12W/m": {
       "codice": "SLS03WW",
-      "specifiche": "24V DC · 12W/m · COB · 512 LED/m · CRI90"
+      "specifiche": "512 LED/m · CRI90"
     },
     "14W/m": {
       "codice": "SLS04WW",
-      "specifiche": "24V DC · 14W/m · COB · 512 LED/m · CRI90"
+      "specifiche": "512 LED/m · CRI90"
     },
     "10W/m MINI": {
       "codice": "SLSIP20WW4CRI90",
-      "specifiche": "24V DC · 10W/m · COB MINI · 420 LED/m · CRI90"
+      "specifiche": "420 LED/m · CRI90"
     },
     "15W/m": {
       "codice": "SLS01RGB",
-      "specifiche": "24V DC · 15W/m · RGB COB · CRI90"
+      "specifiche": "CRI90"
     },
     "20W/m": {
       "codice": "FW24267WW20S",
-      "specifiche": "24V DC · 20W/m · COB · 2200lm/m · CRI90"
+      "specifiche": "42 LED/m · CRI90"
     },
     "25W/m": {
       "codice": "XTP01WW65",
-      "specifiche": "48V/220V · 25W/m · COB/SMD · 2750lm/m · CRI90"
+      "specifiche": "CRI90"
     },
     "13W/m": {
       "codice": "ST56020RGB",
-      "specifiche": "24V DC · 13W/m · RGB · 60 LED/m"
+      "specifiche": "60 LED/m"
     },
     "5W/m": {
       "codice": "STXXXXXXXX",
-      "specifiche": "48V DC · 5W/m · SMD · 60 LED/m"
+      "specifiche": "60 LED/m"
     },
     "9,6W/m": {
       "codice": "JJXXXXXXXX",
-      "specifiche": "48V DC · 9,6W/m · SMD · 60 LED/m"
+      "specifiche": "60 LED/m"
     },
     "14,4W/m": {
       "codice": "EEXXXXXXXX",
-      "specifiche": "24V DC · 14,4W/m · COB · 60 LED/m"
+      "specifiche": "60 LED/m"
     }
   },
   "alimentazione": {

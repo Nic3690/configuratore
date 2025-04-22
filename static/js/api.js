@@ -621,7 +621,6 @@ export function caricaOpzioniPotenza(profiloId, temperatura) {
             <div class="card option-card potenza-card" data-potenza="${potenza.id}" data-codice="${potenza.codice}">
               <div class="card-body">
                 <h5 class="card-title">${potenza.nome}</h5>
-                <p class="card-text small text-muted">${potenza.specifiche}</p>
               </div>
             </div>
           </div>
