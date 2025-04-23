@@ -886,7 +886,7 @@
       "nomeCommerciale": "XTAP 220V IP65",
       "tipo": "COB",
       "tensione": "220V",
-      "ip": "IP66",
+      "ip": "IP65",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["12W/m"],
       "codiciProdotto": ["XTP01WW65", "XTP01NW65", "XTP01CW65"],
