@@ -90,11 +90,11 @@ def get_opzioni_tensione(profilo_id, tipologia_strip=None):
     # Ottieni le strip LED compatibili con questo profilo
     strip_led_compatibili = profilo.get('stripLedCompatibili', [])
     strip_led_data = CONFIG_DATA.get('stripLed', {})
+
     
     voltaggi_disponibili = set()
     for strip_id in strip_led_compatibili:
         strip_info = strip_led_data.get(strip_id, {})
-        
         # Filtra in base alla tipologia selezionata
         if tipologia_strip:
             if tipologia_strip == 'COB' and 'COB' not in strip_id:
