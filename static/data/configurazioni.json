@@ -839,7 +839,7 @@
     },
     "STRIP_24V_RGB_SMD_IP20": {
       "nome": "STRIP 24V RGB SMD IP20",
-      "nomeCommerciale": "XTRIP RGB IP20",
+      "nomeCommerciale": "XSTRIP RGB IP20",
       "tipo": "SMD",
       "tensione": "24V",
       "ip": "IP20",
@@ -850,7 +850,7 @@
     },
     "STRIP_24V_RGB_SMD_IP66": {
       "nome": "STRIP 24V RGB SMD IP66",
-      "nomeCommerciale": "XTRIP RGB IP65",
+      "nomeCommerciale": "XSTRIP RGB IP65",
       "tipo": "SMD",
       "tensione": "24V",
       "ip": "IP65",
@@ -908,7 +908,7 @@
       "nomeCommerciale": "XSTRIP TUNING WHITE IP65",
       "tipo": "SMD",
       "tensione": "24V",
-      "ip": "IP66",
+      "ip": "IP65",
       "temperaturaColoreDisponibili": ["CCT"],
       "potenzeDisponibili": ["14,4W/m"],
       "codiciProdotto": ["ST56065TWCRI90"],

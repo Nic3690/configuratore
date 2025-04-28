@@ -848,10 +848,6 @@ function calcolaPotenzaAlimentatoreConsigliata() {
   }
 }
 
-/**
- * Carica le opzioni alimentatore in base al tipo di alimentazione
- * @param {string} tipoAlimentazione - Tipo di alimentazione selezionato
- */
 export function caricaOpzioniAlimentatore(tipoAlimentazione) {
   
   $('#alimentatore-container').html('<div class="col-12 text-center"><div class="spinner-border" role="status"></div><p class="mt-3">Caricamento opzioni alimentatore...</p></div>');
@@ -896,19 +892,39 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
         $('#potenza-consigliata-section').show();
       }
       
+      // Verifica se il profilo selezionato è PRF080 o PRF101
+      const isPRF080or101 = (configurazione.profiloSelezionato === 'PRF080_200' || 
+                             configurazione.profiloSelezionato === 'PRF101_200');
+      
+      // Se necessario, aggiungi una nota per le serie ATSIP44 per i profili specifici
+      if (isPRF080or101) {
+        $('#alimentatore-container').append(`
+          <div class="col-12 mb-3">
+            <div class="alert alert-info">
+              <strong>Nota:</strong> Per i profili PRF080 e PRF101, la serie ATSIP44 può essere inserita all'interno del profilo.
+            </div>
+          </div>
+        `);
+      }
+      
       alimentatori.forEach(function(alimentatore) {
         // Percorso immagine per il tipo di alimentatore (usa placeholder se non disponibile)
         const imgPath = `/static/img/${alimentatore.id.toLowerCase()}.jpg`;
         
+        // Aggiunge una classe speciale per evidenziare ATSIP44 se necessario
+        const extraClass = (isPRF080or101 && alimentatore.id === 'SERIE_ATSIP44') ? ' highlight-alimentatore' : '';
+        
         $('#alimentatore-container').append(`
           <div class="col-md-4 mb-3 alimentatore-column">
-            <div class="card option-card alimentatore-card" data-alimentatore="${alimentatore.id}">
+            <div class="card option-card alimentatore-card${extraClass}" data-alimentatore="${alimentatore.id}">
               <img src="${imgPath}" class="card-img-top" alt="${alimentatore.nome}" 
                    style="height: 180px; object-fit: cover;" 
-                   onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px';">
+                   onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px'">
               <div class="card-body">
                 <h5 class="card-title">${alimentatore.nome}</h5>
                 <p class="card-text small text-muted">${alimentatore.descrizione}</p>
+                ${(isPRF080or101 && alimentatore.id === 'SERIE_ATSIP44') ? 
+                  '<p class="card-text small fw-bold" style="color: #e83f34;" >Questa tipologia di driver può essere inserita all\'interno del profilo.</p>' : ''}
               </div>
             </div>
           </div>
