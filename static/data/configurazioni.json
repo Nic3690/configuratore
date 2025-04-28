@@ -161,8 +161,8 @@
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
-      "stripLedCompatibili": ["STRIP_24V_COB_IP20", "STRIP_24V_COB_IP20_MINI", "STRIP_24V_SMD_IP20",
-        "STRIP_24V_ZIGZAG_IP66", "STRIP_48V_ZIGZAG_IP66"
+      "stripLedCompatibili": ["STRIP_24V_COB_IP20", "STRIP_24V_COB_IP20_MINI", "STRIP_24V_SMD_IP20_LOW",
+      "STRIP_24V_SMD_IP66_LOW", "STRIP_24V_ZIGZAG_IP66", "STRIP_48V_ZIGZAG_IP66"
       ]
     },
     {
@@ -207,8 +207,8 @@
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 3000,
       "stripLedCompatibili": [
-        "STRIP_24V_COB_IP20", "STRIP_24V_SMD_IP66",  "STRIP_24V_COB_IP66_CL", "STRIP_24V_COB_IP66_FR", "STRIP_24V_RGB_COB_IP20",
-        "STRIP_220V_COB_IP66", "STRIP_24V_SMD_IP20", "STRIP_24V_ZIGZAG_IP66", "STRIP_48V_ZIGZAG_IP66"
+        "STRIP_24V_COB_IP20", "STRIP_24V_SMD_IP66_LOW",  "STRIP_24V_COB_IP66_CL", "STRIP_24V_COB_IP66_FR", "STRIP_24V_RGB_COB_IP20",
+        "STRIP_220V_COB_IP66", "STRIP_24V_SMD_IP20_LOW", "STRIP_24V_ZIGZAG_IP66", "STRIP_48V_ZIGZAG_IP66"
       ]
     },
     {
@@ -339,8 +339,8 @@
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 3000,
-      "stripLedCompatibili": ["STRIP_24V_COB_IP20", "STRIP_24V_COB_IP20_MINI", "STRIP_24V_SMD_IP20",
-        "STRIP_24V_ZIGZAG_IP66", "STRIP_48V_ZIGZAG_IP66"
+      "stripLedCompatibili": ["STRIP_24V_COB_IP20", "STRIP_24V_COB_IP20_MINI", "STRIP_24V_SMD_IP20_LOW",
+      "STRIP_24V_SMD_IP66_LOW", "STRIP_24V_ZIGZAG_IP66", "STRIP_48V_ZIGZAG_IP66"
       ]
     },
     {
@@ -496,8 +496,8 @@
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["BIANCO"],
       "lunghezzaMassima": 3000,
-      "stripLedCompatibili": ["STRIP_24V_COB_IP20", "STRIP_24V_COB_IP20_MINI", "STRIP_24V_SMD_IP20",
-        "STRIP_24V_ZIGZAG_IP66", "STRIP_48V_ZIGZAG_IP66"
+      "stripLedCompatibili": ["STRIP_24V_COB_IP20", "STRIP_24V_COB_IP20_MINI", "STRIP_24V_SMD_IP20_LOW",
+      "STRIP_24V_SMD_IP66_LOW", "STRIP_24V_ZIGZAG_IP66", "STRIP_48V_ZIGZAG_IP66"
       ]
     },
     {
@@ -525,8 +525,8 @@
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO", "BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
-      "stripLedCompatibili": ["STRIP_24V_COB_IP20", "STRIP_24V_COB_IP20_MINI", "STRIP_24V_SMD_IP20",
-        "STRIP_24V_ZIGZAG_IP66", "STRIP_48V_ZIGZAG_IP66"
+      "stripLedCompatibili": ["STRIP_24V_COB_IP20", "STRIP_24V_COB_IP20_MINI", "STRIP_24V_SMD_IP20_LOW",
+      "STRIP_24V_SMD_IP66_LOW", "STRIP_24V_ZIGZAG_IP66", "STRIP_48V_ZIGZAG_IP66"
       ]
     },
     {
@@ -1067,6 +1067,28 @@
       "potenzeDisponibili": ["14,4W/m"],
       "codiciProdotto": ["SNK12X4NWHP", "SNK12X4CWHP"],
       "taglioMinimo" : ["25mm"]
+    },
+    "STRIP_24V_SMD_IP20_LOW": {
+      "nome": "STRIP 24V SMD IP20 LOW",
+      "nomeCommerciale": "XRIBO 24V IP20",
+      "tipo": "SMD",
+      "tensione": "24V",
+      "ip": "IP20",
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K", "6000K"],
+      "potenzeDisponibili": ["6W/m", "12W/m", "12W/m CRI90"],
+      "codiciProdotto": ["RB26420", "RB212820"],
+      "taglioMinimo" : ["125mm", "62,5mm", "62,5mm"]
+    },
+    "STRIP_24V_SMD_IP66_LOW": {
+      "nome": "STRIP 24V SMD IP66 LOW",
+      "nomeCommerciale": "XRIBO 24V IP66",
+      "tipo": "SMD",
+      "tensione": "24V",
+      "ip": "IP66",
+      "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K", "6000K"],
+      "potenzeDisponibili": ["6W/m", "12W/m"],
+      "codiciProdotto": ["RB26420", "RB212820"],
+      "taglioMinimo" : ["125mm", "62,5mm"]
     }
   },
   "opzioniStripLed": {
