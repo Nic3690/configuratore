@@ -1351,7 +1351,7 @@ export function finalizzaConfigurazione() {
         // Dimmer e cavi
         if (riepilogo.dimmerSelezionato) {
           // Usa il testo formattato se disponibile
-          const dimmerText = riepilogo.dimmerText || 
+          const dimmerText = riepilogo.dimmerText.replace(/_/g, ' ') || 
                            (riepilogo.dimmerSelezionato === 'NESSUN_DIMMER' ? 'Nessun dimmer' : 
                             riepilogo.dimmerSelezionato.replace(/_/g, ' '));
           

@@ -203,6 +203,7 @@ def get_dimmer_compatibili(strip_id):
         'dimmer_compatibili': dimmer_compatibili
     })
 
+# Endpoint per ottenere i dimmer compatibili con una determinata strip LED
 @app.route('/get_opzioni_dimmerazione/<strip_id>')
 def get_opzioni_dimmerazione(strip_id):
     dimmerazione = CONFIG_DATA.get('dimmerazione', {})
@@ -211,24 +212,56 @@ def get_opzioni_dimmerazione(strip_id):
     # Ottieni la lista di dimmer compatibili con questa strip
     compatibilita = dimmerazione.get('compatibilitaDimmer', {})
     
+    # Cerchiamo il nome commerciale della strip selezionata
+    strip_led_data = CONFIG_DATA.get('stripLed', {})
+    strip_info = strip_led_data.get(strip_id, {})
+    nome_commerciale = strip_info.get('nomeCommerciale', '')
+    
     dimmer_compatibili = []
-    for dimmer, strip_compatibili in compatibilita.items():
-        if strip_id in strip_compatibili:
-            dimmer_compatibili.append(dimmer)
+    
+    # Se abbiamo un nome commerciale, cerchiamo i dimmer compatibili
+    if nome_commerciale:
+        for dimmer, strip_compatibili in compatibilita.items():
+            if nome_commerciale in strip_compatibili:
+                dimmer_compatibili.append(dimmer)
+    
+    # Se non ci sono dimmer compatibili trovati tramite nome commerciale, 
+    # proviamo con l'ID della strip direttamente
+    if not dimmer_compatibili:
+        for dimmer, strip_compatibili in compatibilita.items():
+            if strip_id in strip_compatibili:
+                dimmer_compatibili.append(dimmer)
     
     # Se non ci sono dimmer compatibili, include solo l'opzione NESSUN_DIMMER
     if not dimmer_compatibili and "NESSUN_DIMMER" in opzioni_base:
         opzioni_filtrate = ["NESSUN_DIMMER"]
     else:
         # Altrimenti include tutti i dimmer compatibili più NESSUN_DIMMER
-        opzioni_filtrate = ["NESSUN_DIMMER"] + dimmer_compatibili
+        opzioni_filtrate = dimmer_compatibili.copy()
+        if "NESSUN_DIMMER" in opzioni_base and "NESSUN_DIMMER" not in opzioni_filtrate:
+            opzioni_filtrate.append("NESSUN_DIMMER")
+    
+    # Ottieni i codici dei dimmer
+    codici_dimmer = {}
+    for dimmer in opzioni_filtrate:
+        codice = dimmerazione.get('codiciDimmer', {}).get(dimmer, "")
+        if codice:
+            codici_dimmer[dimmer] = codice
+    
+    # Ottieni i nomi dei dimmer
+    nomi_dimmer = {}
+    for dimmer in opzioni_filtrate:
+        nome = dimmerazione.get('nomeDimmer', {}).get(dimmer, "")
+        if nome:
+            nomi_dimmer[dimmer] = nome
     
     return jsonify({
         'success': True,
         'opzioni': opzioni_filtrate,
-        'spaziNonIlluminati': dimmerazione.get('spaziNonIlluminati', {})
+        'spaziNonIlluminati': dimmerazione.get('spaziNonIlluminati', {}),
+        'codiciDimmer': codici_dimmer,
+        'nomiDimmer': nomi_dimmer
     })
-
 
 @app.route('/get_opzioni_potenza/<profilo_id>/<tensione>/<ip>/<temperatura>')
 @app.route('/get_opzioni_potenza/<profilo_id>/<tensione>/<ip>/<temperatura>/<tipologia_strip>')

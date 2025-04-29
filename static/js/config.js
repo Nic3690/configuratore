@@ -101,6 +101,55 @@ const configurazione = {
 	'XMAGIS': 'XMAGIS'
   };
 
+  // Aggiorna l'oggetto della mappatura dimmer nel file config.js
+const mappaDimmerVisualizzazione = {
+	"NESSUN_DIMMER": "Nessun dimmer",
+	"DIMMER_TOUCH_SU_PROFILO_PRFTSW01": "Dimmer touch su profilo - On/Off",
+	"DIMMER_TOUCH_SU_PROFILO_PRFTDIMM01": "Dimmer touch su profilo - Dimmerabile",
+	"DIMMER_TOUCH_SU_PROFILO_PRFIRSW01": "Dimmer IR su profilo - On/Off",
+	"DIMMER_TOUCH_SU_PROFILO_PRFIRDIMM01": "Dimmer IR su profilo - Dimmerabile",
+	"DIMMER_PWM_CON_TELECOMANDO_RGB_RGBW": "Dimmer PWM con telecomando RGB + RGBW",
+	"DIMMER_PWM_CON_TELECOMANDO_MONOCOLORE": "Dimmer PWM con telecomando monocolore",
+	"DIMMER_PWM_CON_TELECOMANDO_TUNABLE_WHITE": "Dimmer PWM con telecomando tunable white",
+	"DIMMER_PWM_CON_PULSANTE_24V_MONOCOLORE": "Dimmer PWM con pulsante 24V monocolore",
+	"DIMMER_PWM_CON_PULSANTE_48V_MONOCOLORE": "Dimmer PWM con pulsante 48V monocolore",
+	"DIMMERABILE_PWM_CON_SISTEMA_TUYA_MONOCOLORE": "Dimmerabile PWM con sistema TUYA monocolore",
+	"DIMMERABILE_PWM_CON_SISTEMA_TUYA_TUNABLE_WHITE": "Dimmerabile PWM con sistema TUYA tunable white",
+	"DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB": "Dimmerabile PWM con sistema TUYA RGB",
+	"DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW": "Dimmerabile PWM con sistema TUYA RGBW",
+	"DIMMERABILE_TRIAC_PULSANTE_TUYA_220V": "Dimmerabile TRIAC pulsante + TUYA 220V",
+	"DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA": "Dimmer PWM da scatola con pulsante N.A."
+  };
+  
+  // Aggiungi anche una funzione helper per ottenere il codice del dimmer dal suo id
+  function getDimmerCode(dimmerId) {
+	if (!dimmerId) return "";
+	
+	// Estrai il codice dal nome del dimmer se è un dimmer touch
+	if (dimmerId.includes("PRFTSW01")) return "PRFTSW01";
+	if (dimmerId.includes("PRFTDIMM01")) return "PRFTDIMM01";
+	if (dimmerId.includes("PRFIRSW01")) return "PRFIRSW01";
+	if (dimmerId.includes("PRFIRDIMM01")) return "PRFIRDIMM01";
+	
+	// Altri dimmer
+	const dimmerCodes = {
+	  "DIMMER_PWM_CON_TELECOMANDO_RGB_RGBW": "CTR104",
+	  "DIMMER_PWM_CON_TELECOMANDO_MONOCOLORE": "CTR114",
+	  "DIMMER_PWM_CON_TELECOMANDO_TUNABLE_WHITE": "CTR124",
+	  "DIMMER_PWM_CON_PULSANTE_24V_MONOCOLORE": "CTR125",
+	  "DIMMER_PWM_CON_PULSANTE_48V_MONOCOLORE": "CTR129",
+	  "DIMMERABILE_PWM_CON_SISTEMA_TUYA_MONOCOLORE": "CTR002SCTY",
+	  "DIMMERABILE_PWM_CON_SISTEMA_TUYA_TUNABLE_WHITE": "CTR003CCTTY",
+	  "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB": "CTR004RGB2TY",
+	  "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW": "CTR005RGBWTY",
+	  "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V": "CTR130",
+	  "DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA": "CTR050IT"
+	};
+	
+	return dimmerCodes[dimmerId] || "";
+  }
+  
+  // Modificare l'export alla fine del file per includere la nuova mappatura e funzione
   export {
 	configurazione,
 	mappaCategorieVisualizzazione,
@@ -111,5 +160,7 @@ const configurazione = {
 	mappaTensioneVisualizzazione,
 	mappaIPVisualizzazione,
 	mappaTipologiaStripVisualizzazione,
-	mappaSpecialStripVisualizzazione
+	mappaSpecialStripVisualizzazione,
+	mappaDimmerVisualizzazione,
+	getDimmerCode
   };
