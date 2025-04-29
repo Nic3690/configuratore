@@ -127,27 +127,56 @@ function caricaDimmerCompatibili() {
   // Mostriamo un loader mentre carichiamo i dimmer compatibili
   $('#dimmer-loading').show();
   
-  // Immagini per i diversi tipi di dimmer touch
-  const dimmerTouchImages = {
-    "DIMMER_TOUCH_SU_PROFILO_PRFTSW01": "/static/img/dimmer/touch_su_profilo.jpg",
-    "DIMMER_TOUCH_SU_PROFILO_PRFTDIMM01": "/static/img/dimmer/touch_su_profilo_dim.jpg",
-    "DIMMER_TOUCH_SU_PROFILO_PRFIRSW01": "/static/img/dimmer/ir_su_profilo.jpg",
-    "DIMMER_TOUCH_SU_PROFILO_PRFIRDIMM01": "/static/img/dimmer/ir_su_profilo_dim.jpg"
+  // Immagini per i diversi tipi di dimmer
+  const dimmerCategoryImages = {
+    "TOUCH_SU_PROFILO": "/static/img/dimmer/touch_su_profilo.jpg",
+    "CON_TELECOMANDO": "/static/img/dimmer/con_telecomando.jpg",
+    "CON_PULSANTE": "/static/img/dimmer/dimmer_pulsante.jpg", 
+    "SISTEMA_TUYA": "/static/img/dimmer/centralina_tuya.jpg",
+    "DA_SCATOLA": "/static/img/dimmer/dimmer_scatola.jpg",
+    "NESSUN_DIMMER": "/static/img/placeholder_logo.jpg"
   };
   
-  // Immagini per gli altri dimmer
-  const dimmerOtherImages = {
-    "DIMMER_PWM_CON_TELECOMANDO_RGB_RGBW": "/static/img/dimmer/con_telecomando_rgb.jpg",
-    "DIMMER_PWM_CON_TELECOMANDO_MONOCOLORE": "/static/img/dimmer/con_telecomando.jpg",
-    "DIMMER_PWM_CON_TELECOMANDO_TUNABLE_WHITE": "/static/img/dimmer/con_telecomando_cct.jpg",
-    "DIMMER_PWM_CON_PULSANTE_24V_MONOCOLORE": "/static/img/dimmer/dimmer_pulsante.jpg",
-    "DIMMER_PWM_CON_PULSANTE_48V_MONOCOLORE": "/static/img/dimmer/dimmer_pulsante.jpg",
-    "DIMMERABILE_PWM_CON_SISTEMA_TUYA_MONOCOLORE": "/static/img/dimmer/centralina_tuya.jpg",
-    "DIMMERABILE_PWM_CON_SISTEMA_TUYA_TUNABLE_WHITE": "/static/img/dimmer/centralina_tuya_cct.jpg",
-    "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB": "/static/img/dimmer/centralina_tuya_rgb.jpg",
-    "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW": "/static/img/dimmer/centralina_tuya_rgbw.jpg",
-    "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V": "/static/img/dimmer/dimmer_triac_220v.jpg",
-    "DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA": "/static/img/dimmer/dimmer_scatola.jpg"
+  // Definizione delle categorie di dimmer e quali dimmer specifici appartengono a ciascuna
+  const dimmerCategories = {
+    "TOUCH_SU_PROFILO": [
+      "DIMMER_TOUCH_SU_PROFILO_PRFTSW01",
+      "DIMMER_TOUCH_SU_PROFILO_PRFTDIMM01", 
+      "DIMMER_TOUCH_SU_PROFILO_PRFIRSW01", 
+      "DIMMER_TOUCH_SU_PROFILO_PRFIRDIMM01"
+    ],
+    "CON_TELECOMANDO": [
+      "DIMMER_PWM_CON_TELECOMANDO_RGB_RGBW",
+      "DIMMER_PWM_CON_TELECOMANDO_MONOCOLORE",
+      "DIMMER_PWM_CON_TELECOMANDO_TUNABLE_WHITE"
+    ],
+    "CON_PULSANTE": [
+      "DIMMER_PWM_CON_PULSANTE_24V_MONOCOLORE",
+      "DIMMER_PWM_CON_PULSANTE_48V_MONOCOLORE",
+      "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V"
+    ],
+    "SISTEMA_TUYA": [
+      "DIMMERABILE_PWM_CON_SISTEMA_TUYA_MONOCOLORE",
+      "DIMMERABILE_PWM_CON_SISTEMA_TUYA_TUNABLE_WHITE",
+      "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB",
+      "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW"
+    ],
+    "DA_SCATOLA": [
+      "DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA"
+    ],
+    "NESSUN_DIMMER": [
+      "NESSUN_DIMMER"
+    ]
+  };
+  
+  // Nomi visualizzati per le categorie
+  const categoryDisplayNames = {
+    "TOUCH_SU_PROFILO": "Touch su profilo",
+    "CON_TELECOMANDO": "Con telecomando",
+    "CON_PULSANTE": "Con pulsante",
+    "SISTEMA_TUYA": "Sistema Tuya",
+    "DA_SCATOLA": "Da scatola",
+    "NESSUN_DIMMER": "Nessun dimmer"
   };
   
   // Chiamiamo l'API per ottenere i dimmer compatibili
@@ -164,96 +193,162 @@ function caricaDimmerCompatibili() {
           opzioniDimmer.push('NESSUN_DIMMER');
         }
         
-        // Creiamo l'HTML per le opzioni di dimmer
-        let dimmerHtml = `<h3 class="mb-3">Dimmer</h3><div class="row">`;
+        // Raggruppiamo i dimmer disponibili per categoria
+        const categorieDisponibili = {};
         
-        // Per ogni dimmer compatibile, creiamo una card
-        opzioniDimmer.forEach(dimmer => {
-          // Ottieni il testo e il codice del dimmer
-          const dimmerText = response.nomiDimmer && response.nomiDimmer[dimmer] ? response.nomiDimmer[dimmer] : dimmer;
-          const dimmerCode = response.codiciDimmer && response.codiciDimmer[dimmer] ? response.codiciDimmer[dimmer] : "";
-          
-          // Controlla se questo dimmer ha spazi non illuminati
-          const spazioNonIlluminato = response.spaziNonIlluminati && response.spaziNonIlluminati[dimmer];
-          
-          // Crea una card diversa in base al tipo di dimmer
-          if (dimmer === 'NESSUN_DIMMER') {
-            // Per "NESSUN_DIMMER", non mostriamo l'immagine, solo il testo
-            dimmerHtml += `
-            <div class="col-md-4 mb-3 dimmer-column">
-              <div class="card option-card dimmer-card" data-dimmer="${dimmer}">
-                <div class="card-body text-center d-flex flex-column justify-content-center" style="min-height: 180px;">
-                  <h5 class="card-title">Nessun dimmer</h5>
-                  <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
-                </div>
-              </div>
-            </div>`;
-          } else {
-            // Per tutti gli altri dimmer, includiamo l'immagine
-            let imgPath = '/static/img/placeholder_logo.jpg';
-            
-            // Controlla se è un dimmer touch
-            if (dimmer.includes('DIMMER_TOUCH_SU_PROFILO_') || dimmer.includes('PRFIRSW') || dimmer.includes('PRFIRDIMM')) {
-              imgPath = dimmerTouchImages[dimmer] || '/static/img/dimmer/touch_su_profilo.jpg';
-            } else {
-              // Altrimenti, usa l'immagine degli altri dimmer
-              imgPath = dimmerOtherImages[dimmer] || '/static/img/dimmer/placeholder_logo.jpg';
-            }
-            
-            dimmerHtml += `
-              <div class="col-md-4 mb-3 dimmer-column">
-                <div class="card option-card dimmer-card" data-dimmer="${dimmer}" data-codice="${dimmerCode}">
-                  <img src="${imgPath}" class="card-img-top" alt="${dimmerText}" style="height: 180px; object-fit: cover;" onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px'">
-                  <div class="card-body text-center">
-                    <h5 class="card-title">${dimmerText}</h5>
-                    ${spazioNonIlluminato ? `<p class="card-text small text-danger">Spazio non illuminato: ${spazioNonIlluminato}mm</p>` : ''}
-                  </div>
-                </div>
-              </div>`;
+        // Popoliamo le categorie disponibili
+        Object.keys(dimmerCategories).forEach(categoria => {
+          const dimmerInCategoria = dimmerCategories[categoria].filter(d => opzioniDimmer.includes(d));
+          if (dimmerInCategoria.length > 0) {
+            categorieDisponibili[categoria] = dimmerInCategoria;
           }
         });
         
-        dimmerHtml += `</div>`;
+        // Immagini per i diversi tipi di dimmer specifici
+        const dimmerImages = {
+          "DIMMER_TOUCH_SU_PROFILO_PRFTSW01": "/static/img/dimmer/touch_su_profilo.jpg",
+          "DIMMER_TOUCH_SU_PROFILO_PRFTDIMM01": "/static/img/dimmer/touch_su_profilo_dim.jpg",
+          "DIMMER_TOUCH_SU_PROFILO_PRFIRSW01": "/static/img/dimmer/ir_su_profilo.jpg",
+          "DIMMER_TOUCH_SU_PROFILO_PRFIRDIMM01": "/static/img/dimmer/ir_su_profilo_dim.jpg",
+          "DIMMER_PWM_CON_TELECOMANDO_RGB_RGBW": "/static/img/dimmer/con_telecomando_rgb.jpg",
+          "DIMMER_PWM_CON_TELECOMANDO_MONOCOLORE": "/static/img/dimmer/con_telecomando.jpg",
+          "DIMMER_PWM_CON_TELECOMANDO_TUNABLE_WHITE": "/static/img/dimmer/con_telecomando_cct.jpg",
+          "DIMMER_PWM_CON_PULSANTE_24V_MONOCOLORE": "/static/img/dimmer/dimmer_pulsante.jpg",
+          "DIMMER_PWM_CON_PULSANTE_48V_MONOCOLORE": "/static/img/dimmer/dimmer_pulsante.jpg",
+          "DIMMERABILE_PWM_CON_SISTEMA_TUYA_MONOCOLORE": "/static/img/dimmer/centralina_tuya.jpg",
+          "DIMMERABILE_PWM_CON_SISTEMA_TUYA_TUNABLE_WHITE": "/static/img/dimmer/centralina_tuya_cct.jpg",
+          "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB": "/static/img/dimmer/centralina_tuya_rgb.jpg",
+          "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW": "/static/img/dimmer/centralina_tuya_rgbw.jpg",
+          "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V": "/static/img/dimmer/dimmer_triac_220v.jpg",
+          "DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA": "/static/img/dimmer/dimmer_scatola.jpg",
+          "NESSUN_DIMMER": "/static/img/placeholder_logo.jpg"
+        };
         
-        // Se c'è almeno un dimmer touch, aggiungiamo un alert sotto il container
-        const hasTouchDimmer = opzioniDimmer.some(dimmer => 
-          dimmer.includes('DIMMER_TOUCH_SU_PROFILO_') || 
-          dimmer.includes('PRFIRSW') || 
-          dimmer.includes('PRFIRDIMM')
-        );
+        // Memorizziamo tutte le informazioni sui dimmer disponibili per uso futuro
+        window.dimmerData = {
+          categories: categorieDisponibili,
+          nomiDimmer: response.nomiDimmer || {},
+          codiciDimmer: response.codiciDimmer || {},
+          spaziNonIlluminati: response.spaziNonIlluminati || {}
+        };
         
-        if (hasTouchDimmer) {
+        // Creiamo l'HTML per il container dei dimmer
+        let dimmerHtml = `<h3 class="mb-3">Dimmer</h3>`;
+        
+        // Se c'è una sola categoria e contiene solo l'opzione NESSUN_DIMMER, mostro direttamente quella
+        if (Object.keys(categorieDisponibili).length === 1 && 
+            Object.keys(categorieDisponibili)[0] === 'NESSUN_DIMMER' && 
+            categorieDisponibili['NESSUN_DIMMER'].length === 1) {
+            
           dimmerHtml += `
-            <div id="dimmer-warning" class="alert alert-warning mt-3" style="display: none;">
-              <strong style="color:#ff0000 !important;">Nota:</strong> Con l'opzione Touch/IR su profilo ci sarà uno spazio non illuminato di 50mm.
+            <div class="row">
+              <div class="col-md-4 mb-3 dimmer-column">
+                <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
+                  <div class="card-body text-center d-flex flex-column justify-content-center" style="min-height: 180px;">
+                    <h5 class="card-title">Nessun dimmer</h5>
+                    <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
+                  </div>
+                </div>
+              </div>
             </div>
           `;
+          
+          $('#dimmer-container').html(dimmerHtml);
+          
+          // Auto-seleziona l'opzione
+          $('.dimmer-card').addClass('selected');
+          configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+          configurazione.dimmerCodice = "";
+          
+          bindDimmerCardListeners();
+          checkStep5Completion();
+          return;
         }
+        
+        // Creiamo la struttura a due livelli
+        dimmerHtml += `
+          <div class="mb-4">
+            <h5 class="mb-3">1. Seleziona la categoria di dimmer</h5>
+            <div class="row" id="dimmer-categories-container">
+        `;
+        
+        // Aggiungiamo le card delle categorie
+        Object.keys(categorieDisponibili).forEach(categoria => {
+          dimmerHtml += `
+            <div class="col-md-4 mb-3 dimmer-category-column">
+              <div class="card option-card dimmer-category-card" data-categoria="${categoria}">
+                <img src="${dimmerCategoryImages[categoria]}" class="card-img-top" alt="${categoryDisplayNames[categoria]}" 
+                     style="height: 150px; object-fit: cover;" 
+                     onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='150px'">
+                <div class="card-body text-center">
+                  <h5 class="card-title">${categoryDisplayNames[categoria]}</h5>
+                  <p class="card-text small text-muted">${categorieDisponibili[categoria].length} ${categorieDisponibili[categoria].length === 1 ? 'opzione disponibile' : 'opzioni disponibili'}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        dimmerHtml += `
+            </div>
+          </div>
+        `;
+        
+        // Aggiungiamo il container per i dimmer specifici (inizialmente vuoto)
+        dimmerHtml += `
+          <div id="dimmer-specific-section" style="display: none;">
+            <h5 class="mb-3">2. Seleziona il modello specifico <span id="categoria-selezionata-label"></span></h5>
+            <div class="row" id="dimmer-specific-container"></div>
+          </div>
+          
+          <div id="dimmer-warning" class="alert alert-warning mt-3" style="display: none;">
+            <strong style="color:#ff0000 !important;">Nota:</strong> Con l'opzione Touch/IR su profilo ci sarà uno spazio non illuminato di 50mm.
+          </div>
+        `;
         
         // Aggiorniamo il contenitore con le opzioni di dimmer
         $('#dimmer-container').html(dimmerHtml);
         
-        // Auto-selezione solo se c'è una sola opzione
-        if (opzioniDimmer.length === 1) {
-          const $unicoDimmer = $('.dimmer-card');
-          $unicoDimmer.addClass('selected');
-          configurazione.dimmerSelezionato = opzioniDimmer[0];
-          configurazione.dimmerCodice = response.codiciDimmer && response.codiciDimmer[opzioniDimmer[0]] ? response.codiciDimmer[opzioniDimmer[0]] : "";
-          
-          // Se il dimmer è touch, mostra l'avviso
-          if (opzioniDimmer[0].includes('DIMMER_TOUCH_SU_PROFILO_') || 
-              opzioniDimmer[0].includes('PRFIRSW') || 
-              opzioniDimmer[0].includes('PRFIRDIMM')) {
-            $('#dimmer-warning').show();
-          }
-        } else {
-          // Non selezionare automaticamente nessuna opzione quando ce ne sono più di una
-          configurazione.dimmerSelezionato = null;
-          configurazione.dimmerCodice = null;
-        }
+        // Nascondiamo il loader
+        $('#dimmer-loading').hide();
         
-        // Ripristiniamo gli event listener per le card di dimmer
-        bindDimmerCardListeners();
+        // Aggiungiamo listener per le categorie di dimmer
+        $('.dimmer-category-card').on('click', function() {
+          // Rimuoviamo la classe selected da tutte le categorie
+          $('.dimmer-category-card').removeClass('selected');
+          // Aggiungiamo la classe selected alla categoria cliccata
+          $(this).addClass('selected');
+          
+          const categoria = $(this).data('categoria');
+          
+          // Aggiorniamo il label della categoria selezionata
+          $('#categoria-selezionata-label').text(`di ${categoryDisplayNames[categoria]}`);
+          
+          // Carichiamo e mostriamo i dimmer specifici di questa categoria
+          mostraDimmerSpecifici(categoria, dimmerImages, response);
+        });
+        
+        // Se c'è una sola categoria disponibile, la selezioniamo automaticamente
+        if (Object.keys(categorieDisponibili).length === 1) {
+          const unicaCategoria = Object.keys(categorieDisponibili)[0];
+          
+          // Seleziona visivamente la categoria
+          $(`.dimmer-category-card[data-categoria="${unicaCategoria}"]`).addClass('selected');
+          
+          // Aggiorniamo il label della categoria selezionata
+          $('#categoria-selezionata-label').text(`di ${categoryDisplayNames[unicaCategoria]}`);
+          
+          // Mostra e seleziona automaticamente i dimmer di questa categoria
+          mostraDimmerSpecifici(unicaCategoria, dimmerImages, response);
+          
+          // Se questa categoria ha un solo dimmer, lo selezioniamo automaticamente
+          if (categorieDisponibili[unicaCategoria].length === 1) {
+            setTimeout(function() {
+              const unicoDimmer = categorieDisponibili[unicaCategoria][0];
+              $(`.dimmer-specific-card[data-dimmer="${unicoDimmer}"]`).click();
+            }, 200);
+          }
+        }
         
         // Verifica completamento passo
         checkStep5Completion();
@@ -288,9 +383,6 @@ function caricaDimmerCompatibili() {
         bindDimmerCardListeners();
         checkStep5Completion();
       }
-      
-      // Nascondiamo il loader
-      $('#dimmer-loading').hide();
     },
     error: function(error) {
       // In caso di errore, mostriamo solo l'opzione "nessun dimmer"
@@ -325,6 +417,95 @@ function caricaDimmerCompatibili() {
       checkStep5Completion();
     }
   });
+}
+
+// Funzione per mostrare i dimmer specifici di una categoria
+function mostraDimmerSpecifici(categoria, dimmerImages, response) {
+  // Ottenere i dati della categoria selezionata
+  const dimmerData = window.dimmerData;
+  const dimmerInCategoria = dimmerData.categories[categoria];
+  
+  // Prepara il container per i dimmer specifici
+  const specificContainer = $('#dimmer-specific-container');
+  specificContainer.empty();
+  
+  // Caso speciale per NESSUN_DIMMER
+  if (categoria === 'NESSUN_DIMMER') {
+    specificContainer.append(`
+      <div class="col-md-4 mb-3 dimmer-column">
+        <div class="card option-card dimmer-specific-card" data-dimmer="NESSUN_DIMMER">
+          <div class="card-body text-center d-flex flex-column justify-content-center" style="min-height: 180px;">
+            <h5 class="card-title">Nessun dimmer</h5>
+            <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
+          </div>
+        </div>
+      </div>
+    `);
+  } else {
+    // Per tutte le altre categorie, aggiungi ogni dimmer specifico
+    dimmerInCategoria.forEach(dimmer => {
+      const dimmerText = dimmerData.nomiDimmer[dimmer] || dimmer;
+      const dimmerCode = dimmerData.codiciDimmer[dimmer] || "";
+      const spazioNonIlluminato = dimmerData.spaziNonIlluminati[dimmer];
+      const imgPath = dimmerImages[dimmer] || "/static/img/placeholder_logo.jpg";
+      
+      specificContainer.append(`
+        <div class="col-md-4 mb-3 dimmer-column">
+          <div class="card option-card dimmer-specific-card" data-dimmer="${dimmer}" data-codice="${dimmerCode}">
+            <img src="${imgPath}" class="card-img-top" alt="${dimmerText}" 
+                 style="height: 180px; object-fit: cover;" onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px'">
+            <div class="card-body text-center">
+              <h5 class="card-title">${dimmerText}</h5>
+              ${spazioNonIlluminato ? `<p class="card-text small text-danger">Spazio non illuminato: ${spazioNonIlluminato}mm</p>` : ''}
+            </div>
+          </div>
+        </div>
+      `);
+    });
+  }
+  
+  // Mostra il container dei dimmer specifici
+  $('#dimmer-specific-section').show();
+  
+  // Aggiungi i listener per le card dei dimmer specifici
+  $('.dimmer-specific-card').on('click', function() {
+    $('.dimmer-specific-card').removeClass('selected');
+    $(this).addClass('selected');
+    
+    const dimmer = $(this).data('dimmer');
+    configurazione.dimmerSelezionato = dimmer;
+    
+    // Salva il codice del dimmer
+    configurazione.dimmerCodice = $(this).data('codice') || "";
+    
+    // Gestione dello warning per i dimmer touch/ir su profilo
+    if (dimmer.includes('DIMMER_TOUCH_SU_PROFILO_') || 
+        dimmer.includes('PRFIRSW') || 
+        dimmer.includes('PRFIRDIMM')) {
+      $('#dimmer-warning').show();
+      
+      // Se c'è anche una lunghezza richiesta, aggiorna il calcolo considerando lo spazio non illuminato
+      if (configurazione.lunghezzaRichiesta) {
+        const spazioNonIlluminato = 50; // mm
+        $('#dimmer-warning').html(`
+          <strong style="color:#ff0000 !important;">Nota:</strong> Con l'opzione Touch/IR su profilo ci sarà uno spazio non illuminato di ${spazioNonIlluminato}mm.
+          Lunghezza illuminata effettiva: ${configurazione.lunghezzaRichiesta - spazioNonIlluminato}mm.
+        `);
+      }
+    } else {
+      $('#dimmer-warning').hide();
+    }
+    
+    checkStep5Completion();
+  });
+  
+  // Se c'è solo un dimmer in questa categoria, selezionalo automaticamente
+  if (dimmerInCategoria.length === 1) {
+    // Piccolo timeout per assicurarsi che il DOM sia pronto
+    setTimeout(function() {
+      $('.dimmer-specific-card').click();
+    }, 100);
+  }
 }
 
 function bindDimmerCardListeners() {
