@@ -469,3 +469,25 @@ h1, h2, h3, h4 {
   display: inline-block;
   margin-bottom: 20px;
 }
+
+.card-img-strip-detail {
+  display: block;
+  border-top: 1px solid #eee;
+  transition: all 0.3s ease;
+  object-fit: contain;
+}
+
+.strip-led-compatibile-card {
+  transition: all 0.3s ease;
+  border: 2px solid #ddd;
+  overflow: hidden;
+}
+
+.strip-led-compatibile-card:hover {
+  border-color: #e83f34;
+  box-shadow: 0 5px 15px rgba(232, 63, 52, 0.2);
+}
+
+.strip-led-compatibile-card.selected .card-img-strip-detail {
+  border-top: 1px solid rgba(232, 63, 52, 0.3);
+}

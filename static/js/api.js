@@ -478,10 +478,22 @@ export function caricaStripLedFiltrate(profiloId, tensione, ip, temperatura) {
       stripFiltrate.forEach(function(strip) {
         // Usa il nome commerciale se disponibile
         const nomeVisualizzato = strip.nomeCommerciale || strip.nome;
+
+        // Percorso immagine per il modello di strip LED
+        const imgPath = `/static/img/strip/${strip.id}.jpg`;
+        
+        // Percorso per la seconda immagine (dettaglio ravvicinato)
+        const imgPath2 = `/static/img/strip/${strip.id}_2.jpg`;
         
         $('#strip-led-filtrate-options').append(`
           <div class="col-md-6 mb-3">
             <div class="card option-card strip-led-filtrata-card" data-strip="${strip.id}" data-nome-commerciale="${strip.nomeCommerciale || ''}">
+              <img src="${imgPath}" class="card-img-top" alt="${nomeVisualizzato}" 
+                  style="height: 180px; object-fit: cover;" 
+                  onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px';">
+              <img src="${imgPath2}" class="card-img-strip-detail" alt="Dettaglio ${nomeVisualizzato}" 
+                  style="height: 60px; width: 100%; object-fit: cover; margin-top: -10px;" 
+                  onerror="this.style.display='none';">
               <div class="card-body">
                 <h5 class="card-title">${nomeVisualizzato}</h5>
                 ${strip.nomeCommerciale ? `<p class="card-subtitle mb-2 text-muted strip-led-nome-tecnico">${strip.nome}</p>` : ''}
@@ -655,9 +667,6 @@ export function caricaOpzioniPotenza(profiloId, temperatura) {
   });
 }
 
-/**
- * Carica le strip LED compatibili per il profilo, tensione, IP, temperatura e potenza selezionati
- */
 export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, potenza, tipologia_strip) {
   
   // Verifica che tutti i parametri siano definiti
@@ -699,6 +708,9 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
         
         // Percorso immagine per il modello di strip LED
         const imgPath = `/static/img/strip/${strip.id}.jpg`;
+        
+        // Percorso per la seconda immagine (dettaglio ravvicinato)
+        const imgPath2 = `/static/img/strip/${strip.id}_2.jpg`;
         
         // Verifica se il nome commerciale contiene già un'indicazione dell'IP
         const ipAlreadyInName = nomeVisualizzato && 
@@ -757,6 +769,9 @@ export function caricaStripLedCompatibili(profiloId, tensione, ip, temperatura, 
               <img src="${imgPath}" class="card-img-top" alt="${nomeVisualizzato}" 
                   style="height: 180px; object-fit: cover;" 
                   onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px';">
+              <img src="${imgPath2}" class="card-img-strip-detail" alt="Dettaglio ${nomeVisualizzato}" 
+                  style="height: 60px; width: 100%; object-fit: cover; margin-top: -10px;" 
+                  onerror="this.style.display='none';">
               <div class="card-body">
                 <h5 class="card-title">${nomeVisualizzato}</h5>
                 ${showTechnicalName && strip.nomeCommerciale ? `<p class="card-subtitle mb-2 text-muted">${technicalNameDisplay}</p>` : ''}
