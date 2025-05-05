@@ -342,7 +342,7 @@ h1, h2, h3, h4 {
 #btn-continua-step2, #btn-continua-step3, #btn-continua-step4, #btn-continua-step5,
 #btn-continua-step6, #btn-continua-step7, #btn-continua-strip, #btn-continua-parametri,
 #btn-finalizza, #btn-continua-personalizzazione, #btn-continua-step2-option,
-#btn-continua-tipologia-strip, #btn-continua-step3-strip {
+#btn-continua-tipologia-strip, #btn-continua-step3-strip, .btn-success {
   background-color: #e83f34 !important;
   border-color: #e83f34 !important;
   color: #fff !important;
