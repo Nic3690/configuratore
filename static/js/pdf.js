@@ -159,7 +159,7 @@ export function generaPDF(codiceProdotto, configurazione) {
 		
 		// Potenza strip
 		if (configurazione.potenzaSelezionata) {
-		  datiTabella.push(['Potenza', configurazione.potenzaSelezionata + (configurazione.codicePotenza ? ' - ' + configurazione.codicePotenza : '')]);
+		  datiTabella.push(['Potenza', configurazione.potenzaSelezionata]);
 		}
 	  } else {
 		datiTabella.push(['Strip LED', 'Senza Strip LED']);
@@ -192,7 +192,7 @@ export function generaPDF(codiceProdotto, configurazione) {
 		// Per strip 220V, mostriamo specificatamente il modello CTR130
 		  datiTabella.push(['Dimmer', 'CTR130 - Dimmerabile TRIAC tramite pulsante e sistema TUYA']);
 		} else {
-		  datiTabella.push(['Dimmer', getNomeVisualizzabile(configurazione.dimmerSelezionato)]);
+		  datiTabella.push(['Dimmer', getNomeVisualizzabile(configurazione.dimmerSelezionato).replace(/_/g, ' ')]);
 		}
 	  }
 	  
