@@ -129,11 +129,14 @@ export function checkStep5Completion() {
     isComplete = false;
   }
   
-  if (!configurazione.uscitaCavoSelezionata) {
-    isComplete = false;
-  }
+  // Non verifichiamo più l'uscita cavo perché ora ha un valore predefinito
+  // Il controllo precedente era:
+  // if (!configurazione.uscitaCavoSelezionata) {
+  //   isComplete = false;
+  // }
   
   $('#btn-continua-step5').prop('disabled', !isComplete);
+  return isComplete;
 }
 
 /**

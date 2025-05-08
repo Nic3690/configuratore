@@ -14,6 +14,16 @@ h1, h2, h3, h4 {
   padding-bottom: 0px !important;
 }
 
+/* Nascondi la sezione uscita cavo */
+.container.mb-5:has(> h3:contains("Uscita Cavo")) {
+  display: none !important;
+}
+
+/* Alternativa per browser che non supportano il selettore :has */
+#uscita-cavo-container {
+  display: none !important;
+}
+
 /* Header e logo */
 .col-md-3.text-start a {
   cursor: pointer;

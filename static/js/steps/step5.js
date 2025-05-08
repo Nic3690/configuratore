@@ -527,10 +527,14 @@ export function vaiAlControllo() {
 export function prepareControlloListeners() {
   configurazione.dimmerSelezionato = null;
   configurazione.tipoAlimentazioneCavo = null;
-  configurazione.uscitaCavoSelezionata = null;
+  // Imposta automaticamente l'uscita cavo su DRITTA
+  configurazione.uscitaCavoSelezionata = "DRITTA";
   
   $('#dimmer-warning').hide();
   $('#lunghezza-cavo-uscita-container').hide();
+  
+  // Nascondi completamente la sezione Uscita Cavo
+  $('div.container.mb-5:has(h3:contains("Uscita Cavo"))').hide();
   
   $('#lunghezza-cavo-ingresso').val(0);
   $('#lunghezza-cavo-uscita').val(0);
@@ -703,15 +707,9 @@ export function prepareControlloListeners() {
     }
   }
 
-  const usciteCavoDisponibili = $('.uscita-cavo-card').length;
-  if (usciteCavoDisponibili === 1) {
-    const $unicaUscitaCavo = $('.uscita-cavo-card').first();
-    $unicaUscitaCavo.addClass('selected');
-    configurazione.uscitaCavoSelezionata = $unicaUscitaCavo.data('uscita-cavo');
-  } else {
-    configurazione.uscitaCavoSelezionata = null;
-  }
-
+  // Non serve più cercare e selezionare automaticamente le opzioni di uscita cavo, 
+  // poiché ora abbiamo impostato un valore predefinito
+  
   $('.alimentazione-cavo-card').on('click', function() {
     $('.alimentazione-cavo-card').removeClass('selected');
     $(this).addClass('selected');
@@ -728,6 +726,7 @@ export function prepareControlloListeners() {
     checkStep5Completion();
   });
 
+  // Manteniamo il listener per i pulsanti di uscita cavo, anche se la sezione è nascosta
   $('.uscita-cavo-card').on('click', function() {
     $('.uscita-cavo-card').removeClass('selected');
     $(this).addClass('selected');
