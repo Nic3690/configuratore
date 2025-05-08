@@ -136,9 +136,13 @@ export function vaiAlleProposte() {
         
         // Crea l'avviso dello spazio buio, ma non lo mostra ancora
         if (spazioBuio > 0) {
-          $('<div id="spazio-buio-warning" class="assembly-warning" style="display: none;">' +
-            `<strong>ATTENZIONE:</strong> se si sceglie questa misura si verificherà uno spazio buio nel profilo di ${spazioBuio}mm` +
-            '</div>').insertBefore('#step6-proposte-container');
+          // Crea l'elemento di avviso ma non lo mostra ancora
+          let warningElement = $(`<p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="display: none; color:#e83f34 !important">
+            <strong>ATTENZIONE:</strong> se si sceglie questa misura si verificherà uno spazio buio nel profilo di ${spazioBuio}mm
+          </p>`);
+          
+          // Inserisci l'avviso all'interno del div della lunghezza selezionata
+          $('.alert.alert-success.mt-4').append(warningElement);
         }
         
         // Determina quante colonne mostrare (2 o 3)
