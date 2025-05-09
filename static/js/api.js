@@ -882,8 +882,13 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
     'SENZA_ALIMENTATORE': 'SENZA_ALIMENTATORE'
   }[tipoAlimentazione] || tipoAlimentazione;
   
+  // Ottieni la potenza consigliata per il filtro
+  const potenzaConsigliata = configurazione.potenzaConsigliataAlimentatore ? parseInt(configurazione.potenzaConsigliataAlimentatore) : 0;
+  const tensioneStripLed = configurazione.tensioneSelezionato;
+  
   $.ajax({
-    url: `/get_opzioni_alimentatore/${tipoAlimentazioneBackend}`,
+    // Modifica l'URL per includere la potenza consigliata e la tensione della strip LED
+    url: `/get_opzioni_alimentatore/${tipoAlimentazioneBackend}/${tensioneStripLed}/${potenzaConsigliata}`,
     method: 'GET',
     success: function(data) {
       
@@ -897,7 +902,7 @@ export function caricaOpzioniAlimentatore(tipoAlimentazione) {
       const alimentatori = data.alimentatori;
       
       if (!alimentatori || alimentatori.length === 0) {
-        $('#alimentatore-container').html('<div class="col-12 text-center"><p>Nessun alimentatore disponibile per questo tipo di alimentazione.</p></div>');
+        $('#alimentatore-container').html('<div class="col-12 text-center"><p>Nessun alimentatore disponibile per questo tipo di alimentazione e tensione strip LED.</p></div>');
         return;
       }
       
@@ -1010,28 +1015,45 @@ export function caricaPotenzeAlimentatore(alimentatoreId) {
       }
       
       // Potenza consigliata (se disponibile)
-      const potenzaConsigliata = configurazione.potenzaConsigliataAlimentatore;
+      const potenzaConsigliata = configurazione.potenzaConsigliataAlimentatore ? parseInt(configurazione.potenzaConsigliataAlimentatore) : 0;
       
       // Ordina le potenze in ordine crescente
       const potenzeOrdinate = [...potenze].sort((a, b) => a - b);
       
-      potenzeOrdinate.forEach(function(potenza) {
-        // Verifica se questa potenza è quella consigliata
-        if (potenza >= configurazione.potenzaConsigliataAlimentatore)
-        {
-          const isConsigliata = potenzaConsigliata && parseInt(potenzaConsigliata) === potenza;
-          const consigliataBadge = isConsigliata ? '<span class="badge bg-success ms-2">Consigliata</span>' : '';
-          
-          $('#potenza-alimentatore-container').append(`
-            <div class="col-md-3 mb-3">
-              <div class="card option-card potenza-alimentatore-card" data-potenza="${potenza}">
-                <div class="card-body text-center">
-                  <h5 class="card-title">${potenza}W ${consigliataBadge}</h5>
-                </div>
+      // Trova la prima potenza disponibile che è >= alla potenza consigliata
+      let potenzaConsigliataProssima = null;
+      if (potenzaConsigliata > 0) {
+        potenzaConsigliataProssima = potenzeOrdinate.find(p => p >= potenzaConsigliata);
+      }
+      
+      // Filtra solo le potenze >= alla consigliata
+      const potenzeAdeguate = potenzaConsigliata 
+        ? potenzeOrdinate.filter(p => p >= potenzaConsigliata) 
+        : potenzeOrdinate;
+      
+      potenzeAdeguate.forEach(function(potenza) {
+        // Verifica se questa potenza dovrebbe essere etichettata come consigliata
+        const isConsigliata = potenza === potenzaConsigliata;
+        const isProssimaConsigliata = potenza === potenzaConsigliataProssima && potenza !== potenzaConsigliata;
+        
+        // Determina il testo del badge
+        let badgeText = '';
+        if (isConsigliata) {
+          badgeText = '<span class="badge bg-success ms-2">Consigliata</span>';
+        } else if (isProssimaConsigliata) {
+          badgeText = '<span class="badge bg-success ms-2">Potenza consigliata</span>';
+        }
+        
+        // Crea la card
+        $('#potenza-alimentatore-container').append(`
+          <div class="col-md-3 mb-3">
+            <div class="card option-card potenza-alimentatore-card" data-potenza="${potenza}">
+              <div class="card-body text-center">
+                <h5 class="card-title">${potenza}W ${badgeText}</h5>
               </div>
             </div>
-          `);
-        }
+          </div>
+        `);
       });
 
       // Auto-selezione se c'è una sola potenza disponibile

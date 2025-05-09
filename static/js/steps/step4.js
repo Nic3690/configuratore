@@ -131,10 +131,34 @@ export function vaiAllAlimentazione() {
   
   updateProgressBar(4);
   
-  // Mostra la sezione di alimentazione
-  $("#step4-alimentazione").fadeIn(300);
+// Mostra la sezione di alimentazione
+$("#step4-alimentazione").fadeIn(300);
+
+// Per strip LED 220V, mostra un messaggio speciale e imposta SENZA_ALIMENTATORE
+if (configurazione.tensioneSelezionato === '220V') {
+  $('#alimentazione-container').html(`
+    <div class="alert alert-info mb-3">
+      <strong>Nota:</strong> Per strip LED 220V non è necessario un alimentatore aggiuntivo, in quanto si collegano direttamente alla rete elettrica.
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <div class="card option-card alimentazione-card selected" data-alimentazione="SENZA_ALIMENTATORE">
+          <div class="card-body text-center">
+            <h5 class="card-title">Senza alimentatore</h5>
+            <p class="card-text small text-muted">Strip LED 220V (collegamento diretto)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `);
   
-  prepareAlimentazioneListeners();
+  configurazione.alimentazioneSelezionata = "SENZA_ALIMENTATORE";
+  $('#alimentatore-section').hide();
+  $('#potenza-alimentatore-section').hide();
+  $('#btn-continua-step4').prop('disabled', false);
+}
+
+prepareAlimentazioneListeners();
   
   // Nascondi la sezione della potenza consigliata se non c'è strip LED o non abbiamo una potenza
   if (configurazione.stripLedSelezionata === 'senza_strip' || 
@@ -153,12 +177,12 @@ export function prepareAlimentazioneListeners() {
   configurazione.potenzaAlimentatoreSelezionata = null;
   
   $('#alimentatore-section').hide();
-  $('#potenza-alimentatore-section').hide(); // Nascondi la sezione della potenza
+  $('#potenza-alimentatore-section').hide();
   
   $('#btn-continua-step4').prop('disabled', true);
   
   $('.alimentazione-card').removeClass('selected');
-  
+
   // Verifica se la strip LED selezionata è di tipo RGB o RGBWW
   const isRGBStrip = 
     (configurazione.stripLedSelezionata && configurazione.stripLedSelezionata.includes('RGB')) || 

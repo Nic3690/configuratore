@@ -387,51 +387,40 @@ def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipol
         print(f"Errore in get_strip_led_filtrate: {e}")
         return jsonify({'success': False, 'message': f'Errore: {str(e)}'})
 
-@app.route('/get_opzioni_alimentatore/<tipo_alimentazione>')
-def get_opzioni_alimentatore(tipo_alimentazione):
-    alimentazione_data = CONFIG_DATA.get('alimentazione', {})
-
-    alimentatori_ids = alimentazione_data.get('alimentatori', {}).get(tipo_alimentazione, [])
+@app.route('/get_opzioni_alimentatore/<tipo_alimentazione>/<tensione_strip>', methods=['GET'])
+def get_opzioni_alimentatore(tipo_alimentazione, tensione_strip):
+    try:
+        # Qui la logica per caricare i dati degli alimentatori
+        # Possiamo usare i dati dal file PDF che hai condiviso
+        
+        alimentatori = []
+        
+        # Utilizziamo i dati del file PDF fornito
+        # Per ON-OFF, filtriamo gli alimentatori standard (non dimmerabili)
+        if tipo_alimentazione == 'ON-OFF':
+            if tensione_strip == '24V':
+                alimentatori.extend([
+                    {'id': 'SERIE_AT24', 'nome': 'SERIE AT24', 'descrizione': 'Carcassa in lamiera forata di acciaio zincato, per assicurare una corretta ventilazione.'},
+                    {'id': 'SERIE_ATUS', 'nome': 'SERIE ATUS', 'descrizione': 'Alimentatore in tensione costante 24V, forma ultra slim, per interni (IP20). Carcassa in policarbonato bianco.'},
+                    {'id': 'SERIE_ATSIP44', 'nome': 'SERIE ATSIP44', 'descrizione': 'Alimentatore in tensione costante 24V, forma stretta, per installazione in interno (IP44). Scatola e coperchi per i contatti elettrici in policarbonato.'}
+                ])
+            elif tensione_strip == '48V':
+                alimentatori.extend([
+                    {'id': 'SERIE_ATS48IP44', 'nome': 'SERIE ATS48IP44', 'descrizione': 'Alimentatore in tensione costante 48V per installazione in interno (IP44).'}
+                ])
+        
+        # Per DIMMERABILE_TRIAC, filtriamo gli alimentatori dimmerabili
+        elif tipo_alimentazione == 'DIMMERABILE_TRIAC':
+            if tensione_strip == '24V':
+                alimentatori.extend([
+                    {'id': 'SERIE_ATD24', 'nome': 'SERIE ATD24', 'descrizione': 'Alimentatore dimmerabile TRIAC, in tensione costante 24V DC, per installazione in interno (IP20).'}
+                ])
+            # Non ci sono alimentatori dimmerabili a 48V nel file
+        
+        return jsonify({'success': True, 'alimentatori': alimentatori})
     
-    dettagli_alimentatori = CONFIG_DATA.get('dettagliAlimentatori', {})
-    
-    alimentatori_completi = []
-    for alimentatore_id in alimentatori_ids:
-        dettaglio = dettagli_alimentatori.get(alimentatore_id, {})
-        if dettaglio:
-            alimentatori_completi.append({
-                'id': alimentatore_id,
-                'nome': dettaglio.get('nome', ''),
-                'descrizione': dettaglio.get('descrizione', ''),
-                'potenze': dettaglio.get('potenze', [])
-            })
-    
-    return jsonify({
-        'success': True,
-        'alimentatori': alimentatori_completi
-    })
-
-    alimentazione_data = CONFIG_DATA.get('alimentazione', {})
-    
-    alimentatori_ids = alimentazione_data.get('alimentatori', {}).get(tipo_alimentazione, [])
-    
-    dettagli_alimentatori = CONFIG_DATA.get('dettagliAlimentatori', {})
-    
-    alimentatori_completi = []
-    for alimentatore_id in alimentatori_ids:
-        dettaglio = dettagli_alimentatori.get(alimentatore_id, {})
-        if dettaglio:
-            alimentatori_completi.append({
-                'id': alimentatore_id,
-                'nome': dettaglio.get('nome', ''),
-                'descrizione': dettaglio.get('descrizione', ''),
-                'potenze': dettaglio.get('potenze', [])
-            })
-    
-    return jsonify({
-        'success': True,
-        'alimentatori': alimentatori_completi
-    })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
 
 @app.route('/get_potenze_alimentatore/<alimentatore_id>')
 def get_potenze_alimentatore(alimentatore_id):
