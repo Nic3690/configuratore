@@ -418,16 +418,19 @@ h1, h2, h3, h4 {
   background-color: #f8f9fa;
   border: 2px solid #ddd;
   color: #000000;
+  font-size: 1.1rem;
 }
 
 .alert-success {
   background-color: rgba(255, 119, 0, 0.1);
   color: #ff0000;
   border: none;
+  font-size: 1.1rem;
 }
 
 .text-warning {
   color: #000 !important;
+  font-size: 1.1rem;
 }
 
 /* Animazioni */
@@ -469,7 +472,7 @@ h1, h2, h3, h4 {
 }
 
 .assembly-warning {
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #ff0000;
   font-weight: bold;
   padding: 5px 10px;

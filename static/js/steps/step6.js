@@ -137,7 +137,7 @@ export function vaiAlleProposte() {
         // Crea l'avviso dello spazio buio, ma non lo mostra ancora
         if (spazioBuio > 0) {
           // Crea l'elemento di avviso ma non lo mostra ancora
-          let warningElement = $(`<p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="display: none; color:#e83f34 !important">
+          let warningElement = $(`<p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="display: none; font-size: 1rem; color:#e83f34 !important">
             <strong>ATTENZIONE:</strong> se si sceglie questa misura si verificherà uno spazio buio nel profilo di ${spazioBuio}mm
           </p>`);
           
