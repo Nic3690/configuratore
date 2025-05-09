@@ -46,6 +46,7 @@ const configurazione = {
   const mappaStripLedVisualizzazione = {
 	'senza_strip': 'Senza Strip LED',
 	'STRIP_24V_SMD_IP20': 'STRIP 24V SMD (IP20)',
+	'STRIP_24V_COB_IP20_HIGH': 'STRIP 24V COB (IP20) HIGH POWER',
 	'STRIP_24V_SMD_IP66': 'STRIP 24V SMD (IP66)',
 	'STRIP_24V_COB_IP20': 'STRIP 24V COB (IP20)',
 	'STRIP_24V_COB_IP66': 'STRIP 24V COB (IP66)',
