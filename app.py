@@ -388,34 +388,85 @@ def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipol
         return jsonify({'success': False, 'message': f'Errore: {str(e)}'})
 
 @app.route('/get_opzioni_alimentatore/<tipo_alimentazione>/<tensione_strip>', methods=['GET'])
-def get_opzioni_alimentatore(tipo_alimentazione, tensione_strip):
+@app.route('/get_opzioni_alimentatore/<tipo_alimentazione>/<tensione_strip>/<potenza_consigliata>', methods=['GET'])
+def get_opzioni_alimentatore(tipo_alimentazione, tensione_strip, potenza_consigliata=None):
     try:
         # Qui la logica per caricare i dati degli alimentatori
-        # Possiamo usare i dati dal file PDF che hai condiviso
+        # Possiamo usare i dati dal file JSON che hai condiviso
         
         alimentatori = []
         
-        # Utilizziamo i dati del file PDF fornito
+        # Converti la potenza consigliata in intero se presente
+        potenza_consigliata_int = 0
+        if potenza_consigliata:
+            try:
+                potenza_consigliata_int = int(potenza_consigliata)
+            except ValueError:
+                # Se non è un numero valido, ignoriamo la potenza consigliata
+                pass
+        
+        # Ottieni i dettagli degli alimentatori dal CONFIG_DATA
+        dettagli_alimentatori = CONFIG_DATA.get('dettagliAlimentatori', {})
+        
+        # Utilizziamo i dati del file JSON fornito
         # Per ON-OFF, filtriamo gli alimentatori standard (non dimmerabili)
         if tipo_alimentazione == 'ON-OFF':
             if tensione_strip == '24V':
-                alimentatori.extend([
+                # Lista dei possibili alimentatori per questo tipo e tensione
+                alimentatori_possibili = [
                     {'id': 'SERIE_AT24', 'nome': 'SERIE AT24', 'descrizione': 'Carcassa in lamiera forata di acciaio zincato, per assicurare una corretta ventilazione.'},
                     {'id': 'SERIE_ATUS', 'nome': 'SERIE ATUS', 'descrizione': 'Alimentatore in tensione costante 24V, forma ultra slim, per interni (IP20). Carcassa in policarbonato bianco.'},
-                    {'id': 'SERIE_ATSIP44', 'nome': 'SERIE ATSIP44', 'descrizione': 'Alimentatore in tensione costante 24V, forma stretta, per installazione in interno (IP44). Scatola e coperchi per i contatti elettrici in policarbonato.'}
-                ])
+                    {'id': 'SERIE_ATSIP44', 'nome': 'SERIE ATSIP44', 'descrizione': 'Alimentatore in tensione costante 24V, forma stretta, per installazione in interno (IP44). Scatola e coperchi per i contatti elettrici in policarbonato.'},
+                    {'id': 'SERIE_AT24IP67', 'nome': 'SERIE AT24IP67', 'descrizione': 'Alimentatore in tensione costante 24V per installazione in esterno (IP67). Con cavi flessibili in ingresso e uscita.'},
+                    {'id': 'SERIE_ATN24IP67', 'nome': 'SERIE ATN24IP67', 'descrizione': 'Alimentatore in tensione costante 24V per installazione in esterno. Scatola in alluminio con cavi flessibili in ingresso e uscita.'}
+                ]
+                
+                # Se c'è una potenza consigliata, filtra gli alimentatori in base alla potenza
+                if potenza_consigliata_int > 0:
+                    for alim in alimentatori_possibili:
+                        alim_details = dettagli_alimentatori.get(alim['id'], {})
+                        potenze = alim_details.get('potenze', [])
+                        # Verifica se almeno una potenza è >= alla potenza consigliata
+                        if any(p >= potenza_consigliata_int for p in potenze):
+                            alimentatori.append(alim)
+                else:
+                    # Se non c'è potenza consigliata, mostra tutti
+                    alimentatori.extend(alimentatori_possibili)
+                    
             elif tensione_strip == '48V':
-                alimentatori.extend([
+                # Lista dei possibili alimentatori per 48V
+                alimentatori_possibili = [
                     {'id': 'SERIE_ATS48IP44', 'nome': 'SERIE ATS48IP44', 'descrizione': 'Alimentatore in tensione costante 48V per installazione in interno (IP44).'}
-                ])
+                ]
+                
+                # Se c'è una potenza consigliata, filtra gli alimentatori
+                if potenza_consigliata_int > 0:
+                    for alim in alimentatori_possibili:
+                        alim_details = dettagli_alimentatori.get(alim['id'], {})
+                        potenze = alim_details.get('potenze', [])
+                        if any(p >= potenza_consigliata_int for p in potenze):
+                            alimentatori.append(alim)
+                else:
+                    alimentatori.extend(alimentatori_possibili)
         
         # Per DIMMERABILE_TRIAC, filtriamo gli alimentatori dimmerabili
         elif tipo_alimentazione == 'DIMMERABILE_TRIAC':
             if tensione_strip == '24V':
-                alimentatori.extend([
-                    {'id': 'SERIE_ATD24', 'nome': 'SERIE ATD24', 'descrizione': 'Alimentatore dimmerabile TRIAC, in tensione costante 24V DC, per installazione in interno (IP20).'}
-                ])
-            # Non ci sono alimentatori dimmerabili a 48V nel file
+                # Lista dei possibili alimentatori dimmerabili
+                alimentatori_possibili = [
+                    {'id': 'SERIE_ATD24', 'nome': 'SERIE ATD24', 'descrizione': 'Alimentatore dimmerabile TRIAC, in tensione costante 24V DC, per installazione in interno (IP20).'},
+                    {'id': 'SERIE_ATD24IP67', 'nome': 'SERIE ATD24IP67', 'descrizione': 'Alimentatore dimmerabile TRIAC, in tensione costante 24V per installazione in esterno (IP67). Con cavi flessibili in ingresso e uscita.'}
+                ]
+                
+                # Se c'è una potenza consigliata, filtra gli alimentatori
+                if potenza_consigliata_int > 0:
+                    for alim in alimentatori_possibili:
+                        alim_details = dettagli_alimentatori.get(alim['id'], {})
+                        potenze = alim_details.get('potenze', [])
+                        if any(p >= potenza_consigliata_int for p in potenze):
+                            alimentatori.append(alim)
+                else:
+                    alimentatori.extend(alimentatori_possibili)
         
         return jsonify({'success': True, 'alimentatori': alimentatori})
     
