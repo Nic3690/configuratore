@@ -51,7 +51,11 @@ function caricaDimmerCompatibili() {
       <p class="mt-3">Caricamento opzioni dimmer compatibili...</p>
     </div>
   `);
+  
+  // Calcoliamo la potenza totale del sistema
+  let potenzaTotale = calcolaPotenzaTotaleStrip();
 
+  // Per strip LED 220V, mostriamo direttamente il dimmer CTR130
   if (configurazione.tensioneSelezionato === '220V') {
     const dimmerHtml = `
       <h3 class="mb-3">Dimmer</h3>
@@ -60,11 +64,13 @@ function caricaDimmerCompatibili() {
       </div>
       <div class="row">
         <div class="col-md-4 mb-3 dimmer-column">
-          <div class="card option-card dimmer-card" data-dimmer="DIMMERABILE_TRIAC_PULSANTE_TUYA_220V" data-codice="CTR130">
+          <div class="card option-card dimmer-card" data-dimmer="DIMMERABILE_TRIAC_PULSANTE_TUYA_220V" data-codice="CTR130" data-potenza-max="200">
             <img src="/static/img/dimmer/dimmer_pulsante.jpg" class="card-img-top" alt="CTR130" style="height: 180px; object-fit: cover;" onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px'">
             <div class="card-body text-center">
               <h5 class="card-title">CTR130 - Dimmer a pulsante</h5>
               <p class="card-text small text-muted">Dimmerabile TRIAC tramite pulsante e compatibile con sistema TUYA</p>
+              <p class="card-text small text-danger">Potenza massima: 200W</p>
+              ${potenzaTotale > 200 ? '<p class="card-text small text-danger">Attenzione: Potenza richiesta superiore al limite massimo!</p>' : ''}
             </div>
           </div>
         </div>
@@ -72,20 +78,24 @@ function caricaDimmerCompatibili() {
     `;
     
     $('#dimmer-container').html(dimmerHtml);
-    $('.dimmer-card').addClass('selected');
-    configurazione.dimmerSelezionato = "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V";
-    configurazione.dimmerCodice = "CTR130";
-
+    // Se la potenza totale è inferiore alla potenza massima, seleziona automaticamente
+    if (potenzaTotale <= 200) {
+      $('.dimmer-card').addClass('selected');
+      configurazione.dimmerSelezionato = "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V";
+      configurazione.dimmerCodice = "CTR130";
+    }
+    
     bindDimmerCardListeners();
     checkStep5Completion();
     return;
   }
 
+  // Se non c'è strip LED, mostra solo "NESSUN_DIMMER"
   if (!configurazione.stripLedSelezionata || 
       configurazione.stripLedSelezionata === 'senza_strip' || 
       configurazione.stripLedSelezionata === 'NO_STRIP') {
     
-      const dimmerHtml = `
+    const dimmerHtml = `
       <h3 class="mb-3">Dimmer</h3>
       <div class="row">
         <div class="col-md-4 mb-3 dimmer-column">
@@ -100,67 +110,34 @@ function caricaDimmerCompatibili() {
     `;
     
     $('#dimmer-container').html(dimmerHtml);
-    if ($('.dimmer-card').length === 1) {
-      $('.dimmer-card').addClass('selected');
-      configurazione.dimmerSelezionato = "NESSUN_DIMMER";
-      configurazione.dimmerCodice = "";
-    } else {
-      configurazione.dimmerSelezionato = null;
-      configurazione.dimmerCodice = null;
-    }
+    $('.dimmer-card').addClass('selected');
+    configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+    configurazione.dimmerCodice = "";
     
     bindDimmerCardListeners();
+    checkStep5Completion();
     return;
   }
 
   $('#dimmer-loading').show();
-  const dimmerCategoryImages = {
-    "TOUCH_SU_PROFILO": "/static/img/dimmer/touch_su_profilo.jpg",
-    "CON_TELECOMANDO": "/static/img/dimmer/con_telecomando.jpg",
-    "CON_PULSANTE": "/static/img/dimmer/dimmer_pulsante.jpg", 
-    "SISTEMA_TUYA": "/static/img/dimmer/centralina_tuya.jpg",
-    "DA_SCATOLA": "/static/img/dimmer/dimmer_scatola.jpg",
-    "NESSUN_DIMMER": "/static/img/placeholder_logo.jpg"
-  };
-
-  const dimmerCategories = {
-    "TOUCH_SU_PROFILO": [
-      "DIMMER_TOUCH_SU_PROFILO_PRFTSW01",
-      "DIMMER_TOUCH_SU_PROFILO_PRFTDIMM01", 
-      "DIMMER_TOUCH_SU_PROFILO_PRFIRSW01", 
-      "DIMMER_TOUCH_SU_PROFILO_PRFIRDIMM01"
-    ],
-    "CON_TELECOMANDO": [
-      "DIMMER_PWM_CON_TELECOMANDO_RGB_RGBW",
-      "DIMMER_PWM_CON_TELECOMANDO_MONOCOLORE",
-      "DIMMER_PWM_CON_TELECOMANDO_TUNABLE_WHITE"
-    ],
-    "CON_PULSANTE": [
-      "DIMMER_PWM_CON_PULSANTE_24V_MONOCOLORE",
-      "DIMMER_PWM_CON_PULSANTE_48V_MONOCOLORE",
-      "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V"
-    ],
-    "SISTEMA_TUYA": [
-      "DIMMERABILE_PWM_CON_SISTEMA_TUYA_MONOCOLORE",
-      "DIMMERABILE_PWM_CON_SISTEMA_TUYA_TUNABLE_WHITE",
-      "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB",
-      "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW"
-    ],
-    "DA_SCATOLA": [
-      "DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA"
-    ],
-    "NESSUN_DIMMER": [
-      "NESSUN_DIMMER"
-    ]
-  };
-
-  const categoryDisplayNames = {
-    "TOUCH_SU_PROFILO": "Touch su profilo",
-    "CON_TELECOMANDO": "Con telecomando",
-    "CON_PULSANTE": "Con pulsante",
-    "SISTEMA_TUYA": "Sistema Tuya",
-    "DA_SCATOLA": "Da scatola",
-    "NESSUN_DIMMER": "Nessun dimmer"
+  // Definizione delle potenze massime per ogni dimmer in base al PDF fornito
+  const potenzeMassimeDimmer = {
+    "DIMMER_TOUCH_SU_PROFILO_PRFTSW01": 120,
+    "DIMMER_TOUCH_SU_PROFILO_PRFTDIMM01": 120,
+    "DIMMER_TOUCH_SU_PROFILO_PRFIRSW01": 192,
+    "DIMMER_TOUCH_SU_PROFILO_PRFIRDIMM01": 192,
+    "DIMMER_PWM_CON_TELECOMANDO_RGB_RGBW": 576,
+    "DIMMER_PWM_CON_TELECOMANDO_MONOCOLORE": 144,
+    "DIMMER_PWM_CON_TELECOMANDO_TUNABLE_WHITE": 288,
+    "DIMMER_PWM_CON_PULSANTE_24V_MONOCOLORE": 288,
+    "DIMMER_PWM_CON_PULSANTE_48V_MONOCOLORE": 336,
+    "DIMMERABILE_PWM_CON_SISTEMA_TUYA_MONOCOLORE": 144,
+    "DIMMERABILE_PWM_CON_SISTEMA_TUYA_TUNABLE_WHITE": 144,
+    "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB": 144,
+    "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW": 144,
+    "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V": 200,
+    "DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA": 192,
+    "NESSUN_DIMMER": 9999 // Valore alto per "nessun dimmer"
   };
 
   $.ajax({
@@ -174,6 +151,43 @@ function caricaDimmerCompatibili() {
           opzioniDimmer.push('NESSUN_DIMMER');
         }
 
+        // Filtra i dimmer in base alla potenza totale richiesta
+        opzioniDimmer = opzioniDimmer.filter(dimmer => {
+          const potenzaMassima = potenzeMassimeDimmer[dimmer] || 0;
+          return potenzaMassima >= potenzaTotale;
+        });
+
+        const dimmerCategories = {
+          "TOUCH_SU_PROFILO": [
+            "DIMMER_TOUCH_SU_PROFILO_PRFTSW01",
+            "DIMMER_TOUCH_SU_PROFILO_PRFTDIMM01", 
+            "DIMMER_TOUCH_SU_PROFILO_PRFIRSW01", 
+            "DIMMER_TOUCH_SU_PROFILO_PRFIRDIMM01"
+          ],
+          "CON_TELECOMANDO": [
+            "DIMMER_PWM_CON_TELECOMANDO_RGB_RGBW",
+            "DIMMER_PWM_CON_TELECOMANDO_MONOCOLORE",
+            "DIMMER_PWM_CON_TELECOMANDO_TUNABLE_WHITE"
+          ],
+          "CON_PULSANTE": [
+            "DIMMER_PWM_CON_PULSANTE_24V_MONOCOLORE",
+            "DIMMER_PWM_CON_PULSANTE_48V_MONOCOLORE",
+            "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V"
+          ],
+          "SISTEMA_TUYA": [
+            "DIMMERABILE_PWM_CON_SISTEMA_TUYA_MONOCOLORE",
+            "DIMMERABILE_PWM_CON_SISTEMA_TUYA_TUNABLE_WHITE",
+            "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB",
+            "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW"
+          ],
+          "DA_SCATOLA": [
+            "DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA"
+          ],
+          "NESSUN_DIMMER": [
+            "NESSUN_DIMMER"
+          ]
+        };
+
         const categorieDisponibili = {};
 
         Object.keys(dimmerCategories).forEach(categoria => {
@@ -182,6 +196,23 @@ function caricaDimmerCompatibili() {
             categorieDisponibili[categoria] = dimmerInCategoria;
           }
         });
+        const dimmerCategoryImages = {
+          "TOUCH_SU_PROFILO": "/static/img/dimmer/touch_su_profilo.jpg",
+          "CON_TELECOMANDO": "/static/img/dimmer/con_telecomando.jpg",
+          "CON_PULSANTE": "/static/img/dimmer/dimmer_pulsante.jpg", 
+          "SISTEMA_TUYA": "/static/img/dimmer/centralina_tuya.jpg",
+          "DA_SCATOLA": "/static/img/dimmer/dimmer_scatola.jpg",
+          "NESSUN_DIMMER": "/static/img/placeholder_logo.jpg"
+        };
+
+        const categoryDisplayNames = {
+          "TOUCH_SU_PROFILO": "Touch su profilo",
+          "CON_TELECOMANDO": "Con telecomando",
+          "CON_PULSANTE": "Con pulsante",
+          "SISTEMA_TUYA": "Sistema Tuya",
+          "DA_SCATOLA": "Da scatola",
+          "NESSUN_DIMMER": "Nessun dimmer"
+        };
 
         const dimmerImages = {
           "DIMMER_TOUCH_SU_PROFILO_PRFTSW01": "/static/img/dimmer/touch_su_profilo.jpg",
@@ -206,16 +237,14 @@ function caricaDimmerCompatibili() {
           categories: categorieDisponibili,
           nomiDimmer: response.nomiDimmer || {},
           codiciDimmer: response.codiciDimmer || {},
-          spaziNonIlluminati: response.spaziNonIlluminati || {}
+          spaziNonIlluminati: response.spaziNonIlluminati || {},
+          potenzeMassime: potenzeMassimeDimmer || {}
         };
 
-        let dimmerHtml = `<h3 class="mb-3">Dimmer</h3>`;
-        
-        if (Object.keys(categorieDisponibili).length === 1 && 
-            Object.keys(categorieDisponibili)[0] === 'NESSUN_DIMMER' && 
-            categorieDisponibili['NESSUN_DIMMER'].length === 1) {
-            
-          dimmerHtml += `
+        // Se non ci sono categorie disponibili oltre a "NESSUN_DIMMER", mostra solo quest'ultimo
+        if (Object.keys(categorieDisponibili).length === 1 && Object.keys(categorieDisponibili)[0] === 'NESSUN_DIMMER') {
+          const dimmerHtml = `
+            <h3 class="mb-3">Dimmer</h3>
             <div class="row">
               <div class="col-md-4 mb-3 dimmer-column">
                 <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
@@ -237,6 +266,8 @@ function caricaDimmerCompatibili() {
           checkStep5Completion();
           return;
         }
+
+        let dimmerHtml = `<h3 class="mb-3">Dimmer</h3>`;
 
         dimmerHtml += `
           <div class="mb-4">
@@ -291,6 +322,7 @@ function caricaDimmerCompatibili() {
 
         $('#dimmer-container').html(dimmerHtml);
         $('#dimmer-loading').hide();
+        
         $('.dimmer-category-card').on('click', function() {
           $('.dimmer-category-card').removeClass('selected');
           $(this).addClass('selected');
@@ -309,17 +341,25 @@ function caricaDimmerCompatibili() {
           }
 
           $('#categoria-selezionata-label').text(`di ${categoryDisplayNames[categoria]}`);
-          mostraDimmerSpecifici(categoria, dimmerImages, response);
+          mostraDimmerSpecifici(categoria, dimmerImages, response, potenzaTotale);
         });
 
+        // Auto-selezione se c'è una sola categoria
         if (Object.keys(categorieDisponibili).length === 1) {
           const unicaCategoria = Object.keys(categorieDisponibili)[0];
 
           $(`.dimmer-category-card[data-categoria="${unicaCategoria}"]`).addClass('selected');
           $('#categoria-selezionata-label').text(`di ${categoryDisplayNames[unicaCategoria]}`);
 
-          mostraDimmerSpecifici(unicaCategoria, dimmerImages, response);
+          if (unicaCategoria === 'NESSUN_DIMMER') {
+            configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+            configurazione.dimmerCodice = "";
+            checkStep5Completion();
+          } else {
+            mostraDimmerSpecifici(unicaCategoria, dimmerImages, response, potenzaTotale);
+          }
 
+          // Se c'è un solo dimmer, selezionalo automaticamente
           if (categorieDisponibili[unicaCategoria].length === 1) {
             setTimeout(function() {
               const unicoDimmer = categorieDisponibili[unicaCategoria][0];
@@ -327,6 +367,7 @@ function caricaDimmerCompatibili() {
             }, 200);
           }
         }
+        
         checkStep5Completion();
       } else {
         console.error("Errore nel caricamento dei dimmer compatibili:", response.message);
@@ -345,14 +386,9 @@ function caricaDimmerCompatibili() {
         
         $('#dimmer-container').html(dimmerHtml);
 
-        if ($('.dimmer-card').length === 1) {
-          $('.dimmer-card').addClass('selected');
-          configurazione.dimmerSelezionato = "NESSUN_DIMMER";
-          configurazione.dimmerCodice = "";
-        } else {
-          configurazione.dimmerSelezionato = null;
-          configurazione.dimmerCodice = null;
-        }
+        $('.dimmer-card').addClass('selected');
+        configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+        configurazione.dimmerCodice = "";
         
         bindDimmerCardListeners();
         checkStep5Completion();
@@ -375,14 +411,9 @@ function caricaDimmerCompatibili() {
       
       $('#dimmer-container').html(dimmerHtml);
 
-      if ($('.dimmer-card').length === 1) {
-        $('.dimmer-card').addClass('selected');
-        configurazione.dimmerSelezionato = "NESSUN_DIMMER";
-        configurazione.dimmerCodice = "";
-      } else {
-        configurazione.dimmerSelezionato = null;
-        configurazione.dimmerCodice = null;
-      }
+      $('.dimmer-card').addClass('selected');
+      configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+      configurazione.dimmerCodice = "";
       
       $('#dimmer-loading').hide();
       bindDimmerCardListeners();
@@ -391,7 +422,47 @@ function caricaDimmerCompatibili() {
   });
 }
 
-function mostraDimmerSpecifici(categoria, dimmerImages, response) {
+/**
+ * Calcola la potenza totale richiesta dalla strip LED
+ * @returns {number} - Potenza totale in Watt
+ */
+function calcolaPotenzaTotaleStrip() {
+  // Se non c'è una strip LED o non c'è una potenza selezionata, restituisci 0
+  if (configurazione.stripLedSelezionata === 'NO_STRIP' || 
+      !configurazione.potenzaSelezionata) {
+    return 0;
+  }
+
+  // Estrai il valore numerico della potenza dalla stringa (es. "14W/m" -> 14)
+  let potenzaPerMetro = 0;
+  const potenzaMatch = configurazione.potenzaSelezionata.match(/(\d+(\.\d+)?)/);
+  if (potenzaMatch && potenzaMatch[1]) {
+    potenzaPerMetro = parseFloat(potenzaMatch[1]);
+  }
+
+  // Calcola la lunghezza in metri
+  let lunghezzaMetri = 0;
+  if (configurazione.lunghezzaRichiesta) {
+    lunghezzaMetri = parseFloat(configurazione.lunghezzaRichiesta) / 1000;
+  } else if (configurazione.lunghezzaSelezionata) {
+    lunghezzaMetri = parseFloat(configurazione.lunghezzaSelezionata) / 1000;
+  }
+
+  // Calcola la potenza totale con un margine di sicurezza del 20%
+  // Questo segue la stessa logica usata per calcolare la potenza dell'alimentatore
+  const potenzaTotale = potenzaPerMetro * lunghezzaMetri * 1.2;
+  
+  return potenzaTotale;
+}
+
+/**
+ * Mostra i dimmer specifici per una categoria selezionata
+ * @param {string} categoria - La categoria di dimmer selezionata
+ * @param {object} dimmerImages - Oggetto che mappa i dimmer alle immagini
+ * @param {object} response - Risposta dall'API con le opzioni del dimmer
+ * @param {number} potenzaTotale - Potenza totale richiesta dal sistema
+ */
+function mostraDimmerSpecifici(categoria, dimmerImages, response, potenzaTotale) {
   const dimmerData = window.dimmerData;
   const dimmerInCategoria = dimmerData.categories[categoria];
   const specificContainer = $('#dimmer-specific-container');
@@ -404,15 +475,27 @@ function mostraDimmerSpecifici(categoria, dimmerImages, response) {
       const dimmerText = dimmerData.nomiDimmer[dimmer] || dimmer;
       const dimmerCode = dimmerData.codiciDimmer[dimmer] || "";
       const spazioNonIlluminato = dimmerData.spaziNonIlluminati[dimmer];
+      const potenzaMassima = dimmerData.potenzeMassime[dimmer] || 0;
       const imgPath = dimmerImages[dimmer] || "/static/img/placeholder_logo.jpg";
+      
+      // Verifica se la potenza totale richiesta supera la potenza massima supportata
+      const potenzaEccessiva = potenzaTotale > potenzaMassima;
       
       specificContainer.append(`
         <div class="col-md-4 mb-3 dimmer-column">
-          <div class="card option-card dimmer-specific-card" data-dimmer="${dimmer}" data-codice="${dimmerCode}">
+          <div class="card option-card dimmer-specific-card ${potenzaEccessiva ? 'disabled' : ''}" 
+               data-dimmer="${dimmer}" 
+               data-codice="${dimmerCode}" 
+               data-potenza-max="${potenzaMassima}">
             <img src="${imgPath}" class="card-img-top" alt="${dimmerText}" 
-                 style="height: 180px; object-fit: cover;" onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px'">
+                 style="height: 180px; object-fit: cover; ${potenzaEccessiva ? 'opacity: 0.5;' : ''}" 
+                 onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px'">
             <div class="card-body text-center">
               <h5 class="card-title">${dimmerText}</h5>
+              <p class="card-text small text-danger">
+                Potenza massima: ${potenzaMassima}W
+                ${potenzaEccessiva ? ' (Insufficiente per la configurazione attuale!)' : ''}
+              </p>
               ${spazioNonIlluminato ? `<p class="card-text small text-danger">Spazio non illuminato: ${spazioNonIlluminato}mm</p>` : ''}
             </div>
           </div>
@@ -422,14 +505,30 @@ function mostraDimmerSpecifici(categoria, dimmerImages, response) {
   }
 
   $('#dimmer-specific-section').show();
-  $('.dimmer-specific-card').on('click', function() {
+  
+  // Aggiungi stile CSS per le card disabilitate
+  $('<style>').text(`
+    .dimmer-specific-card.disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      border-color: #ddd !important;
+    }
+    .dimmer-specific-card.disabled:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  `).appendTo('head');
+  
+  // Aggiungi listener solo alle card non disabilitate
+  $('.dimmer-specific-card:not(.disabled)').on('click', function() {
     $('.dimmer-specific-card').removeClass('selected');
     $(this).addClass('selected');
     
     const dimmer = $(this).data('dimmer');
     configurazione.dimmerSelezionato = dimmer;
-
     configurazione.dimmerCodice = $(this).data('codice') || "";
+    configurazione.dimmerPotenzaMax = $(this).data('potenza-max') || 0;
+
     if (dimmer.includes('DIMMER_TOUCH_SU_PROFILO_') || 
         dimmer.includes('PRFIRSW') || 
         dimmer.includes('PRFIRDIMM')) {
@@ -449,21 +548,36 @@ function mostraDimmerSpecifici(categoria, dimmerImages, response) {
     checkStep5Completion();
   });
 
-  if (dimmerInCategoria.length === 1) {
+  // Se c'è un solo dimmer non disabilitato, selezionalo automaticamente
+  const dimmerAbilitati = $('.dimmer-specific-card:not(.disabled)');
+  if (dimmerAbilitati.length === 1) {
     setTimeout(function() {
-      $('.dimmer-specific-card').click();
+      dimmerAbilitati.click();
     }, 100);
   }
 }
 
 function bindDimmerCardListeners() {
+  // Calcola la potenza totale per eventuali controlli
+  const potenzaTotale = calcolaPotenzaTotaleStrip();
+  
   $('.dimmer-card').on('click', function() {
+    const dimmer = $(this).data('dimmer');
+    const potenzaMax = $(this).data('potenza-max') || 9999;
+    
+    // Verifica se la potenza totale richiesta supera la potenza massima supportata
+    if (potenzaTotale > potenzaMax) {
+      // Mostra un avviso e non permette la selezione
+      alert(`Questo dimmer supporta fino a ${potenzaMax}W, ma la configurazione attuale richiede circa ${potenzaTotale.toFixed(1)}W. Seleziona un dimmer con potenza massima più elevata.`);
+      return;
+    }
+    
     $('.dimmer-card').removeClass('selected');
     $(this).addClass('selected');
     
-    const dimmer = $(this).data('dimmer');
     configurazione.dimmerSelezionato = dimmer;
     configurazione.dimmerCodice = $(this).data('codice') || "";
+    configurazione.dimmerPotenzaMax = potenzaMax;
 
     if (dimmer.includes('DIMMER_TOUCH_SU_PROFILO_') || 
         dimmer.includes('PRFIRSW') || 
