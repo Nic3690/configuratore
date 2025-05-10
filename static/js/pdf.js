@@ -1,3 +1,5 @@
+import { calcolaCodiceProdottoCompleto } from './codici_prodotto.js'
+
 /**
  * Genera e scarica un PDF con i dati della configurazione
  * @param {string} codiceProdotto - Codice prodotto finale
@@ -30,6 +32,7 @@ export function generaPDF(codiceProdotto, configurazione) {
    */
   function generaPDFContenuto(codiceProdotto, configurazione) {
 	try {
+	  const tuttiCodici = calcolaCodiceProdottoCompleto();
 	  // Crea il documento PDF
 	  const { jsPDF } = window.jspdf;
 	  const doc = new jsPDF({
@@ -129,7 +132,8 @@ export function generaPDF(codiceProdotto, configurazione) {
 	  }
 	  
 	  // Modello
-	  datiTabella.push(['Modello', configurazione.nomeModello || codiceProdotto]);
+	  datiTabella.push(['Modello', (configurazione.nomeModello || codiceProdotto) + 
+	  (tuttiCodici && tuttiCodici.profilo ? ' - ' + tuttiCodici.profilo : '')]);
 	  
 	  // Tipologia
 	  if (configurazione.tipologiaSelezionata) {
@@ -144,8 +148,8 @@ export function generaPDF(codiceProdotto, configurazione) {
 	  // Se c'è una strip LED
 	  if (configurazione.stripLedSelezionata && configurazione.stripLedSelezionata !== 'NO_STRIP' && configurazione.includeStripLed !== false) {
 		// Nome strip LED
-		datiTabella.push(['Strip LED', configurazione.nomeCommercialeStripLed || configurazione.stripLedSelezionata]);
-		
+		datiTabella.push(['Strip LED', (configurazione.nomeCommercialeStripLed || configurazione.stripLedSelezionata) + 
+		(tuttiCodici && tuttiCodici.stripLed ? ' - ' + tuttiCodici.stripLed : '')]);		
 		// Tipologia strip
 		if (configurazione.tipologiaStripSelezionata) {
 		  let tipologiaText = configurazione.tipologiaStripSelezionata;
