@@ -397,7 +397,6 @@ export function preparePersonalizzazioneListeners() {
   
   // Per profilo intero, imposta automaticamente la forma di taglio a DRITTO_SEMPLICE
   if (configurazione.tipologiaSelezionata === 'profilo_intero') {
-    console.log("Profilo intero: impostiamo automaticamente la forma di taglio a DRITTO_SEMPLICE");
     configurazione.formaDiTaglioSelezionata = 'DRITTO_SEMPLICE';
     
     // Se c'è una lunghezza massima per il profilo, usala come lunghezza richiesta
@@ -423,14 +422,6 @@ export function preparePersonalizzazioneListeners() {
   
   // Avvia un controllo iniziale per abilitare/disabilitare il pulsante continua
   checkPersonalizzazioneCompletion();
-  
-  // Log per debugging
-  console.log("Stato configurazione dopo prepare:", {
-    tipologia: configurazione.tipologiaSelezionata,
-    forma: configurazione.formaDiTaglioSelezionata,
-    finitura: configurazione.finituraSelezionata,
-    lunghezza: configurazione.lunghezzaRichiesta
-  });
 }
 
 // Nuova funzione per gestire la visibilità della sezione forma di taglio
@@ -506,9 +497,7 @@ function togglePersonalizzazioneLunghezza() {
     $('#finitura-container').closest('.container').after(infoMessage);
     
     // Impostazione automatica della lunghezza richiesta usando la lunghezza massima specifica del profilo
-    configurazione.lunghezzaRichiesta = lunghezzaMassima;
-    console.log("Lunghezza impostata automaticamente per profilo intero:", lunghezzaMassima);
-    
+    configurazione.lunghezzaRichiesta = lunghezzaMassima;    
     // Forza un controllo del completamento dopo aver impostato la lunghezza
     setTimeout(checkPersonalizzazioneCompletion, 100);
   } else {
@@ -833,16 +822,13 @@ function renderizzaOpzioniTensione(tensioni) {
   
   // Auto-selezione se c'è una sola opzione di tensione
   if (tensioni.length === 1) {
-    console.log("Tensione unica trovata, auto-seleziono:", tensioni[0]);
     // Piccolo ritardo per assicurarsi che il DOM sia aggiornato
     setTimeout(function() {
       const $unicaTensione = $('.tensione-card');
-      console.log("Elementi tensione-card trovati:", $unicaTensione.length);
       
       if ($unicaTensione.length > 0) {
         $unicaTensione.addClass('selected');
         configurazione.tensioneSelezionato = tensioni[0];
-        console.log("Tensione selezionata:", configurazione.tensioneSelezionato);
         
         // Carica automaticamente le opzioni IP per questa tensione
         caricaOpzioniIP(configurazione.profiloSelezionato, configurazione.tensioneSelezionato);
@@ -927,14 +913,6 @@ export function forceBtnProfiloIntero() {
       configurazione.lunghezzaRichiesta = 3000;
     }
     
-    // Stampa lo stato attuale
-    console.log("Stato configurazione forzato:", {
-      tipologia: configurazione.tipologiaSelezionata,
-      forma: configurazione.formaDiTaglioSelezionata,
-      finitura: configurazione.finituraSelezionata,
-      lunghezza: configurazione.lunghezzaRichiesta
-    });
-    
     // Abilita direttamente il pulsante
     $('#btn-continua-personalizzazione').prop('disabled', false);
     
@@ -951,7 +929,6 @@ $(document).ready(function() {
     // Attendi un attimo per dare tempo agli altri handler di eseguire
     setTimeout(function() {
       if (configurazione.tipologiaSelezionata === 'profilo_intero' && configurazione.finituraSelezionata) {
-        console.log("Auto-sblocco pulsante continua per profilo intero");
         $('#btn-continua-personalizzazione').prop('disabled', false);
       }
     }, 100);

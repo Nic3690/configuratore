@@ -33,9 +33,6 @@ export function updateProgressBar(step) {
     for (let i = 1; i < actualStep; i++) {
       $(`#progress-step${i}`).addClass('completed');
     }
-    
-    // Debug per verificare quale step viene aggiornato
-    console.log(`Aggiornamento barra di progresso: step originale ${step}, step effettivo ${actualStep}`);
 }
 
 /**
@@ -179,14 +176,6 @@ export function checkPersonalizzazioneCompletion() {
     if (!configurazione.lunghezzaRichiesta && configurazione.lunghezzaMassimaProfilo) {
       configurazione.lunghezzaRichiesta = configurazione.lunghezzaMassimaProfilo;
     }
-    
-    // Debug
-    console.log("Profilo intero - Validazione:", {
-      formaDiTaglio: configurazione.formaDiTaglioSelezionata,
-      finitura: configurazione.finituraSelezionata,
-      lunghezza: configurazione.lunghezzaRichiesta,
-      isComplete: isComplete
-    });
   } else {
     // Per il taglio su misura, controlliamo tutto
     if (!configurazione.formaDiTaglioSelezionata) {

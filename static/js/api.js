@@ -1130,17 +1130,14 @@ export function caricaFinitureDisponibili(profiloId) {
       
       // Auto-selezione se c'è una sola finitura disponibile
       if (finitureDisponibili.length === 1) {
-        console.log("Finitura unica trovata, auto-seleziono:", finitureDisponibili[0]);
         
         // Piccolo ritardo per assicurarsi che il DOM sia aggiornato
         setTimeout(function() {
           const $unicaFinitura = $(`.finitura-card[data-finitura="${finitureDisponibili[0]}"]`);
-          console.log("Elemento finitura-card trovato:", $unicaFinitura.length);
           
           if ($unicaFinitura.length > 0) {
             $unicaFinitura.addClass('selected');
             configurazione.finituraSelezionata = finitureDisponibili[0];
-            console.log("Finitura selezionata:", configurazione.finituraSelezionata);
             
             // Aggiorna lo stato del pulsante continua
             checkPersonalizzazioneCompletion();
