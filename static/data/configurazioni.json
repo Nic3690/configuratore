@@ -890,7 +890,7 @@
       "ip": "IP20",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["10W/m"],
-      "codiciProdotto": ["SLSIP20WW4CRI90", "SLSIP20NW4CRI90", "SLSIP20CW4CRI90"],
+      "codiciProdotto": ["SLSIP20"],
       "taglioMinimo" : ["16,67mm"]
     },
     "STRIP_24V_SMD_IP20": {
@@ -901,7 +901,7 @@
       "ip": "IP20",
       "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["6W/m", "12W/m", "12W/m CRI90", "18W/m", "18W/m CRI90", "22W/m"],
-      "codiciProdotto": ["RB26420", "RB212820", "RB219220", "RB224020"],
+      "codiciProdotto": ["RB26420", "RB212820", "RB212820", "RB219220", "RB219220", "RB224020"],
       "taglioMinimo" : ["125mm", "62,5mm", "62,5mm", "41,7mm", "41,7mm", "33,3mm"]
     },
     "STRIP_24V_SMD_IP66": {
@@ -912,7 +912,7 @@
       "ip": "IP66",
       "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["6W/m", "12W/m", "18W/m", "22W/m"],
-      "codiciProdotto": ["RB26420", "RB212820", "RB219220", "RB224020"],
+      "codiciProdotto": ["RB26466", "RB212866", "RB219266", "RB224066"],
       "taglioMinimo" : ["125mm", "62,5mm", "41,7mm", "33,3mm"]
     },
     "STRIP_24V_ZIGZAG_IP66": {
@@ -923,7 +923,7 @@
       "ip": "IP65",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["14,4W/m"],
-      "codiciProdotto": ["RB27265ZWW", "RB27265ZNW", "RB27265ZCW"],
+      "codiciProdotto": ["RB27265Z"],
       "taglioMinimo" : ["83,33mm"]
     },
     "STRIP_48V_ZIGZAG_IP66": {
@@ -934,7 +934,7 @@
       "ip": "IP65",
       "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K"],
       "potenzeDisponibili": ["5,5W/m"],
-      "codiciProdotto": ["RB27865ZWW48", "RB27865ZNW48", "RB27865ZCW48"],
+      "codiciProdotto": ["RB27865Z"],
       "taglioMinimo" : ["167,67mm"]
     },
     "STRIP_24V_COB_IP20": {
@@ -945,7 +945,7 @@
       "ip": "IP20",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["8W/m", "10W/m", "12W/m"],
-      "codiciProdotto": ["SLS01WW", "SLS02WW", "SLS03WW", "SLSIP20WW4CRI90"],
+      "codiciProdotto": ["SLS01", "SLS02", "SLS03"],
       "taglioMinimo": ["50mm", "41,66mm", "45,45mm"]
     },
     "STRIP_24V_COB_IP20_HIGH": {
@@ -956,7 +956,7 @@
       "ip": "IP20",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["14W/m"],
-      "codiciProdotto": ["SLS04WW", "SLS04NW", "SLS04CW"],
+      "codiciProdotto": ["SLS04"],
       "taglioMinimo": ["45,45mm"]
     },
     "STRIP_24V_COB_IP66_CL": {
@@ -967,7 +967,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["8W/m", "10W/m", "12W/m", "14W/m"],
-      "codiciProdotto": ["SLS01WW67CL", "SLS02WW67CL", "SLS03WW67CL", "SLS04WW67CL"],
+      "codiciProdotto": ["SLS01", "SLS02", "SLS03", "SLS04"],
       "taglioMinimo" : ["50mm", "41,7mm", "45,5mm", "45,5mm"]
     },
     "STRIP_24V_COB_IP66_FR": {
@@ -978,7 +978,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["8W/m", "10W/m", "12W/m", "14W/m"],
-      "codiciProdotto": ["SLS01WW67FR", "SLS02WW67FR", "SLS03WW67FR", "SLS04WW67FR"],
+      "codiciProdotto": ["SLS01", "SLS02", "SLS03", "SLS04"],
       "taglioMinimo" : ["50mm", "41,7mm", "45,5mm", "45,5mm"]
     },
     "STRIP_48V_SMD_IP20": {
@@ -989,7 +989,7 @@
       "ip": "IP20",
       "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["5W/m", "9,6W/m", "12W/m", "20W/m"],
-      "codiciProdotto": ["RB26520..48", "RB213020..48", "RB218220..48", "RB224020..48"],
+      "codiciProdotto": ["RB26520", "RB213020", "RB218220", "RB224020"],
       "taglioMinimo" : ["200mm", "100mm", "71,7mm", "50mm"]
     },
     "STRIP_48V_SMD_IP66": {
@@ -1000,7 +1000,7 @@
       "ip": "IP66",
       "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["5W/m", "9,6W/m", "12W/m", "20W/m"],
-      "codiciProdotto": ["RB26566..48", "RB213066..48", "RB218266..48", "RB224066..48"],
+      "codiciProdotto": ["RB26566", "RB213066", "RB218266", "RB224066"],
       "taglioMinimo" : ["200mm", "100mm", "71,4mm", "50mm"]
     },
     "STRIP_24V_RGB_SMD_IP20": {
@@ -1011,7 +1011,7 @@
       "ip": "IP20",
       "temperaturaColoreDisponibili": ["RGB", "RGBW"],
       "potenzeDisponibili": ["14,4W/m"],
-      "codiciProdotto": ["ST56020RGB", "ST56020RGB+WW"],
+      "codiciProdotto": ["ST56020"],
       "taglioMinimo" : ["100mm"]
     },
     "STRIP_24V_RGB_SMD_IP66": {
@@ -1022,7 +1022,7 @@
       "ip": "IP65",
       "temperaturaColoreDisponibili": ["RGB", "RGBW"],
       "potenzeDisponibili": ["14,4W/m"],
-      "codiciProdotto": ["ST56065RGB", "ST56065RGB+WW"],
+      "codiciProdotto": ["ST56065"],
       "taglioMinimo" : ["100mm"]
     },
     "STRIP_24V_RGB_COB_IP20": {
@@ -1033,7 +1033,7 @@
       "ip": "IP20",
       "temperaturaColoreDisponibili": ["RGB"],
       "potenzeDisponibili": ["13W/m"],
-      "codiciProdotto": ["SLS01RGB"],
+      "codiciProdotto": ["SLS01"],
       "taglioMinimo" : ["62,5mm"]
     },
     "STRIP_24V_RGB_COB_IP66": {
@@ -1044,7 +1044,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["RGB"],
       "potenzeDisponibili": ["13W/m"],
-      "codiciProdotto": ["SLS01RGB67"],
+      "codiciProdotto": ["SLS01"],
       "taglioMinimo" : ["62,5mm"]
     },
     "STRIP_220V_COB_IP66": {
@@ -1055,7 +1055,7 @@
       "ip": "IP65",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["12W/m"],
-      "codiciProdotto": ["XTP01WW65", "XTP01NW65", "XTP01CW65"],
+      "codiciProdotto": ["XTP01"],
       "taglioMinimo" : ["45,5mm"]
     },
     "STRIP_24V_SMD_IP20_CCT": {
@@ -1066,7 +1066,7 @@
       "ip": "IP20",
       "temperaturaColoreDisponibili": ["CCT"],
       "potenzeDisponibili": ["14,4W/m"],
-      "codiciProdotto": ["ST56020TWCRI90"],
+      "codiciProdotto": ["ST56020"],
       "taglioMinimo" : ["50mm"]
     },
     "STRIP_24V_SMD_IP66_CCT": {
@@ -1077,7 +1077,7 @@
       "ip": "IP65",
       "temperaturaColoreDisponibili": ["CCT"],
       "potenzeDisponibili": ["14,4W/m"],
-      "codiciProdotto": ["ST56065TWCRI90"],
+      "codiciProdotto": ["ST56065"],
       "taglioMinimo" : ["50mm"]
     },
     "STRIP_24V_IP66_XFLEX": {
@@ -1088,7 +1088,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K", "RGB"],
       "potenzeDisponibili": ["20W/m"],
-      "codiciProdotto": ["FW24267WW20S", "FW24267NW20S", "FW24267CW20S"],
+      "codiciProdotto": ["FW24267"],
       "taglioMinimo" : ["166,67mm"]
     },
     "STRIP_24V_IP66_XMAGIS_13X12": {
@@ -1099,7 +1099,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6700K"],
       "potenzeDisponibili": ["9,6W/m"],
-      "codiciProdotto": ["MG13X12WW", "MG13X12NW", "MG13X12CW"],
+      "codiciProdotto": ["MG13X12"],
       "taglioMinimo" : ["50mm"]
     },
     "STRIP_24V_IP66_XMAGIS_13X12_RGB": {
@@ -1110,7 +1110,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["RGB"],
       "potenzeDisponibili": ["18W/m"],
-      "codiciProdotto": ["MG13X12RGBDMX"],
+      "codiciProdotto": ["MG13X12"],
       "taglioMinimo" : ["71,43mm"]
     },
     "STRIP_24V_IP66_XMAGIS_13X12_RGBW": {
@@ -1121,7 +1121,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["RGBW"],
       "potenzeDisponibili": ["14,4W/m"],
-      "codiciProdotto": ["MG13X12RGBW"],
+      "codiciProdotto": ["MG13X12"],
       "taglioMinimo" : ["62,5mm"]
     },
     "STRIP_24V_IP66_XMAGIS_13X12_CCT": {
@@ -1132,7 +1132,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["CCT"],
       "potenzeDisponibili": ["12W/m"],
-      "codiciProdotto": ["MG13X12CCT"],
+      "codiciProdotto": ["MG13X12"],
       "taglioMinimo" : ["31,25mm"]
     },
     "STRIP_24V_IP66_XMAGIS_12X17": {
@@ -1143,7 +1143,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["9,6W/m"],
-      "codiciProdotto": ["MG12X17WW", "MG12X17NW", "MG12X17CW"],
+      "codiciProdotto": ["MG12X17"],
       "taglioMinimo" : ["50mm"]
     },
     "STRIP_24V_IP66_XMAGIS_12X17_RGB": {
@@ -1154,7 +1154,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["RGB"],
       "potenzeDisponibili": ["18W/m"],
-      "codiciProdotto": ["MG12X17RGBDMX"],
+      "codiciProdotto": ["MG12X17"],
       "taglioMinimo" : ["71,5mm"]
     },
     "STRIP_24V_IP66_XMAGIS_12X17_RGBW": {
@@ -1165,7 +1165,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["RGBW"],
       "potenzeDisponibili": ["14,4W/m"],
-      "codiciProdotto": ["MG12X17RGBW"],
+      "codiciProdotto": ["MG12X17"],
       "taglioMinimo" : ["62,5mm"]
     },
     "STRIP_24V_IP66_XMAGIS_12X17_CCT": {
@@ -1176,7 +1176,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["CCT"],
       "potenzeDisponibili": ["12W/m"],
-      "codiciProdotto": ["MG12X17CCT"],
+      "codiciProdotto": ["MG12X17"],
       "taglioMinimo" : ["100mm"]
     },
     "STRIP_24V_IP66_XSNAKE_6X12": {
@@ -1187,7 +1187,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K", "ROSSO", "VERDE", "BLU", "AMBRA", "PINK"],
       "potenzeDisponibili": ["8W/m"],
-      "codiciProdotto": ["SNK6X12WW", "SNK6X12NW", "SNK6X12CW"],
+      "codiciProdotto": ["SNK6X12"],
       "taglioMinimo" : ["50mm"]
     },
     "STRIP_24V_IP66_XSNAKE_10X10": {
@@ -1198,7 +1198,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["10W/m"],
-      "codiciProdotto": ["SNK10X10WW", "SNK10X10NW", "SNK10X10CW"],
+      "codiciProdotto": ["SNK10X10"],
       "taglioMinimo" : ["55mm"]
     },
     "STRIP_24V_IP66_XSNAKE_12X20": {
@@ -1209,7 +1209,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["12W/m"],
-      "codiciProdotto": ["SNK12X20WW", "SNK12X20NW", "SNK12X20CW"],
+      "codiciProdotto": ["SNK12X20"],
       "taglioMinimo" : ["50mm"]
     },
     "STRIP_24V_IP66_XSNAKE_12X20_RGB": {
@@ -1220,7 +1220,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["RGB"],
       "potenzeDisponibili": ["8W/m"],
-      "codiciProdotto": ["SNK12X20RGB"],
+      "codiciProdotto": ["SNK12X20"],
       "taglioMinimo" : ["100mm"]
     },
     "STRIP_24V_IP66_XSNAKE_12X4": {
@@ -1231,7 +1231,7 @@
       "ip": "IP67",
       "temperaturaColoreDisponibili": ["4000K", "6500K"],
       "potenzeDisponibili": ["14,4W/m"],
-      "codiciProdotto": ["SNK12X4NWHP", "SNK12X4CWHP"],
+      "codiciProdotto": ["SNK12X4"],
       "taglioMinimo" : ["25mm"]
     },
     "STRIP_24V_SMD_IP20_LOW": {
@@ -1242,7 +1242,7 @@
       "ip": "IP20",
       "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["6W/m", "12W/m", "12W/m CRI90"],
-      "codiciProdotto": ["RB26420", "RB212820"],
+      "codiciProdotto": ["RB26420", "RB212820", "RB212820"],
       "taglioMinimo" : ["125mm", "62,5mm", "62,5mm"]
     },
     "STRIP_24V_SMD_IP66_LOW": {
@@ -1253,7 +1253,7 @@
       "ip": "IP66",
       "temperaturaColoreDisponibili": ["2700K", "3000K", "4000K", "6000K"],
       "potenzeDisponibili": ["6W/m", "12W/m"],
-      "codiciProdotto": ["RB26420", "RB212820"],
+      "codiciProdotto": ["RB26466", "RB212866"],
       "taglioMinimo" : ["125mm", "62,5mm"]
     }
   },

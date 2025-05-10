@@ -1,6 +1,7 @@
 import { configurazione, mappaTipologieVisualizzazione, mappaTensioneVisualizzazione, mappaIPVisualizzazione, mappaStripLedVisualizzazione, mappaFormeTaglio, mappaFiniture, mappaCategorieVisualizzazione, mappaTipologiaStripVisualizzazione, mappaSpecialStripVisualizzazione } from './config.js';
 import { formatTemperatura, getTemperaturaColor, checkParametriCompletion, checkStep2Completion, updateProgressBar, checkPersonalizzazioneCompletion } from './utils.js';
 import { initRiepilogoOperationsListeners } from './steps/step7.js';
+import { calcolaCodiceProfilo, calcolaCodiceStripLed, calcolaCodiceAlimentatore, calcolaCodiceDimmer, calcolaCodiceProdottoCompleto } from './codici_prodotto.js';
 
 /**
  * Carica i profili per la categoria selezionata
@@ -1210,6 +1211,7 @@ export function finalizzaConfigurazione() {
         const riepilogo = data.riepilogo;
         const potenzaTotale = data.potenzaTotale;
         const codiceProdotto = data.codiceProdotto;
+        const tuttiCodici = calcolaCodiceProdottoCompleto();
         
         let riepilogoHtml = `
           <div class="card">
@@ -1228,7 +1230,7 @@ export function finalizzaConfigurazione() {
                       </tr>
                       <tr>
                         <th scope="row">Modello</th>
-                        <td>${riepilogo.nomeModello}</td>
+                        <td>${riepilogo.nomeModello} - ${tuttiCodici.profilo}</td>
                       </tr>
                       <tr>
                         <th scope="row">Tipologia</th>
@@ -1308,7 +1310,7 @@ export function finalizzaConfigurazione() {
           riepilogoHtml += `
                       <tr>
                         <th scope="row">Strip LED</th>
-                        <td>${nomeStripLed}</td>
+                        <td>${nomeStripLed} - ${tuttiCodici["stripLed"]}</td>
                       </tr>
           `;
 

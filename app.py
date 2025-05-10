@@ -376,6 +376,7 @@ def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipol
                     'tensione': tensione,
                     'ip': ip,
                     'temperatura': temperatura,
+                    'potenzeDisponibili': strip_info.get('potenzeDisponibili', []),
                     'codiciProdotto': strip_info.get('codiciProdotto', [])
                 })
         
