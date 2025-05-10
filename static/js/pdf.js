@@ -181,7 +181,7 @@ export function generaPDF(codiceProdotto, configurazione) {
 	  if (configurazione.tipologiaAlimentatoreSelezionata && 
 		  configurazione.alimentazioneSelezionata !== 'SENZA_ALIMENTATORE' &&
 		  configurazione.tensioneSelezionato !== '220V') {
-		datiTabella.push(['Alimentatore', configurazione.tipologiaAlimentatoreSelezionata]);
+		datiTabella.push(['Alimentatore', configurazione.tipologiaAlimentatoreSelezionata, tuttiCodici.alimentatore]);
 	  }
 	  
 	  // Potenza consigliata - MODIFICATO PER STRIP 220V
@@ -196,7 +196,7 @@ export function generaPDF(codiceProdotto, configurazione) {
 		// Per strip 220V, mostriamo specificatamente il modello CTR130
 		  datiTabella.push(['Dimmer', 'CTR130 - Dimmerabile TRIAC tramite pulsante e sistema TUYA']);
 		} else {
-		  datiTabella.push(['Dimmer', getNomeVisualizzabile(configurazione.dimmerSelezionato).replace(/_/g, ' ')]);
+		  datiTabella.push(['Dimmer', getNomeVisualizzabile(configurazione.dimmerSelezionato).replace(/_/g, ' '), tuttiCodici.dimmer]);
 		}
 	  }
 	  

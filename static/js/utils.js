@@ -94,11 +94,26 @@ export function getTemperaturaColor(temperatura) {
  * Controlla se lo step 2 è completo
  */
 export function checkStep2Completion() {
-  if (configurazione.profiloSelezionato && configurazione.tipologiaSelezionata) {
-    $('#btn-continua-step2').prop('disabled', false);
-  } else {
-    $('#btn-continua-step2').prop('disabled', true);
+  let isComplete = true;
+  
+  if (!configurazione.profiloSelezionato) {
+    isComplete = false;
   }
+  
+  if (!configurazione.tipologiaSelezionata) {
+    isComplete = false;
+  }
+  
+  // Se è profilo intero e ci sono multiple lunghezze disponibili, verifica che ne sia stata selezionata una
+  if (configurazione.tipologiaSelezionata === 'profilo_intero' && 
+      configurazione.lunghezzeDisponibili && 
+      configurazione.lunghezzeDisponibili.length > 1 && 
+      !configurazione.lunghezzaRichiesta) {
+    isComplete = false;
+  }
+  
+  $('#btn-continua-step2').prop('disabled', !isComplete);
+  return isComplete;
 }
 
 /**

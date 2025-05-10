@@ -73,8 +73,10 @@ export function caricaOpzioniProfilo(profiloId) {
   
   configurazione.tipologiaSelezionata = null;
   configurazione.stripLedSelezionata = null;
+  // Nascondi il container delle lunghezze se esistente
+  $('#lunghezza-profilo-container').hide();
   
-  // Prima otteniamo i dettagli del profilo selezionato per la lunghezza massima
+  // Prima otteniamo i dettagli del profilo selezionato
   $.ajax({
     url: `/get_profili/${configurazione.categoriaSelezionata}`,
     method: 'GET',
@@ -82,9 +84,11 @@ export function caricaOpzioniProfilo(profiloId) {
       // Cerca il profilo selezionato tra i risultati
       const profiloSelezionato = profili.find(p => p.id === profiloId);
       
-      // Memorizza la lunghezza massima nella configurazione
-      if (profiloSelezionato && profiloSelezionato.lunghezzaMassima) {
-        configurazione.lunghezzaMassimaProfilo = profiloSelezionato.lunghezzaMassima;
+      // Memorizza tutti i dati del profilo nella configurazione
+      if (profiloSelezionato) {
+        configurazione.lunghezzaMassimaProfilo = profiloSelezionato.lunghezzaMassima || 3000;
+        configurazione.lunghezzaStandard = profiloSelezionato.lunghezzaStandard || configurazione.lunghezzaMassimaProfilo;
+        configurazione.lunghezzeDisponibili = profiloSelezionato.lunghezzeDisponibili || [configurazione.lunghezzaStandard];
       }
       
       // Continua con il caricamento delle opzioni di tipologia
@@ -101,12 +105,17 @@ export function caricaOpzioniProfilo(profiloId) {
             $('#tipologie-options').html('<div class="col-12 text-center"><p>Nessuna tipologia disponibile per questo profilo.</p></div>');
           } else {
             data.tipologie.forEach(function(tipologia) {
-              // Aggiungi la lunghezza massima solo per "profilo_intero"
               let lunghezzaInfo = '';
-              if (tipologia === 'profilo_intero' && configurazione.lunghezzaMassimaProfilo) {
-                // Converti da mm a m
-                const lunghezzaMetri = configurazione.lunghezzaMassimaProfilo / 1000;
-                lunghezzaInfo = ` (${lunghezzaMetri}m)`;
+              if (tipologia === 'profilo_intero') {
+                // Mostra le lunghezze disponibili per i profili interi
+                const lunghezze = configurazione.lunghezzeDisponibili || [];
+                if (lunghezze.length === 1) {
+                  const lunghezzaMetri = lunghezze[0] / 1000;
+                  lunghezzaInfo = ` (${lunghezzaMetri}m)`;
+                } else if (lunghezze.length > 1) {
+                  const lunghezzeText = lunghezze.map(l => `${l / 1000}m`).join(', ');
+                  lunghezzaInfo = ` (${lunghezzeText})`;
+                }
               }
               
               $('#tipologie-options').append(`
@@ -121,12 +130,39 @@ export function caricaOpzioniProfilo(profiloId) {
             });
           }
           
+          // Listener per le tipologie card
           $('.tipologia-card').on('click', function() {
             $('.tipologia-card').removeClass('selected');
             $(this).addClass('selected');
             configurazione.tipologiaSelezionata = $(this).data('id');
             
-            checkStep2Completion();
+            // Resetta la lunghezza quando si cambia tipologia
+            configurazione.lunghezzaRichiesta = null;
+            
+            // Se è profilo intero
+            if (configurazione.tipologiaSelezionata === 'profilo_intero') {
+              // Se ci sono multiple lunghezze disponibili
+              if (configurazione.lunghezzeDisponibili && configurazione.lunghezzeDisponibili.length > 1) {
+                // Mostra le opzioni di lunghezza
+                mostraOpzioniLunghezzaProfilo();
+                // Non completare lo step fino a quando non viene selezionata una lunghezza
+                $('#btn-continua-step2').prop('disabled', true);
+              } else {
+                // Se c'è solo una lunghezza, impostala automaticamente
+                $('#lunghezza-profilo-container').hide();
+                if (configurazione.lunghezzeDisponibili && configurazione.lunghezzeDisponibili.length === 1) {
+                  configurazione.lunghezzaRichiesta = configurazione.lunghezzeDisponibili[0];
+                } else {
+                  configurazione.lunghezzaRichiesta = configurazione.lunghezzaStandard || 3000;
+                }
+                configurazione.lunghezzaProfiloIntero = configurazione.lunghezzaRichiesta;
+                checkStep2Completion();
+              }
+            } else {
+              // Per taglio su misura, nascondi le opzioni di lunghezza
+              $('#lunghezza-profilo-container').hide();
+              checkStep2Completion();
+            }
           });
         },
         error: function(error) {
@@ -137,47 +173,62 @@ export function caricaOpzioniProfilo(profiloId) {
     },
     error: function(error) {
       console.error("Errore nel caricamento dei dettagli del profilo:", error);
-      // Continua comunque con il caricamento delle opzioni di tipologia senza lunghezza massima
-      $.ajax({
-        url: `/get_opzioni_profilo/${profiloId}`,
-        method: 'GET',
-        success: function(data) {
-          
-          $('#tipologie-options').empty();
-          
-          $('#tipologia-container').show();
-          
-          if (!data.tipologie || data.tipologie.length === 0) {
-            $('#tipologie-options').html('<div class="col-12 text-center"><p>Nessuna tipologia disponibile per questo profilo.</p></div>');
-          } else {
-            data.tipologie.forEach(function(tipologia) {
-              $('#tipologie-options').append(`
-                <div class="col-md-6 mb-3">
-                  <div class="card option-card tipologia-card" data-id="${tipologia}">
-                    <div class="card-body text-center">
-                      <h5 class="card-title">${mappaTipologieVisualizzazione[tipologia] || tipologia}</h5>
-                    </div>
-                  </div>
-                </div>
-              `);
-            });
-          }
-          
-          $('.tipologia-card').on('click', function() {
-            $('.tipologia-card').removeClass('selected');
-            $(this).addClass('selected');
-            configurazione.tipologiaSelezionata = $(this).data('id');
-            
-            checkStep2Completion();
-          });
-        },
-        error: function(error) {
-          console.error("Errore nel caricamento delle opzioni:", error);
-          $('#tipologie-options').html('<div class="col-12 text-center"><p class="text-danger">Errore nel caricamento delle opzioni. Riprova più tardi.</p></div>');
-        }
-      });
+      // Continue without profile details
     }
   });
+}
+
+// Nuova funzione per mostrare le opzioni di lunghezza
+function mostraOpzioniLunghezzaProfilo() {
+  $('#lunghezze-profilo-options').empty();
+  
+  if (!configurazione.lunghezzeDisponibili || configurazione.lunghezzeDisponibili.length === 0) {
+    // Se non ci sono lunghezze disponibili, usa quella standard
+    configurazione.lunghezzeDisponibili = [configurazione.lunghezzaStandard || 3000];
+  }
+  
+  // Ordina le lunghezze in ordine crescente
+  const lunghezzeOrdinate = [...configurazione.lunghezzeDisponibili].sort((a, b) => a - b);
+  
+  lunghezzeOrdinate.forEach(function(lunghezza) {
+    const lunghezzaMetri = lunghezza / 1000;
+    $('#lunghezze-profilo-options').append(`
+      <div class="col-md-3 mb-3">
+        <div class="card option-card lunghezza-profilo-card" data-lunghezza="${lunghezza}">
+          <div class="card-body text-center">
+            <h5 class="card-title">${lunghezza}mm</h5>
+            <p class="small text-muted">${lunghezzaMetri}m</p>
+          </div>
+        </div>
+      </div>
+    `);
+  });
+  
+  // Mostra il container
+  $('#lunghezza-profilo-container').show();
+  
+  // Aggiungi i listener per la selezione
+  $('.lunghezza-profilo-card').on('click', function() {
+    $('.lunghezza-profilo-card').removeClass('selected');
+    $(this).addClass('selected');
+    
+    const lunghezzaSelezionata = parseInt($(this).data('lunghezza'), 10);
+    configurazione.lunghezzaRichiesta = lunghezzaSelezionata;
+    configurazione.lunghezzaProfiloIntero = lunghezzaSelezionata;
+    
+    checkStep2Completion();
+  });
+  
+  // Se c'è solo una lunghezza, selezionala automaticamente
+  if (lunghezzeOrdinate.length === 1) {
+    setTimeout(function() {
+      const $unicaLunghezza = $('.lunghezza-profilo-card');
+      $unicaLunghezza.addClass('selected');
+      configurazione.lunghezzaRichiesta = lunghezzeOrdinate[0];
+      configurazione.lunghezzaProfiloIntero = lunghezzeOrdinate[0];
+      checkStep2Completion();
+    }, 100);
+  }
 }
 
 /**
@@ -1281,8 +1332,7 @@ export function finalizzaConfigurazione() {
               }
             });
           }
-          
-          // Aggiungi una nota sul non-assemblaggio nel riepilogo
+
           riepilogoHtml += `
                       <tr>
                         <th scope="row">Nota</th>
@@ -1290,8 +1340,7 @@ export function finalizzaConfigurazione() {
                       </tr>
           `;
         }
-        
-        // Informazioni sulla strip LED
+
         if (riepilogo.stripLedSelezionata === 'NO_STRIP' || !riepilogo.includeStripLed) {
           riepilogoHtml += `
                       <tr>
@@ -1334,10 +1383,8 @@ export function finalizzaConfigurazione() {
             `;
           }
         }
-        
-        // Informazioni sull'alimentazione
+
         if (riepilogo.tensioneSelezionato === '220V') {
-          // Per strip 220V, mostriamo un messaggio dedicato
           riepilogoHtml += `
                       <tr>
                         <th scope="row">Alimentazione</th>
@@ -1345,7 +1392,6 @@ export function finalizzaConfigurazione() {
                       </tr>
           `;
         } else if (riepilogo.alimentazioneSelezionata) {
-          // Usa il testo formattato se disponibile
           const alimentazioneText = riepilogo.alimentazioneText || 
                                   (riepilogo.alimentazioneSelezionata === 'SENZA_ALIMENTATORE' ? 'Senza alimentatore' : 
                                    riepilogo.alimentazioneSelezionata.replace('_', ' '));
@@ -1361,7 +1407,7 @@ export function finalizzaConfigurazione() {
             riepilogoHtml += `
                         <tr>
                           <th scope="row">Alimentatore</th>
-                          <td>${riepilogo.tipologiaAlimentatoreSelezionata}</td>
+                          <td>${riepilogo.tipologiaAlimentatoreSelezionata} - ${tuttiCodici.alimentatore} </td>
                         </tr>
             `;
             
@@ -1383,10 +1429,8 @@ export function finalizzaConfigurazione() {
                 <div class="col-md-6">
                   <table class="table table-striped">
         `;
-        
-        // Dimmer e cavi
+
         if (riepilogo.dimmerSelezionato) {
-          // Usa il testo formattato se disponibile
           const dimmerText = riepilogo.dimmerText.replace(/_/g, ' ') || 
                            (riepilogo.dimmerSelezionato === 'NESSUN_DIMMER' ? 'Nessun dimmer' : 
                             riepilogo.dimmerSelezionato.replace(/_/g, ' '));
@@ -1394,11 +1438,10 @@ export function finalizzaConfigurazione() {
           riepilogoHtml += `
                     <tr>
                       <th scope="row">Dimmer</th>
-                      <td>${dimmerText}</td>
+                      <td>${dimmerText} - ${tuttiCodici.dimmer}</td>
                     </tr>
           `;
-          
-          // Se è TOUCH_SU_PROFILO, aggiungi la nota sullo spazio non illuminato
+
           if (riepilogo.dimmerSelezionato === 'TOUCH_SU_PROFILO') {
             riepilogoHtml += `
                     <tr>
@@ -1436,7 +1479,6 @@ export function finalizzaConfigurazione() {
           }
           
           if (riepilogo.uscitaCavoSelezionata) {
-            // Formatta l'uscita cavo per una migliore visualizzazione
             let uscitaCavoText = riepilogo.uscitaCavoSelezionata;
             if (uscitaCavoText === 'DRITTA') uscitaCavoText = 'Dritta';
             else if (uscitaCavoText === 'LATERALE_DX') uscitaCavoText = 'Laterale destra';
@@ -1451,8 +1493,7 @@ export function finalizzaConfigurazione() {
             `;
           }
         }
-        
-        // Forma, finitura e lunghezza
+
         riepilogoHtml += `
                     <tr>
                       <th scope="row">Forma di taglio</th>

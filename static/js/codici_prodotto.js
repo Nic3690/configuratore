@@ -164,25 +164,74 @@ export function calcolaCodiceProfilo() {
     return codiceCompleto;
 }
   
-  /**
-   * Calcola il codice prodotto per l'alimentatore selezionato
-   * @returns {string} - Codice prodotto dell'alimentatore
-   */
-  export function calcolaCodiceAlimentatore() {
-	// TODO: Implementare la logica per calcolare il codice dell'alimentatore
-	// Basato su: configurazione.alimentazioneSelezionata, configurazione.tipologiaAlimentatoreSelezionata, configurazione.potenzaAlimentatoreSelezionata
-	return '';
+/**
+ * Calcola il codice prodotto per l'alimentatore selezionato
+ * @returns {string} - Codice prodotto dell'alimentatore
+ */
+export function calcolaCodiceAlimentatore() {
+  if (!configurazione.tipologiaAlimentatoreSelezionata || !configurazione.potenzaAlimentatoreSelezionata) {
+    return '';
   }
+
+  // Ottieni i dettagli degli alimentatori dal CONFIG_DATA
+  let dettagliAlimentatori = null;
   
-  /**
-   * Calcola il codice prodotto per il dimmer selezionato
-   * @returns {string} - Codice prodotto del dimmer
-   */
-  export function calcolaCodiceDimmer() {
-	// TODO: Implementare la logica per calcolare il codice del dimmer
-	// Basato su: configurazione.dimmerSelezionato
-	return '';
+  $.ajax({
+    url: '/static/data/configurazioni.json',
+    method: 'GET',
+    async: false,
+    success: function(response) {
+      dettagliAlimentatori = response.dettagliAlimentatori;
+    },
+    error: function(error) {
+      console.error('Errore nel caricamento dei dettagli alimentatori:', error);
+    }
+  });
+
+  if (!dettagliAlimentatori) return '';
+
+  const alimentatore = dettagliAlimentatori[configurazione.tipologiaAlimentatoreSelezionata];
+  
+  if (!alimentatore || !alimentatore.codici) return '';
+
+  const potenzaStr = configurazione.potenzaAlimentatoreSelezionata.toString();
+  const codice = alimentatore.codici[potenzaStr];
+
+  return codice || '';
+}
+  
+/**
+ * Calcola il codice prodotto per il dimmer selezionato
+ * @returns {string} - Codice prodotto del dimmer
+ */
+export function calcolaCodiceDimmer() {
+  // Se non c'è un dimmer selezionato o è "NESSUN_DIMMER"
+  if (!configurazione.dimmerSelezionato || configurazione.dimmerSelezionato === 'NESSUN_DIMMER') {
+    return '';
   }
+
+  // Mappa dei codici dei dimmer dal configuratore
+  const codiciDimmer = {
+    "DIMMER_TOUCH_SU_PROFILO_PRFTSW01": "PRFTSW01",
+    "DIMMER_TOUCH_SU_PROFILO_PRFTDIMM01": "PRFTDIMM01",
+    "DIMMER_TOUCH_SU_PROFILO_PRFIRSW01": "PRFIRSW01",
+    "DIMMER_TOUCH_SU_PROFILO_PRFIRDIMM01": "PRFIRDIMM01",
+    "DIMMER_PWM_CON_TELECOMANDO_RGB_RGBW": "CTR104",
+    "DIMMER_PWM_CON_TELECOMANDO_MONOCOLORE": "CTR114",
+    "DIMMER_PWM_CON_TELECOMANDO_TUNABLE_WHITE": "CTR124",
+    "DIMMER_PWM_CON_PULSANTE_24V_MONOCOLORE": "CTR125",
+    "DIMMER_PWM_CON_PULSANTE_48V_MONOCOLORE": "CTR129",
+    "DIMMERABILE_PWM_CON_SISTEMA_TUYA_MONOCOLORE": "CTR002SCTY",
+    "DIMMERABILE_PWM_CON_SISTEMA_TUYA_TUNABLE_WHITE": "CTR003CCTTY",
+    "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB": "CTR004RGB2TY",
+    "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW": "CTR005RGBWTY",
+    "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V": "CTR130",
+    "DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA": "CTR050IT"
+  };
+
+  // Restituisci il codice corrispondente
+  return codiciDimmer[configurazione.dimmerSelezionato] || '';
+}
   
   /**
    * Calcola il codice prodotto completo basato su tutta la configurazione
