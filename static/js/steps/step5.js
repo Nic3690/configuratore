@@ -152,6 +152,29 @@ function caricaDimmerCompatibili() {
         }
 
         // Filtra i dimmer in base alla potenza totale richiesta
+        const isRGBStrip = [
+          "STRIP_24V_RGB_COB_IP20",
+          "STRIP_24V_RGB_COB_IP66",
+          "STRIP_24V_RGB_SMD_IP20",
+          "STRIP_24V_RGB_SMD_IP66"
+        ].includes(configurazione.stripLedSelezionata);
+
+        if (isRGBStrip && configurazione.temperaturaColoreSelezionata) {
+          // Filtra i dimmer TUYA in base alla temperatura selezionata
+          opzioniDimmer = opzioniDimmer.filter(dimmer => {
+            // Se è un dimmer TUYA RGB/RGBW, controlla la compatibilità
+            if (dimmer === "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB") {
+              return configurazione.temperaturaColoreSelezionata === 'RGB';
+            }
+            if (dimmer === "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW") {
+              return configurazione.temperaturaColoreSelezionata === 'RGBW';
+            }
+            // Mantieni tutti gli altri dimmer
+            return true;
+          });
+        }
+
+        // Filtra i dimmer in base alla potenza totale richiesta
         opzioniDimmer = opzioniDimmer.filter(dimmer => {
           const potenzaMassima = potenzeMassimeDimmer[dimmer] || 0;
           return potenzaMassima >= potenzaTotale;
