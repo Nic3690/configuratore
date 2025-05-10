@@ -950,7 +950,7 @@
     },
     "STRIP_24V_COB_IP20_HIGH": {
       "nome": "STRIP 24V COB IP20 HIGH POWER",
-      "nomeCommerciale": "XSOLIS IP20 HIGH POWER",
+      "nomeCommerciale": "XSOLIS IP20",
       "tipo": "COB",
       "tensione": "24V",
       "ip": "IP20",
@@ -1734,6 +1734,10 @@
         "STRIP_24V_IP66_XMAGIS_12X17_RGB"
       ],
       "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW": [
+        "STRIP_24V_RGB_COB_IP20",
+        "STRIP_24V_RGB_COB_IP66",
+        "STRIP_24V_RGB_SMD_IP20",
+        "STRIP_24V_RGB_SMD_IP66",
         "STRIP_24V_IP66_XMAGIS_13X12_RGBW",
         "STRIP_24V_IP66_XMAGIS_12X17_RGBW"
       ],
