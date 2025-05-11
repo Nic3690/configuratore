@@ -130,7 +130,7 @@ export function caricaOpzioniProfilo(profiloId) {
                 <div class="col-md-6 mb-3">
                   <div class="card option-card tipologia-card" data-id="${tipologia}">
                     <div class="card-body text-center">
-                      <h5 class="card-title">${mappaTipologieVisualizzazione[tipologia] || tipologia}</h5>
+                      <h5 class="card-title">${mappaTipologieVisualizzazione[tipologia] || tipologia} ${configurazione.lunghezzeDisponibili.length < 2 && mappaTipologieVisualizzazione[tipologia] == 'Profilo intero' ? '(' + configurazione.lunghezzaStandard + 'mm)' : ''}</h5>
                     </div>
                   </div>
                 </div>
