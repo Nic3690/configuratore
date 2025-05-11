@@ -8,6 +8,7 @@ export function calcolaCodiceProfilo() {
   // TODO: Implementare la logica per calcolare il codice del profilo
   // Basato su: configurazione.profiloSelezionato, configurazione.tipologiaSelezionata, configurazione.finituraSelezionata
 
+  if (!configurazione.profiloSelezionato) return '';
   const isSabProfile = [
     "PRF016_200SET",
     "PRF011_300"
@@ -54,6 +55,9 @@ export function calcolaCodiceProfilo() {
    */
   export function calcolaCodiceStripLed(tipologia, tensione, ip, temperatura, potenza, modello) {
     
+    if (!configurazione.profiloSelezionato || !configurazione.tensioneSelezionato
+      || configurazione.ipSelezionato || configurazione.temperaturaColoreSelezionata
+      || configurazione.tipologiaStripSelezionata || !configurazione.potenzaSelezionata) return '';
     // Prepara i parametri per la chiamata API
     const profiloId = configurazione.profiloSelezionato;
     const tensioneParam = configurazione.tensioneSelezionato;
@@ -169,7 +173,7 @@ export function calcolaCodiceProfilo() {
  * @returns {string} - Codice prodotto dell'alimentatore
  */
 export function calcolaCodiceAlimentatore() {
-  if (!configurazione.tipologiaAlimentatoreSelezionata || !configurazione.potenzaAlimentatoreSelezionata) {
+  if (!configurazione.tipologiaAlimentatoreSelezionata || !configurazione.alimentazioneSelezionata) {
     return '';
   }
 
@@ -230,7 +234,7 @@ export function calcolaCodiceDimmer() {
   };
 
   // Restituisci il codice corrispondente
-  return codiciDimmer[configurazione.dimmerSelezionato] || '';
+  return ' - ' + codiciDimmer[configurazione.dimmerSelezionato] || '';
 }
   
   /**

@@ -1439,7 +1439,7 @@ export function finalizzaConfigurazione() {
           riepilogoHtml += `
                     <tr>
                       <th scope="row">Dimmer</th>
-                      <td>${dimmerText} - ${tuttiCodici.dimmer}</td>
+                      <td>${dimmerText}${tuttiCodici.dimmer}</td>
                     </tr>
           `;
 
