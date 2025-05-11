@@ -375,12 +375,12 @@ export function vaiAllaPersonalizzazione() {
     if (configurazione.tipologiaSelezionata === 'profilo_intero' && configurazione.lunghezzaRichiesta) {
       $('#lunghezza-info-container').remove();
       
-      const lunghezzaMetri = configurazione.lunghezzaRichiesta / 1000;
+      const lunghezzaMetri = configurazione.lunghezzaSelezionata ? configurazione.lunghezzaSelezionata : configurazione.lunghezzaRichiesta;
       const infoMessage = `
         <div class="container mb-5" id="lunghezza-info-container">
           <h3 class="mb-3">Lunghezza profilo</h3>
           <div class="alert alert-info">
-            <p>Hai selezionato un profilo intero con una lunghezza di ${configurazione.lunghezzaSelezionata}mm.</p>
+            <p>Hai selezionato un profilo intero con una lunghezza di ${lunghezzaMetri}mm.</p>
           </div>
         </div>
       `;

@@ -56,8 +56,8 @@ export function calcolaCodiceProfilo() {
   export function calcolaCodiceStripLed(tipologia, tensione, ip, temperatura, potenza, modello) {
     
     if (!configurazione.profiloSelezionato || !configurazione.tensioneSelezionato
-      || configurazione.ipSelezionato || configurazione.temperaturaColoreSelezionata
-      || configurazione.tipologiaStripSelezionata || !configurazione.potenzaSelezionata) return '';
+      || !configurazione.ipSelezionato || !configurazione.temperaturaColoreSelezionata
+      || !configurazione.tipologiaStripSelezionata || !configurazione.potenzaSelezionata) return '';
     // Prepara i parametri per la chiamata API
     const profiloId = configurazione.profiloSelezionato;
     const tensioneParam = configurazione.tensioneSelezionato;
@@ -165,6 +165,7 @@ export function calcolaCodiceProfilo() {
     if (configurazione.tensioneSelezionato == '48V') codiceCompleto = codiceCompleto + '48';
     if (configurazione.tensioneSelezionato == '220V') codiceCompleto = codiceCompleto + '220';
 
+    console.log(codiceCompleto);
     return codiceCompleto;
 }
   

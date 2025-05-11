@@ -48,6 +48,14 @@ export function caricaProfili(categoria) {
         configurazione.profiloSelezionato = $(this).data('id');
         configurazione.nomeModello = $(this).data('nome');
         
+        // AGGIUNTA: Reset delle variabili di lunghezza quando si cambia profilo
+        configurazione.lunghezzaRichiesta = null;
+        configurazione.lunghezzaSelezionata = null;
+        configurazione.lunghezzaProfiloIntero = null;
+        configurazione.lunghezzaMassimaProfilo = null;
+        configurazione.lunghezzeDisponibili = [];
+        configurazione.lunghezzaStandard = null;
+        
         caricaOpzioniProfilo(configurazione.profiloSelezionato);
       });
       

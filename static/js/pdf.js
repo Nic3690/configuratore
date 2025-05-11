@@ -174,7 +174,7 @@ export function generaPDF(codiceProdotto, configurazione) {
 		// Per strip 220V, mostriamo un'etichetta speciale
 		datiTabella.push(['Alimentazione', 'Strip 220V (no alimentatore)']);
 	  } else if (configurazione.alimentazioneSelezionata) {
-		datiTabella.push(['Alimentazione', getNomeVisualizzabile(configurazione.alimentazioneSelezionata)]);
+		datiTabella.push(['Alimentazione', getNomeVisualizzabile(configurazione.alimentazioneSelezionata), tuttiCodici.alimentatore]);
 	  }
 	  
 	  // Alimentatore - MODIFICATO PER STRIP 220V
