@@ -212,6 +212,7 @@ function mostraOpzioniLunghezzaProfilo() {
     $('.lunghezza-profilo-card').removeClass('selected');
     $(this).addClass('selected');
     
+    // DA MODIFICARE DOMANI
     const lunghezzaSelezionata = parseInt($(this).data('lunghezza'), 10);
     configurazione.lunghezzaRichiesta = lunghezzaSelezionata;
     configurazione.lunghezzaProfiloIntero = lunghezzaSelezionata;
