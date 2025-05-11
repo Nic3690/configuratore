@@ -101,7 +101,7 @@ export function vaiAlleProposte() {
     $('#step6-proposte-container').html(`
       <div class="alert alert-info">
         <h5>Profilo intero con lunghezza standard</h5>
-        <p>Hai selezionato un profilo intero con una lunghezza standard di ${lunghezzaOriginale}mm.</p>
+        <p>Hai selezionato un profilo intero con una lunghezza standard di ${configurazione.lunghezzaSelezionata}mm.</p>
         <p>Non sono necessarie proposte di lunghezza per i profili interi.</p>
       </div>
     `);

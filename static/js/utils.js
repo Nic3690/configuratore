@@ -108,7 +108,7 @@ export function checkStep2Completion() {
   if (configurazione.tipologiaSelezionata === 'profilo_intero' && 
       configurazione.lunghezzeDisponibili && 
       configurazione.lunghezzeDisponibili.length > 1 && 
-      !configurazione.lunghezzaRichiesta) {
+      (!configurazione.lunghezzaRichiesta || configurazione.lunghezzaRichiesta === null)) {
     isComplete = false;
   }
   
@@ -187,10 +187,23 @@ export function checkPersonalizzazioneCompletion() {
       isComplete = false;
     }
     
-    // Assicura che la lunghezza sia impostata (usando la lunghezza massima del profilo)
-    if (!configurazione.lunghezzaRichiesta && configurazione.lunghezzaMassimaProfilo) {
-      configurazione.lunghezzaRichiesta = configurazione.lunghezzaMassimaProfilo;
+    // IMPORTANTE: Assicura che la lunghezza sia impostata correttamente
+    if (!configurazione.lunghezzaRichiesta) {
+      if (configurazione.lunghezzaProfiloIntero) {
+        configurazione.lunghezzaRichiesta = configurazione.lunghezzaProfiloIntero;
+      } else if (configurazione.lunghezzaSelezionata) {
+        configurazione.lunghezzaRichiesta = configurazione.lunghezzaSelezionata;
+      } else if (configurazione.lunghezzaMassimaProfilo) {
+        configurazione.lunghezzaRichiesta = configurazione.lunghezzaMassimaProfilo;
+      }
     }
+    
+    // Debug log per verificare la lunghezza
+    console.log('Lunghezza dopo controllo personalizzazione:', {
+      lunghezzaRichiesta: configurazione.lunghezzaRichiesta,
+      lunghezzaProfiloIntero: configurazione.lunghezzaProfiloIntero,
+      lunghezzaSelezionata: configurazione.lunghezzaSelezionata
+    });
   } else {
     // Per il taglio su misura, controlliamo tutto
     if (!configurazione.formaDiTaglioSelezionata) {

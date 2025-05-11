@@ -122,7 +122,7 @@ export function caricaOpzioniProfilo(profiloId) {
                 <div class="col-md-6 mb-3">
                   <div class="card option-card tipologia-card" data-id="${tipologia}">
                     <div class="card-body text-center">
-                      <h5 class="card-title">${mappaTipologieVisualizzazione[tipologia] || tipologia}${lunghezzaInfo}</h5>
+                      <h5 class="card-title">${mappaTipologieVisualizzazione[tipologia] || tipologia}</h5>
                     </div>
                   </div>
                 </div>
@@ -178,7 +178,6 @@ export function caricaOpzioniProfilo(profiloId) {
   });
 }
 
-// Nuova funzione per mostrare le opzioni di lunghezza
 function mostraOpzioniLunghezzaProfilo() {
   $('#lunghezze-profilo-options').empty();
   
@@ -212,10 +211,19 @@ function mostraOpzioniLunghezzaProfilo() {
     $('.lunghezza-profilo-card').removeClass('selected');
     $(this).addClass('selected');
     
-    // DA MODIFICARE DOMANI
+    // CORREZIONE: Salva correttamente la lunghezza selezionata in tutte le variabili
     const lunghezzaSelezionata = parseInt($(this).data('lunghezza'), 10);
     configurazione.lunghezzaRichiesta = lunghezzaSelezionata;
     configurazione.lunghezzaProfiloIntero = lunghezzaSelezionata;
+    configurazione.lunghezzaSelezionata = lunghezzaSelezionata;
+    
+    // Debug log per verificare
+    console.log('Lunghezza selezionata:', lunghezzaSelezionata);
+    console.log('Configurazione aggiornata:', {
+      lunghezzaRichiesta: configurazione.lunghezzaRichiesta,
+      lunghezzaProfiloIntero: configurazione.lunghezzaProfiloIntero,
+      lunghezzaSelezionata: configurazione.lunghezzaSelezionata
+    });
     
     checkStep2Completion();
   });
@@ -227,6 +235,7 @@ function mostraOpzioniLunghezzaProfilo() {
       $unicaLunghezza.addClass('selected');
       configurazione.lunghezzaRichiesta = lunghezzeOrdinate[0];
       configurazione.lunghezzaProfiloIntero = lunghezzeOrdinate[0];
+      configurazione.lunghezzaSelezionata = lunghezzeOrdinate[0];
       checkStep2Completion();
     }, 100);
   }
@@ -1213,37 +1222,49 @@ export function finalizzaConfigurazione() {
     
     updateProgressBar(6);
     
-  // Assicurati che dimmer e alimentazione siano correttamente formattati per il riepilogo
-  if (configurazione.dimmerSelezionato) {
-    const mappaDimmerText = {
-      'NESSUN_DIMMER': 'Nessun dimmer',
-      'TOUCH_SU_PROFILO': 'Touch su profilo',
-      'CON_TELECOMANDO': 'Con telecomando',
-      'CENTRALINA_TUYA': 'Centralina TUYA',
-      'DIMMER_A_PULSANTE_SEMPLICE': 'Dimmer a pulsante semplice',
-      'DIMMERABILE_PWM': 'Dimmerabile PWM',
-      'DIMMERABILE_DALI': 'Dimmerabile DALI'
-    };
-    
-    // Gestione speciale per strip 220V con dimmer CTR130
-    if (configurazione.tensioneSelezionato === '220V' && configurazione.dimmerSelezionato === 'DIMMER_A_PULSANTE_SEMPLICE') {
-      configurazione.dimmerText = 'CTR130 - Dimmerabile TRIAC tramite pulsante e sistema TUYA';
-    } else {
-      configurazione.dimmerText = mappaDimmerText[configurazione.dimmerSelezionato] || configurazione.dimmerSelezionato;
+    // IMPORTANTE: Verifica che la lunghezza sia correttamente impostata
+    if (configurazione.tipologiaSelezionata === 'profilo_intero' && configurazione.lunghezzaProfiloIntero) {
+      configurazione.lunghezzaRichiesta = configurazione.lunghezzaProfiloIntero;
     }
-  }
+    
+    // Debug log per verificare
+    console.log('Lunghezza finale prima del riepilogo:', {
+      lunghezzaRichiesta: configurazione.lunghezzaRichiesta,
+      lunghezzaProfiloIntero: configurazione.lunghezzaProfiloIntero,
+      lunghezzaSelezionata: configurazione.lunghezzaSelezionata
+    });
+    
+    // Assicurati che dimmer e alimentazione siano correttamente formattati per il riepilogo
+    if (configurazione.dimmerSelezionato) {
+      const mappaDimmerText = {
+        'NESSUN_DIMMER': 'Nessun dimmer',
+        'TOUCH_SU_PROFILO': 'Touch su profilo',
+        'CON_TELECOMANDO': 'Con telecomando',
+        'CENTRALINA_TUYA': 'Centralina TUYA',
+        'DIMMER_A_PULSANTE_SEMPLICE': 'Dimmer a pulsante semplice',
+        'DIMMERABILE_PWM': 'Dimmerabile PWM',
+        'DIMMERABILE_DALI': 'Dimmerabile DALI'
+      };
+      
+      // Gestione speciale per strip 220V con dimmer CTR130
+      if (configurazione.tensioneSelezionato === '220V' && configurazione.dimmerSelezionato === 'DIMMER_A_PULSANTE_SEMPLICE') {
+        configurazione.dimmerText = 'CTR130 - Dimmerabile TRIAC tramite pulsante e sistema TUYA';
+      } else {
+        configurazione.dimmerText = mappaDimmerText[configurazione.dimmerSelezionato] || configurazione.dimmerSelezionato;
+      }
+    }
 
-  // MODIFICA: Gestire il caso specifico delle strip 220V
-  if (configurazione.tensioneSelezionato === '220V') {
-    configurazione.alimentazioneText = 'Strip 220V (no alimentatore)';
-  } else if (configurazione.alimentazioneSelezionata) {
-    const mappaAlimentazioneText = {
-      'ON-OFF': 'ON/OFF',
-      'DIMMERABILE_TRIAC': 'Dimmerabile TRIAC',
-      'SENZA_ALIMENTATORE': 'Senza alimentatore'
-    };
-    configurazione.alimentazioneText = mappaAlimentazioneText[configurazione.alimentazioneSelezionata] || configurazione.alimentazioneSelezionata;
-  }
+    // MODIFICA: Gestire il caso specifico delle strip 220V
+    if (configurazione.tensioneSelezionato === '220V') {
+      configurazione.alimentazioneText = 'Strip 220V (no alimentatore)';
+    } else if (configurazione.alimentazioneSelezionata) {
+      const mappaAlimentazioneText = {
+        'ON-OFF': 'ON/OFF',
+        'DIMMERABILE_TRIAC': 'Dimmerabile TRIAC',
+        'SENZA_ALIMENTATORE': 'Senza alimentatore'
+      };
+      configurazione.alimentazioneText = mappaAlimentazioneText[configurazione.alimentazioneSelezionata] || configurazione.alimentazioneSelezionata;
+    }
     
     $.ajax({
       url: '/finalizza_configurazione',
@@ -1287,6 +1308,7 @@ export function finalizzaConfigurazione() {
                       </tr>
         `;
 
+        // IMPORTANTE: Usa sempre lunghezzaRichiesta per la visualizzazione
         if (riepilogo.formaDiTaglioSelezionata === 'DRITTO_SEMPLICE') {
           if (riepilogo.lunghezzaRichiesta) {
             riepilogoHtml += `
@@ -1506,6 +1528,7 @@ export function finalizzaConfigurazione() {
                     </tr>
         `;
         
+        // IMPORTANTE: Mostra sempre lunghezzaRichiesta per coerenza
         if (riepilogo.lunghezzaRichiesta) {
           riepilogoHtml += `
                     <tr>

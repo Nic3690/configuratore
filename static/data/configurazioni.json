@@ -231,7 +231,7 @@
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["BIANCO", "NERO"],
       "lunghezzaMassima": 3000,
-      "lunghezzeDisponibili": [570, 1140, 1710, 2280, 3000],
+      "lunghezzeDisponibili": [570, 1140, 1710, 2280],
       "stripLedCompatibili": [
         "STRIP_24V_COB_IP20", "STRIP_24V_COB_IP20_HIGH", "STRIP_24V_SMD_IP66",  "STRIP_24V_COB_IP66_CL", "STRIP_24V_COB_IP66_FR", "STRIP_24V_RGB_COB_IP20",
         "STRIP_220V_COB_IP66", "STRIP_24V_SMD_IP20", "STRIP_48V_SMD_IP20",
@@ -475,7 +475,7 @@
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["BIANCO"],
       "lunghezzaMassima": 3000,
-      "lunghezzeDisponibili": [570, 1140, 1710, 2280, 3000],
+      "lunghezzeDisponibili": [570, 1140, 1710, 2280],
       "stripLedCompatibili": [
         "STRIP_24V_COB_IP20", "STRIP_24V_COB_IP20_HIGH", "STRIP_24V_SMD_IP66",  "STRIP_24V_COB_IP66_CL", "STRIP_24V_COB_IP66_FR", "STRIP_24V_RGB_COB_IP20",
         "STRIP_220V_COB_IP66", "STRIP_24V_SMD_IP20", "STRIP_48V_SMD_IP20",

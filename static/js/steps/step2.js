@@ -362,7 +362,6 @@ export function prepareTipologiaStripListeners() {
   });
 }
 
-// NUOVO: Funzione per andare alla personalizzazione 
 export function vaiAllaPersonalizzazione() {
   $('#profilo-nome-step2-personalizzazione').text(configurazione.nomeModello);
   $('#tipologia-nome-step2-personalizzazione').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
@@ -371,6 +370,23 @@ export function vaiAllaPersonalizzazione() {
     $("#step2-personalizzazione").fadeIn(300);
     
     preparePersonalizzazioneListeners();
+    
+    // Se c'è già una lunghezza selezionata per profilo intero, mostrala
+    if (configurazione.tipologiaSelezionata === 'profilo_intero' && configurazione.lunghezzaRichiesta) {
+      $('#lunghezza-info-container').remove();
+      
+      const lunghezzaMetri = configurazione.lunghezzaRichiesta / 1000;
+      const infoMessage = `
+        <div class="container mb-5" id="lunghezza-info-container">
+          <h3 class="mb-3">Lunghezza profilo</h3>
+          <div class="alert alert-info">
+            <p>Hai selezionato un profilo intero con una lunghezza di ${configurazione.lunghezzaSelezionata}mm.</p>
+          </div>
+        </div>
+      `;
+      
+      $('#finitura-container').closest('.container').after(infoMessage);
+    }
   });
 }
 
@@ -478,7 +494,7 @@ function togglePersonalizzazioneLunghezza() {
     personalizzazioneLunghezzaContainer.hide();
     
     // Determina la lunghezza massima da utilizzare
-    const lunghezzaMassima = configurazione.lunghezzaMassimaProfilo || 3000;
+    const lunghezzaMassima = configurazione.lunghezzaRichiesta || configurazione.lunghezzaMassimaProfilo || 3000;
     
     // Converti da mm a m per la visualizzazione
     const lunghezzaMetri = lunghezzaMassima / 1000;
@@ -488,7 +504,7 @@ function togglePersonalizzazioneLunghezza() {
       <div class="container mb-5" id="lunghezza-info-container">
         <h3 class="mb-3">Lunghezza profilo</h3>
         <div class="alert alert-info">
-          <p>Hai selezionato un profilo intero che ha una lunghezza standard di ${lunghezzaMetri}m.</p>
+          <p>Hai selezionato un profilo intero che ha una lunghezza di ${lunghezzaMetri}m (${lunghezzaMassima}mm).</p>
         </div>
       </div>
     `;
@@ -496,8 +512,13 @@ function togglePersonalizzazioneLunghezza() {
     // Inserisci il messaggio dopo la sezione della finitura
     $('#finitura-container').closest('.container').after(infoMessage);
     
-    // Impostazione automatica della lunghezza richiesta usando la lunghezza massima specifica del profilo
-    configurazione.lunghezzaRichiesta = lunghezzaMassima;    
+    // Assicurati che la lunghezza sia impostata correttamente
+    if (!configurazione.lunghezzaRichiesta && lunghezzaMassima) {
+      configurazione.lunghezzaRichiesta = lunghezzaMassima;
+      configurazione.lunghezzaProfiloIntero = lunghezzaMassima;
+      configurazione.lunghezzaSelezionata = lunghezzaMassima;
+    }
+    
     // Forza un controllo del completamento dopo aver impostato la lunghezza
     setTimeout(checkPersonalizzazioneCompletion, 100);
   } else {
