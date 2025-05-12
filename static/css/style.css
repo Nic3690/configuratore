@@ -134,7 +134,7 @@ h1, h2, h3, h4 {
   color: white;
 }
 
-/* Hotspot e mappa interattiva */
+/* Hotspot e mappa interattiva - Stili unificati per entrambe le mappe */
 .hotspot-container {
   position: relative;
   margin: 0 auto;
@@ -155,112 +155,97 @@ h1, h2, h3, h4 {
 }
 
 .light-overlay {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hotspot {
+  position: absolute;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+/* Area di attivazione (invisibile ma cliccabile) */
+.hotspot-area {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background-color: transparent;
+  transition: border-color 0.3s ease;
+}
+
+.hotspot:hover .hotspot-label {
+  opacity: 1;
+}
+
+/* Contenitore delle luci SVG - unificato per tutte le mappe */
+.svg-lights-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+/* Stile base unificato per tutte le luci SVG */
+.svg-light {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+/* Dimensioni specifiche per gli hotspot della prima mappa */
+.hotspot[data-categoria="nanoprofili"] .hotspot-area { width: 220px; height: 270px; }
+.hotspot[data-categoria="incasso"] .hotspot-area { width: 150px; height: 150px; }
+.hotspot[data-categoria="sospensione"] .hotspot-area { width: 200px; height: 110px; }
+.hotspot[data-categoria="plafone"] .hotspot-area { width: 130px; height: 130px; }
+.hotspot[data-categoria="parete"] .hotspot-area { width: 200px; height: 110px; }
+.hotspot[data-categoria="particolari"] .hotspot-area { width: 90px; height: 90px; }
+.hotspot[data-categoria="scalino"] .hotspot-area { width: 280px; height: 200px; }
+.hotspot[data-categoria="wall_washer"] .hotspot-area { width: 130px; height: 130px; }
+.hotspot[data-categoria="battiscopa"] .hotspot-area { width: 270px; height: 80px; }
+
+.hotspot[data-categoria="led-strip"] .hotspot-area { width: 450px; height: 150px; }
+.hotspot[data-categoria="wall_washer_2"] .hotspot-area { width: 250px; height: 100px; }
+
+.hotspot[data-categoria="parete"]:hover ~ .svg-lights-container .svg-light.parete,
+.hotspot[data-categoria="incasso"]:hover ~ .svg-lights-container .svg-light.incasso,
+.hotspot[data-categoria="plafone"]:hover ~ .svg-lights-container .svg-light.plafone,
+.hotspot[data-categoria="scalino"]:hover ~ .svg-lights-container .svg-light.scalino,
+.hotspot[data-categoria="sospensione"]:hover ~ .svg-lights-container .svg-light.sospeso,
+.hotspot[data-categoria="battiscopa"]:hover ~ .svg-lights-container .svg-light.battiscopa,
+.hotspot[data-categoria="nanoprofili"]:hover ~ .svg-lights-container .svg-light.nanoprofili,
+.hotspot[data-categoria="particolari"]:hover ~ .svg-lights-container .svg-light.particolari,
+.hotspot[data-categoria="wall_washer"]:hover ~ .svg-lights-container .svg-light.wall_washer {
+  opacity: 1;
+}
+
+.hotspot[data-categoria="led-strip"]:hover ~ .svg-lights-container .svg-light.led-strip,
+.hotspot[data-categoria="wall_washer_2"]:hover ~ .svg-lights-container .svg-light.esempio2 {
+  opacity: 1;
+}
+
+/* Responsive per hotspot */
+@media (max-width: 768px) {
+  .hotspot-dot {
+    width: 16px;
+    height: 16px;
   }
   
-  /* Contenitore delle luci SVG */
-  .svg-lights-container {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 5;
+  .hotspot-label {
+    font-size: 12px;
+    top: -35px;
   }
-  
-  /* Stile base per tutte le luci SVG */
-  .svg-light {
-	position: absolute;
-	opacity: 0;
-	transition: opacity 0.5s ease;
-	pointer-events: none;
-  }
-
-  .hotspot {
-	position: absolute;
-	cursor: pointer;
-	z-index: 100;
-	transition: all 0.3s ease;
-  }
-
-  /* Area di attivazione (invisibile ma cliccabile) */
-  .hotspot-area {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background-color: transparent;
-    transition: border-color 0.3s ease;
-  }
-  
-  .hotspot:hover .hotspot-label {
-    opacity: 1;
-  }
-  
-  /* Dimensioni specifiche per categoria */
-  .hotspot[data-categoria="nanoprofili"] .hotspot-area {
-    width: 220px;
-    height: 270px;
-  }
-
-  .hotspot[data-categoria="incasso"] .hotspot-area {
-    width: 150px;
-    height: 150px;
-  }
-
-  .hotspot[data-categoria="sospensione"] .hotspot-area {
-    width: 200px;
-    height: 110px;
-  }
-
-  .hotspot[data-categoria="plafone"] .hotspot-area {
-    width: 130px;
-    height: 130px;
-  }
-
-  .hotspot[data-categoria="parete"] .hotspot-area {
-    width: 200px;
-    height: 110px;
-  }
-
-  .hotspot[data-categoria="particolari"] .hotspot-area {
-    width: 90px;
-    height: 90px;
-  }
-
-  .hotspot[data-categoria="scalino"] .hotspot-area {
-    width: 280px;
-    height: 200px;
-  }
-
-  .hotspot[data-categoria="wall_washer"] .hotspot-area {
-    width: 130px;
-    height: 130px;
-  }
-
-  .hotspot[data-categoria="battiscopa"] .hotspot-area {
-    width: 270px;
-    height: 80px;
-  }
-  
-  /* Rendere visibile l'SVG corrispondente all'hover */
-  .hotspot[data-categoria="parete"]:hover ~ .svg-lights-container .svg-light.parete,
-  .hotspot[data-categoria="incasso"]:hover ~ .svg-lights-container .svg-light.incasso,
-  .hotspot[data-categoria="plafone"]:hover ~ .svg-lights-container .svg-light.plafone,
-  .hotspot[data-categoria="scalino"]:hover ~ .svg-lights-container .svg-light.scalino,
-  .hotspot[data-categoria="sospensione"]:hover ~ .svg-lights-container .svg-light.sospeso,
-  .hotspot[data-categoria="battiscopa"]:hover ~ .svg-lights-container .svg-light.battiscopa,
-  .hotspot[data-categoria="nanoprofili"]:hover ~ .svg-lights-container .svg-light.nanoprofili,
-  .hotspot[data-categoria="particolari"]:hover ~ .svg-lights-container .svg-light.particolari,
-  .hotspot[data-categoria="wall_washer"]:hover ~ .svg-lights-container .svg-light.wall_washer {
-	opacity: 1;
-  }
+}
 
 /* Card stili comuni */
 .profilo-card, .tipologia-card, .option-card {
