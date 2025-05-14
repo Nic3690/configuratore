@@ -81,7 +81,6 @@ function caricaDimmerCompatibili() {
             <div class="card-body text-center">
               <h5 class="card-title">CTR130 - Dimmer a pulsante</h5>
               <p class="card-text small text-muted">Dimmerabile TRIAC tramite pulsante e compatibile con sistema TUYA</p>
-              <p class="card-text small text-danger">Potenza massima: 200W</p>
               ${potenzaTotale > 200 ? '<p class="card-text small text-danger">Attenzione: Potenza richiesta superiore al limite massimo!</p>' : ''}
             </div>
           </div>
@@ -510,10 +509,6 @@ function mostraDimmerSpecifici(categoria, dimmerImages, response, potenzaTotale)
                  onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px'">
             <div class="card-body text-center">
               <h5 class="card-title">${dimmerText}</h5>
-              <p class="card-text small text-danger">
-                Potenza massima: ${potenzaMassima}W
-                ${potenzaEccessiva ? ' (Insufficiente per la configurazione attuale!)' : ''}
-              </p>
               ${spazioNonIlluminato ? `<p class="card-text small text-danger">Spazio non illuminato: ${spazioNonIlluminato}mm</p>` : ''}
             </div>
           </div>
