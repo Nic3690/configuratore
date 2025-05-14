@@ -45,6 +45,18 @@ export function initStep5Listeners() {
  * Carica i dimmer compatibili con la strip LED selezionata
  */
 function caricaDimmerCompatibili() {
+  if (configurazione.alimentazioneSelezionata === 'SENZA_ALIMENTATORE') {
+    // Imposta automaticamente NESSUN_DIMMER
+    configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+    configurazione.dimmerCodice = "";
+    
+    // Nascondi completamente la sezione del dimmer
+    $('#dimmer-container').parent().hide();
+    
+    checkStep5Completion();
+    return;
+  }
+
   $('#dimmer-container').empty().html(`
     <h3 class="mb-3">Dimmer</h3>
     <div class="text-center" id="dimmer-loading">
@@ -640,6 +652,15 @@ export function vaiAlControllo() {
     $("#step4-alimentazione").fadeOut(300, function() {
       $("#step5-controllo").fadeIn(300);
       prepareControlloListeners();
+      
+      if (configurazione.alimentazioneSelezionata === 'SENZA_ALIMENTATORE') {
+        configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+        configurazione.dimmerCodice = "";
+        
+        $('#dimmer-container').parent().hide();
+      } else {
+        $('#dimmer-container').parent().show();
+      }
     });
   }
 }

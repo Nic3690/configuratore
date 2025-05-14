@@ -133,19 +133,15 @@ export function checkParametriCompletion() {
 export function checkStep5Completion() {
   let isComplete = true;
   
-  if (!configurazione.dimmerSelezionato) {
+  if (configurazione.alimentazioneSelezionata === 'SENZA_ALIMENTATORE') {
+    configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+  } else if (!configurazione.dimmerSelezionato) {
     isComplete = false;
   }
   
   if (!configurazione.tipoAlimentazioneCavo) {
     isComplete = false;
   }
-  
-  // Non verifichiamo più l'uscita cavo perché ora ha un valore predefinito
-  // Il controllo precedente era:
-  // if (!configurazione.uscitaCavoSelezionata) {
-  //   isComplete = false;
-  // }
   
   $('#btn-continua-step5').prop('disabled', !isComplete);
   return isComplete;
