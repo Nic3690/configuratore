@@ -711,7 +711,7 @@
     {
       "id": "FWPF",
       "nome": "FWPF",
-      "categoria": "esterni",
+      "categoria": "wall_washer_ext",
       "note": "",
       "immagine": "/static/img/fwpf.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -723,7 +723,7 @@
     {
       "id": "MG13X12PF",
       "nome": "MG13X12PF",
-      "categoria": "wall_washer_ext",
+      "categoria": "esterni",
       "note": "",
       "immagine": "/static/img/mg13x12pf.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -735,9 +735,23 @@
       ]
     },
     {
+      "id": "MG13X12SK",
+      "nome": "MG13X12SK",
+      "categoria": "esterni",
+      "note": "",
+      "immagine": "/static/img/mg13x12sk.jpg",
+      "tipologie": ["profilo_intero"],
+      "finitureDisponibili": ["ALLUMINIO"],
+      "lunghezzaMassima": 1000,
+      "lunghezzeDisponibili": [1000],
+      "stripLedCompatibili": ["STRIP_24V_IP66_XMAGIS_13X12", "STRIP_24V_IP66_XMAGIS_13X12_RGB",
+        "STRIP_24V_IP66_XMAGIS_13X12_RGBW", "STRIP_24V_IP66_XMAGIS_13X12_CCT"
+      ]
+    },
+    {
       "id": "MG12X17PF",
       "nome": "MG12X17PF",
-      "categoria": "wall_washer_ext",
+      "categoria": "esterni",
       "note": "",
       "immagine": "/static/img/mg12x17pf.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -749,9 +763,23 @@
       ]
     },
     {
+      "id": "MG12X17SK",
+      "nome": "MG12X17SK",
+      "categoria": "esterni",
+      "note": "",
+      "immagine": "/static/img/mg12x17sk.jpg",
+      "tipologie": ["profilo_intero"],
+      "finitureDisponibili": ["ALLUMINIO"],
+      "lunghezzaMassima": 1000,
+      "lunghezzeDisponibili": [1000],
+      "stripLedCompatibili": ["STRIP_24V_IP66_XMAGIS_12X17", "STRIP_24V_IP66_XMAGIS_12X17_RGB",
+        "STRIP_24V_IP66_XMAGIS_12X17_RGBW", "STRIP_24V_IP66_XMAGIS_12X17_CCT"
+      ]
+    },
+    {
       "id": "SNK6X12PF",
       "nome": "SNK6X12PF",
-      "categoria": "wall_washer_ext",
+      "categoria": "esterni",
       "note": "",
       "immagine": "/static/img/snk6x12pf.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -761,9 +789,21 @@
       "stripLedCompatibili": ["STRIP_24V_IP66_XSNAKE_6X12"]
     },
     {
+      "id": "SNK6X12SK",
+      "nome": "SNK6X12SK",
+      "categoria": "esterni",
+      "note": "",
+      "immagine": "/static/img/snk6x12sk.jpg",
+      "tipologie": ["profilo_intero"],
+      "finitureDisponibili": ["ALLUMINIO"],
+      "lunghezzaMassima": 1000,
+      "lunghezzeDisponibili": [1000],
+      "stripLedCompatibili": ["STRIP_24V_IP66_XSNAKE_6X12"]
+    },
+    {
       "id": "SNK10X10PF",
       "nome": "SNK10X10PF",
-      "categoria": "wall_washer_ext",
+      "categoria": "esterni",
       "note": "",
       "immagine": "/static/img/snk10x10pf.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -773,15 +813,39 @@
       "stripLedCompatibili": ["STRIP_24V_IP66_XSNAKE_10X10"]
     },
     {
+      "id": "SNK10X10SK",
+      "nome": "SNK10X10SK",
+      "categoria": "esterni",
+      "note": "",
+      "immagine": "/static/img/snk10x10sk.jpg",
+      "tipologie": ["profilo_intero"],
+      "finitureDisponibili": ["ALLUMINIO"],
+      "lunghezzaMassima": 1000,
+      "lunghezzeDisponibili": [1000],
+      "stripLedCompatibili": ["STRIP_24V_IP66_XSNAKE_10X10"]
+    },
+    {
       "id": "SNK12X20PF",
       "nome": "SNK12X20PF",
-      "categoria": "wall_washer_ext",
+      "categoria": "esterni",
       "note": "",
       "immagine": "/static/img/snk12x20pf.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 2000,
       "lunghezzeDisponibili": [2000],
+      "stripLedCompatibili": ["STRIP_24V_IP66_XSNAKE_12X20", "STRIP_24V_IP66_XSNAKE_12X20_RGB"]
+    },
+    {
+      "id": "SNK12X20SK",
+      "nome": "SNK12X20SK",
+      "categoria": "esterni",
+      "note": "",
+      "immagine": "/static/img/snk12x20sk.jpg",
+      "tipologie": ["profilo_intero"],
+      "finitureDisponibili": ["ALLUMINIO"],
+      "lunghezzaMassima": 1000,
+      "lunghezzeDisponibili": [1000],
       "stripLedCompatibili": ["STRIP_24V_IP66_XSNAKE_12X20", "STRIP_24V_IP66_XSNAKE_12X20_RGB"]
     },
     {
