@@ -41,9 +41,10 @@ export function initStep5Listeners() {
   });
 }
 
-// Funzione per caricare i dimmer compatibili con la strip LED selezionata
+/**
+ * Carica i dimmer compatibili con la strip LED selezionata
+ */
 function caricaDimmerCompatibili() {
-  // Contenitore iniziale per il dimmer
   $('#dimmer-container').empty().html(`
     <h3 class="mb-3">Dimmer</h3>
     <div class="text-center" id="dimmer-loading">
@@ -51,8 +52,7 @@ function caricaDimmerCompatibili() {
       <p class="mt-3">Caricamento opzioni dimmer compatibili...</p>
     </div>
   `);
-  
-  // Calcoliamo la potenza totale del sistema
+
   let potenzaTotale = calcolaPotenzaTotaleStrip();
 
   // Per strip LED 220V, mostriamo direttamente il dimmer CTR130
@@ -219,6 +219,19 @@ function caricaDimmerCompatibili() {
             categorieDisponibili[categoria] = dimmerInCategoria;
           }
         });
+
+        // NUOVA CONDIZIONE: Se non ci sono dimmer disponibili o c'è solo NESSUN_DIMMER
+        if (Object.keys(categorieDisponibili).length === 0 || 
+            (Object.keys(categorieDisponibili).length === 1 && Object.keys(categorieDisponibili)[0] === 'NESSUN_DIMMER')) {
+          // Invece di mostrare una card "NESSUN_DIMMER", nascondiamo completamente la sezione
+          $('#dimmer-container').parent().hide(); // Nasconde il container del dimmer
+          configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+          configurazione.dimmerCodice = "";
+          
+          checkStep5Completion();
+          return;
+        }
+
         const dimmerCategoryImages = {
           "TOUCH_SU_PROFILO": "/static/img/dimmer/touch_su_profilo.jpg",
           "CON_TELECOMANDO": "/static/img/dimmer/con_telecomando.jpg",
@@ -394,52 +407,22 @@ function caricaDimmerCompatibili() {
         checkStep5Completion();
       } else {
         console.error("Errore nel caricamento dei dimmer compatibili:", response.message);
-        const dimmerHtml = `
-          <h3 class="mb-3">Dimmer</h3>
-          <div class="row">
-            <div class="col-md-4 mb-3 dimmer-column">
-              <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
-                <div class="card-body text-center d-flex flex-column justify-content-center" style="min-height: 180px;">
-                  <h5 class="card-title">Nessun dimmer</h5>
-                  <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
-                </div>
-              </div>
-            </div>
-          </div>`;
-        
-        $('#dimmer-container').html(dimmerHtml);
-
-        $('.dimmer-card').addClass('selected');
+        // Nascondi la sezione in caso di errore
+        $('#dimmer-container').parent().hide();
         configurazione.dimmerSelezionato = "NESSUN_DIMMER";
         configurazione.dimmerCodice = "";
         
-        bindDimmerCardListeners();
         checkStep5Completion();
       }
     },
     error: function(error) {
       console.error("Errore nella chiamata API dei dimmer:", error);
-      const dimmerHtml = `
-      <h3 class="mb-3">Dimmer</h3>
-      <div class="row">
-        <div class="col-md-4 mb-3 dimmer-column">
-          <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
-            <div class="card-body text-center d-flex flex-column justify-content-center" style="min-height: 180px;">
-              <h5 class="card-title">Nessun dimmer</h5>
-              <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
-            </div>
-          </div>
-        </div>
-      </div>`;
-      
-      $('#dimmer-container').html(dimmerHtml);
-
-      $('.dimmer-card').addClass('selected');
+      // Nascondi la sezione in caso di errore
+      $('#dimmer-container').parent().hide();
       configurazione.dimmerSelezionato = "NESSUN_DIMMER";
       configurazione.dimmerCodice = "";
       
       $('#dimmer-loading').hide();
-      bindDimmerCardListeners();
       checkStep5Completion();
     }
   });
