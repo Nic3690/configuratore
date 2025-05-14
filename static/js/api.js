@@ -189,13 +189,6 @@ function mostraOpzioniLunghezzaProfilo() {
     configurazione.lunghezzaProfiloIntero = lunghezzaSelezionata;
     configurazione.lunghezzaSelezionata = lunghezzaSelezionata;
 
-    console.log('Lunghezza selezionata:', lunghezzaSelezionata);
-    console.log('Configurazione aggiornata:', {
-      lunghezzaRichiesta: configurazione.lunghezzaRichiesta,
-      lunghezzaProfiloIntero: configurazione.lunghezzaProfiloIntero,
-      lunghezzaSelezionata: configurazione.lunghezzaSelezionata
-    });
-    
     checkStep2Completion();
   });
 
@@ -1060,12 +1053,6 @@ export function finalizzaConfigurazione() {
     if (configurazione.tipologiaSelezionata === 'profilo_intero' && configurazione.lunghezzaProfiloIntero) {
       configurazione.lunghezzaRichiesta = configurazione.lunghezzaProfiloIntero;
     }
-
-    console.log('Lunghezza finale prima del riepilogo:', {
-      lunghezzaRichiesta: configurazione.lunghezzaRichiesta,
-      lunghezzaProfiloIntero: configurazione.lunghezzaProfiloIntero,
-      lunghezzaSelezionata: configurazione.lunghezzaSelezionata
-    });
 
     if (configurazione.dimmerSelezionato) {
       const mappaDimmerText = {

@@ -147,7 +147,6 @@ export function calcolaCodiceProfilo() {
     if (configurazione.tensioneSelezionato == '48V') codiceCompleto = codiceCompleto + '48';
     if (configurazione.tensioneSelezionato == '220V') codiceCompleto = codiceCompleto + '220';
 
-    console.log(codiceCompleto);
     return codiceCompleto;
 }
 

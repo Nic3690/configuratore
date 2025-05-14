@@ -154,12 +154,6 @@ export function checkPersonalizzazioneCompletion() {
         configurazione.lunghezzaRichiesta = configurazione.lunghezzaMassimaProfilo;
       }
     }
-
-    console.log('Lunghezza dopo controllo personalizzazione:', {
-      lunghezzaRichiesta: configurazione.lunghezzaRichiesta,
-      lunghezzaProfiloIntero: configurazione.lunghezzaProfiloIntero,
-      lunghezzaSelezionata: configurazione.lunghezzaSelezionata
-    });
   } else {
     if (!configurazione.formaDiTaglioSelezionata) {
       isComplete = false;
