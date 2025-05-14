@@ -40,6 +40,7 @@ const configurazione = {
 	'scalino': 'Profili a Scalino',
 	'wall_washer': 'Profili Wallwasher',
 	'wall_washer_ext': 'Profili Wallwasher da Esterni',
+	'esterni': 'Profili per Strip LED da Esterni',
   };
   
   const mappaTipologieVisualizzazione = {
