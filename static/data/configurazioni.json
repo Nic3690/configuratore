@@ -711,7 +711,7 @@
     {
       "id": "FWPF",
       "nome": "FWPF",
-      "categoria": "parete",
+      "categoria": "esterni",
       "note": "",
       "immagine": "/static/img/fwpf.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -723,7 +723,7 @@
     {
       "id": "MG13X12PF",
       "nome": "MG13X12PF",
-      "categoria": "parete",
+      "categoria": "wall_washer_ext",
       "note": "",
       "immagine": "/static/img/mg13x12pf.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -737,7 +737,7 @@
     {
       "id": "MG12X17PF",
       "nome": "MG12X17PF",
-      "categoria": "parete",
+      "categoria": "wall_washer_ext",
       "note": "",
       "immagine": "/static/img/mg12x17pf.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -751,7 +751,7 @@
     {
       "id": "SNK6X12PF",
       "nome": "SNK6X12PF",
-      "categoria": "parete",
+      "categoria": "wall_washer_ext",
       "note": "",
       "immagine": "/static/img/snk6x12pf.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -763,7 +763,7 @@
     {
       "id": "SNK10X10PF",
       "nome": "SNK10X10PF",
-      "categoria": "parete",
+      "categoria": "wall_washer_ext",
       "note": "",
       "immagine": "/static/img/snk10x10pf.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
@@ -775,7 +775,7 @@
     {
       "id": "SNK12X20PF",
       "nome": "SNK12X20PF",
-      "categoria": "parete",
+      "categoria": "wall_washer_ext",
       "note": "",
       "immagine": "/static/img/snk12x20pf.jpg",
       "tipologie": ["taglio_misura", "profilo_intero"],
