@@ -192,16 +192,14 @@ function caricaDimmerCompatibili() {
           "CON_PULSANTE": [
             "DIMMER_PWM_CON_PULSANTE_24V_MONOCOLORE",
             "DIMMER_PWM_CON_PULSANTE_48V_MONOCOLORE",
-            "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V"
+            "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V",
+            "DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA"
           ],
           "SISTEMA_TUYA": [
             "DIMMERABILE_PWM_CON_SISTEMA_TUYA_MONOCOLORE",
             "DIMMERABILE_PWM_CON_SISTEMA_TUYA_TUNABLE_WHITE",
             "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB",
             "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW"
-          ],
-          "DA_SCATOLA": [
-            "DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA"
           ],
           "NESSUN_DIMMER": [
             "NESSUN_DIMMER"
@@ -232,7 +230,6 @@ function caricaDimmerCompatibili() {
           "CON_TELECOMANDO": "/static/img/dimmer/con_telecomando.jpg",
           "CON_PULSANTE": "/static/img/dimmer/dimmer_pulsante.jpg", 
           "SISTEMA_TUYA": "/static/img/dimmer/centralina_tuya.jpg",
-          "DA_SCATOLA": "/static/img/dimmer/dimmer_scatola.jpg",
           "NESSUN_DIMMER": "/static/img/placeholder_logo.jpg"
         };
 
@@ -241,7 +238,6 @@ function caricaDimmerCompatibili() {
           "CON_TELECOMANDO": "Con telecomando",
           "CON_PULSANTE": "Con pulsante",
           "SISTEMA_TUYA": "Sistema Tuya",
-          "DA_SCATOLA": "Da scatola",
           "NESSUN_DIMMER": "Nessun dimmer"
         };
 
