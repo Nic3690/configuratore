@@ -47,6 +47,18 @@
       "nome": "Wallwasher",
       "immagine": "/static/img/categorie/wall_washer.jpg",
       "sottofamiglie": ["wall_washer"]
+    },
+    {
+      "id": "wall_washer_ext",
+      "nome": "Wallwasher da Esterni",
+      "immagine": "/static/img/categorie/wall_washer.jpg",
+      "sottofamiglie": ["wall_washer_ext"]
+    },
+    {
+      "id": "esterni",
+      "nome": "Strip LED da Esterni",
+      "immagine": "/static/img/categorie/esterni.jpg",
+      "sottofamiglie": ["esterni"]
     }
   ],
   "profili": [

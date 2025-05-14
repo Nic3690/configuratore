@@ -39,6 +39,7 @@ const configurazione = {
 	'particolari': 'Profili Particolari',
 	'scalino': 'Profili a Scalino',
 	'wall_washer': 'Profili Wallwasher',
+	'wall_washer_ext': 'Profili Wallwasher da Esterni',
   };
   
   const mappaTipologieVisualizzazione = {

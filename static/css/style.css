@@ -215,8 +215,8 @@ h1, h2, h3, h4 {
 .hotspot[data-categoria="wall_washer"] .hotspot-area { width: 130px; height: 130px; }
 .hotspot[data-categoria="battiscopa"] .hotspot-area { width: 270px; height: 80px; }
 
-.hotspot[data-categoria="led-strip"] .hotspot-area { width: 450px; height: 150px; }
-.hotspot[data-categoria="wall_washer_2"] .hotspot-area { width: 250px; height: 100px; }
+.hotspot[data-categoria="esterni"] .hotspot-area { width: 450px; height: 150px; }
+.hotspot[data-categoria="wall_washer_ext"] .hotspot-area { width: 250px; height: 100px; }
 
 .hotspot[data-categoria="parete"]:hover ~ .svg-lights-container .svg-light.parete,
 .hotspot[data-categoria="incasso"]:hover ~ .svg-lights-container .svg-light.incasso,
@@ -230,8 +230,8 @@ h1, h2, h3, h4 {
   opacity: 1;
 }
 
-.hotspot[data-categoria="led-strip"]:hover ~ .svg-lights-container .svg-light.led-strip,
-.hotspot[data-categoria="wall_washer_2"]:hover ~ .svg-lights-container .svg-light.esempio2 {
+.hotspot[data-categoria="esterni"]:hover ~ .svg-lights-container .svg-light.esterni,
+.hotspot[data-categoria="wall_washer_ext"]:hover ~ .svg-lights-container .svg-light.esempio2 {
   opacity: 1;
 }
 
