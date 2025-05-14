@@ -43,12 +43,9 @@ def get_categorie():
 @app.route('/get_profili/<categoria>')
 def get_profili(categoria):
     profili = CONFIG_DATA.get('profili', [])
-    
-    # Ottieni i profili per categoria o per categoria alternativa
     profili_categoria = []
     for p in profili:
         if p.get('categoria') == categoria or (isinstance(p.get('categorie'), list) and categoria in p.get('categorie', [])):
-            # Aggiungiamo informazioni sui nomi commerciali delle strip LED compatibili
             profilo = p.copy()
             strip_compatibili_info = []
             for strip_id in p.get('stripLedCompatibili', []):
@@ -87,7 +84,6 @@ def get_opzioni_tensione(profilo_id, tipologia_strip=None):
     if not profilo:
         return jsonify({'success': False, 'message': 'Profilo non trovato'})
 
-    # Ottieni le strip LED compatibili con questo profilo
     strip_led_compatibili = profilo.get('stripLedCompatibili', [])
     strip_led_data = CONFIG_DATA.get('stripLed', {})
 
@@ -95,14 +91,12 @@ def get_opzioni_tensione(profilo_id, tipologia_strip=None):
     voltaggi_disponibili = set()
     for strip_id in strip_led_compatibili:
         strip_info = strip_led_data.get(strip_id, {})
-        # Filtra in base alla tipologia selezionata
         if tipologia_strip:
             if tipologia_strip == 'COB' and 'COB' not in strip_id:
                 continue
             elif tipologia_strip == 'SMD' and 'SMD' not in strip_id:
                 continue
             elif tipologia_strip == 'SPECIAL':
-                # Per SPECIAL, definisci qui la logica di filtro specifica
                 strip_info = strip_led_data.get(strip_id, {})
                 if strip_info.get('tipo') != 'SPECIAL':
                     continue
@@ -131,8 +125,7 @@ def get_opzioni_ip(profilo_id, tensione, tipologia_strip=None):
     ip_disponibili = set()
     for strip_id in strip_led_compatibili:
         strip_info = strip_led_data.get(strip_id, {})
-        
-        # Filtra in base alla tipologia selezionata
+
         if tipologia_strip:
             if tipologia_strip == 'COB' and 'COB' not in strip_id:
                 continue
@@ -168,8 +161,7 @@ def get_opzioni_temperatura_iniziale(profilo_id, tensione, ip, tipologia_strip=N
     temperature_disponibili = set()
     for strip_id in strip_led_compatibili:
         strip_info = strip_led_data.get(strip_id, {})
-        
-        # Filtra in base alla tipologia selezionata
+
         if tipologia_strip:
             if tipologia_strip == 'COB' and 'COB' not in strip_id:
                 continue
@@ -203,52 +195,41 @@ def get_dimmer_compatibili(strip_id):
         'dimmer_compatibili': dimmer_compatibili
     })
 
-# Endpoint per ottenere i dimmer compatibili con una determinata strip LED
 @app.route('/get_opzioni_dimmerazione/<strip_id>')
 def get_opzioni_dimmerazione(strip_id):
     dimmerazione = CONFIG_DATA.get('dimmerazione', {})
     opzioni_base = dimmerazione.get('opzioni', [])
-    
-    # Ottieni la lista di dimmer compatibili con questa strip
     compatibilita = dimmerazione.get('compatibilitaDimmer', {})
-    
-    # Cerchiamo il nome commerciale della strip selezionata
+
     strip_led_data = CONFIG_DATA.get('stripLed', {})
     strip_info = strip_led_data.get(strip_id, {})
     nome_commerciale = strip_info.get('nomeCommerciale', '')
     
     dimmer_compatibili = []
-    
-    # Se abbiamo un nome commerciale, cerchiamo i dimmer compatibili
+
     if nome_commerciale:
         for dimmer, strip_compatibili in compatibilita.items():
             if nome_commerciale in strip_compatibili:
                 dimmer_compatibili.append(dimmer)
-    
-    # Se non ci sono dimmer compatibili trovati tramite nome commerciale, 
-    # proviamo con l'ID della strip direttamente
+
     if not dimmer_compatibili:
         for dimmer, strip_compatibili in compatibilita.items():
             if strip_id in strip_compatibili:
                 dimmer_compatibili.append(dimmer)
-    
-    # Se non ci sono dimmer compatibili, include solo l'opzione NESSUN_DIMMER
+
     if not dimmer_compatibili and "NESSUN_DIMMER" in opzioni_base:
         opzioni_filtrate = ["NESSUN_DIMMER"]
     else:
-        # Altrimenti include tutti i dimmer compatibili più NESSUN_DIMMER
         opzioni_filtrate = dimmer_compatibili.copy()
         if "NESSUN_DIMMER" in opzioni_base and "NESSUN_DIMMER" not in opzioni_filtrate:
             opzioni_filtrate.append("NESSUN_DIMMER")
-    
-    # Ottieni i codici dei dimmer
+
     codici_dimmer = {}
     for dimmer in opzioni_filtrate:
         codice = dimmerazione.get('codiciDimmer', {}).get(dimmer, "")
         if codice:
             codici_dimmer[dimmer] = codice
-    
-    # Ottieni i nomi dei dimmer
+
     nomi_dimmer = {}
     for dimmer in opzioni_filtrate:
         nome = dimmerazione.get('nomeDimmer', {}).get(dimmer, "")
@@ -279,8 +260,7 @@ def get_opzioni_potenza(profilo_id, tensione, ip, temperatura, tipologia_strip=N
     
     for strip_id in strip_led_compatibili:
         strip_info = strip_led_data.get(strip_id, {})
-        
-        # Filtra in base alla tipologia selezionata
+
         if tipologia_strip:
             if tipologia_strip == 'COB' and 'COB' not in strip_id:
                 continue
@@ -290,8 +270,7 @@ def get_opzioni_potenza(profilo_id, tensione, ip, temperatura, tipologia_strip=N
                 strip_info = strip_led_data.get(strip_id, {})
                 if strip_info.get('tipo') != 'SPECIAL':
                     continue
-        
-        # Verifica se la strip soddisfa i parametri selezionati
+
         if (strip_info.get('tensione') == tensione and 
             strip_info.get('ip') == ip and 
             temperatura in strip_info.get('temperaturaColoreDisponibili', [])):
@@ -331,8 +310,7 @@ def get_opzioni_potenza(profilo_id, tensione, ip, temperatura, tipologia_strip=N
 def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipologia_strip = None):
     try:
         print(f"Chiamata a get_strip_led_filtrate con: {profilo_id}, {tensione}, {ip}, {temperatura}, {potenza}")
-        
-        # Decodifica il parametro potenza (in caso sia codificato)
+
         potenza = potenza.replace('-', ' ')
         potenza = potenza.replace('_', '/')
 
@@ -343,8 +321,7 @@ def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipol
         
         if not profilo:
             return jsonify({'success': False, 'message': 'Profilo non trovato'})
-        
-        # Ottieni le strip LED compatibili con questo profilo
+
         strip_led_compatibili = profilo.get('stripLedCompatibili', [])
         strip_led_data = CONFIG_DATA.get('stripLed', {})
         
@@ -362,7 +339,6 @@ def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipol
                     if strip_info.get('tipo') != 'SPECIAL':
                         continue
 
-            # Verifica la compatibilità con tutti i parametri
             if (strip_info.get('tensione') == tensione and 
                 strip_info.get('ip') == ip and 
                 temperatura in strip_info.get('temperaturaColoreDisponibili', []) and
@@ -392,28 +368,18 @@ def get_strip_led_filtrate(profilo_id, tensione, ip, temperatura, potenza, tipol
 @app.route('/get_opzioni_alimentatore/<tipo_alimentazione>/<tensione_strip>/<potenza_consigliata>', methods=['GET'])
 def get_opzioni_alimentatore(tipo_alimentazione, tensione_strip, potenza_consigliata=None):
     try:
-        # Qui la logica per caricare i dati degli alimentatori
-        # Possiamo usare i dati dal file JSON che hai condiviso
-        
         alimentatori = []
-        
-        # Converti la potenza consigliata in intero se presente
         potenza_consigliata_int = 0
         if potenza_consigliata:
             try:
                 potenza_consigliata_int = int(potenza_consigliata)
             except ValueError:
-                # Se non è un numero valido, ignoriamo la potenza consigliata
                 pass
-        
-        # Ottieni i dettagli degli alimentatori dal CONFIG_DATA
+
         dettagli_alimentatori = CONFIG_DATA.get('dettagliAlimentatori', {})
-        
-        # Utilizziamo i dati del file JSON fornito
-        # Per ON-OFF, filtriamo gli alimentatori standard (non dimmerabili)
+
         if tipo_alimentazione == 'ON-OFF':
             if tensione_strip == '24V':
-                # Lista dei possibili alimentatori per questo tipo e tensione
                 alimentatori_possibili = [
                     {'id': 'SERIE_AT24', 'nome': 'SERIE AT24', 'descrizione': 'Carcassa in lamiera forata di acciaio zincato, per assicurare una corretta ventilazione.'},
                     {'id': 'SERIE_ATUS', 'nome': 'SERIE ATUS', 'descrizione': 'Alimentatore in tensione costante 24V, forma ultra slim, per interni (IP20). Carcassa in policarbonato bianco.'},
@@ -421,26 +387,21 @@ def get_opzioni_alimentatore(tipo_alimentazione, tensione_strip, potenza_consigl
                     {'id': 'SERIE_AT24IP67', 'nome': 'SERIE AT24IP67', 'descrizione': 'Alimentatore in tensione costante 24V per installazione in esterno (IP67). Con cavi flessibili in ingresso e uscita.'},
                     {'id': 'SERIE_ATN24IP67', 'nome': 'SERIE ATN24IP67', 'descrizione': 'Alimentatore in tensione costante 24V per installazione in esterno. Scatola in alluminio con cavi flessibili in ingresso e uscita.'}
                 ]
-                
-                # Se c'è una potenza consigliata, filtra gli alimentatori in base alla potenza
+
                 if potenza_consigliata_int > 0:
                     for alim in alimentatori_possibili:
                         alim_details = dettagli_alimentatori.get(alim['id'], {})
                         potenze = alim_details.get('potenze', [])
-                        # Verifica se almeno una potenza è >= alla potenza consigliata
                         if any(p >= potenza_consigliata_int for p in potenze):
                             alimentatori.append(alim)
                 else:
-                    # Se non c'è potenza consigliata, mostra tutti
                     alimentatori.extend(alimentatori_possibili)
                     
             elif tensione_strip == '48V':
-                # Lista dei possibili alimentatori per 48V
                 alimentatori_possibili = [
                     {'id': 'SERIE_ATS48IP44', 'nome': 'SERIE ATS48IP44', 'descrizione': 'Alimentatore in tensione costante 48V per installazione in interno (IP44).'}
                 ]
-                
-                # Se c'è una potenza consigliata, filtra gli alimentatori
+
                 if potenza_consigliata_int > 0:
                     for alim in alimentatori_possibili:
                         alim_details = dettagli_alimentatori.get(alim['id'], {})
@@ -449,17 +410,14 @@ def get_opzioni_alimentatore(tipo_alimentazione, tensione_strip, potenza_consigl
                             alimentatori.append(alim)
                 else:
                     alimentatori.extend(alimentatori_possibili)
-        
-        # Per DIMMERABILE_TRIAC, filtriamo gli alimentatori dimmerabili
+
         elif tipo_alimentazione == 'DIMMERABILE_TRIAC':
             if tensione_strip == '24V':
-                # Lista dei possibili alimentatori dimmerabili
                 alimentatori_possibili = [
                     {'id': 'SERIE_ATD24', 'nome': 'SERIE ATD24', 'descrizione': 'Alimentatore dimmerabile TRIAC, in tensione costante 24V DC, per installazione in interno (IP20).'},
                     {'id': 'SERIE_ATD24IP67', 'nome': 'SERIE ATD24IP67', 'descrizione': 'Alimentatore dimmerabile TRIAC, in tensione costante 24V per installazione in esterno (IP67). Con cavi flessibili in ingresso e uscita.'}
                 ]
-                
-                # Se c'è una potenza consigliata, filtra gli alimentatori
+
                 if potenza_consigliata_int > 0:
                     for alim in alimentatori_possibili:
                         alim_details = dettagli_alimentatori.get(alim['id'], {})
@@ -500,11 +458,7 @@ def calcola_potenza_alimentatore():
     data = request.json
     potenza_per_metro = data.get('potenzaPerMetro', 0)
     lunghezza_metri = data.get('lunghezzaMetri', 0)
-    
-    # Calcola la potenza totale con un margine di sicurezza del 20%
     potenza_totale = potenza_per_metro * lunghezza_metri * 1.2
-    
-    # Trova la potenza standard di alimentatore immediatamente superiore
     potenze_standard = [30, 60, 100, 150, 200, 320]
     potenza_consigliata = next((p for p in potenze_standard if p >= potenza_totale), potenze_standard[-1])
     
@@ -547,57 +501,38 @@ def calcola_lunghezze():
     dim_richiesta = data.get('lunghezzaRichiesta', 0)
     strip_id = data.get('stripLedSelezionata')
     potenza_selezionata = data.get('potenzaSelezionata')
-    
-    # Default values
-    taglio_minimo = 1  # Default se non troviamo un valore specifico
+    taglio_minimo = 1
     spazio_produzione = CONFIG_DATA.get('spazioProduzione', 5)
-    
-    # Ottieni il taglio minimo per la strip e la potenza selezionata
+
     if strip_id and strip_id != 'NO_STRIP' and potenza_selezionata:
-        # Ottieni la configurazione della strip
         strip_info = CONFIG_DATA.get('stripLed', {}).get(strip_id, {})
-        
-        # Ottieni le opzioni di potenza e i tagli minimi
         potenze_disponibili = strip_info.get('potenzeDisponibili', [])
         tagli_minimi = strip_info.get('taglioMinimo', [])
-        
-        # Trova l'indice dell'opzione di potenza selezionata
         potenza_index = -1
         for i, potenza in enumerate(potenze_disponibili):
             if potenza == potenza_selezionata:
                 potenza_index = i
                 break
-        
-        # Ottieni il taglio minimo corrispondente
+
         if potenza_index >= 0 and potenza_index < len(tagli_minimi):
             taglio_minimo_str = tagli_minimi[potenza_index]
-            
-            # Analizza il valore del taglio minimo
-            # Il formato potrebbe essere "62,5mm" o "41.7mm"
+
             import re
             match = re.search(r'(\d+(?:[.,]\d+)?)', taglio_minimo_str)
             if match:
-                # Sostituisci la virgola con il punto per il parsing corretto del float
                 taglio_minimo_val = match.group(1).replace(',', '.')
                 try:
                     taglio_minimo = float(taglio_minimo_val)
                 except ValueError:
                     print(f"Errore nel parsing del valore del taglio minimo: {taglio_minimo_str}")
-    
-    # Se la lunghezza richiesta è fornita
+
     if dim_richiesta > 0:
-        # Calcola il multiplo più vicino minore o uguale alla lunghezza richiesta
         proposta1 = int(dim_richiesta // taglio_minimo * taglio_minimo)
-        
-        # Calcola il multiplo più vicino maggiore o uguale alla lunghezza richiesta
         proposta2 = int(((dim_richiesta + taglio_minimo - 0.01) // taglio_minimo) * taglio_minimo)
-        
-        # Assicurati che proposta2 sia maggiore di proposta1
-        # Questo gestisce il caso in cui la lunghezza richiesta è già un multiplo di taglio_minimo
+
         if proposta2 <= proposta1:
             proposta2 = int(proposta1 + taglio_minimo)
     else:
-        # Valori predefiniti se non viene fornita una dimensione
         proposta1 = 0
         proposta2 = 0
     

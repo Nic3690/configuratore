@@ -3,7 +3,6 @@ import { updateProgressBar } from '../utils.js';
 import { finalizzaConfigurazione } from '../api.js';
 
 export function initStep6Listeners() {
-  // Torna da proposte a controllo (step 5)
   $('#btn-torna-step5-from-proposte').on('click', function(e) {
     e.preventDefault();
     
@@ -12,16 +11,12 @@ export function initStep6Listeners() {
       updateProgressBar(5);
     });
   });
-  
-  // Continua dalle proposte al riepilogo (step 7)
+
   $('#btn-continua-step6').on('click', function(e) {
     e.preventDefault();
-    
-    // Passiamo al riepilogo
     finalizzaConfigurazione();
   });
 
-  // Gestione delle proposte di lunghezza standard
   $('.btn-seleziona-proposta').on('click', function() {
     const proposta = $(this).data('proposta');
     const valore = parseInt($(this).data('valore'), 10);
@@ -33,13 +28,10 @@ export function initStep6Listeners() {
       configurazione.lunghezzaRichiesta = valore;
       $('#step6-lunghezza-finale').text(valore);
     }
-    
-    // Abilita il pulsante per continuare
     $('#btn-continua-step6').prop('disabled', false);
   });
 }
 
-// Funzione per calcolare le proposte di lunghezza
 function calcolaProposte(lunghezzaRichiesta) {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -72,12 +64,10 @@ function calcolaProposte(lunghezzaRichiesta) {
 }
 
 export function vaiAlleProposte() {
-  // Popola i badge con le informazioni correnti
   $('#profilo-nome-step6').text(configurazione.nomeModello);
   $('#tipologia-nome-step6').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
   
   if (configurazione.stripLedSelezionata !== 'senza_strip' && configurazione.stripLedSelezionata !== 'NO_STRIP') {
-    // Usa il nome commerciale se disponibile
     const nomeStripLed = configurazione.nomeCommercialeStripLed || 
                          mappaStripLedVisualizzazione[configurazione.stripLedSelezionata] || 
                          configurazione.stripLedSelezionata;
@@ -86,18 +76,13 @@ export function vaiAlleProposte() {
   } else {
     $('#strip-nome-step6').text('Senza Strip LED');
   }
-  
-  // Memorizza la lunghezza originale richiesta dall'utente
+
   const lunghezzaOriginale = configurazione.lunghezzaRichiesta || 0;
   $('#lunghezza-attuale').text(lunghezzaOriginale);
   $('#step6-lunghezza-finale').text(lunghezzaOriginale);
-
-  // Rimuove eventuali avvisi precedenti
   $('#spazio-buio-warning').remove();
 
-  // Per i profili interi, utilizziamo un approccio diverso
   if (configurazione.tipologiaSelezionata === 'profilo_intero') {
-    // Per profili interi, mostriamo un messaggio che indica la lunghezza fissa
     $('#step6-proposte-container').html(`
       <div class="alert alert-info">
         <h5>Profilo intero con lunghezza standard</h5>
@@ -105,11 +90,8 @@ export function vaiAlleProposte() {
         <p>Non sono necessarie proposte di lunghezza per i profili interi.</p>
       </div>
     `);
-    
-    // Aggiorna la lunghezza finale
+
     $('#step6-lunghezza-finale').text(lunghezzaOriginale);
-    
-    // Abilita il pulsante continua
     $('#btn-continua-step6').prop('disabled', false);
   } 
   else if (lunghezzaOriginale && lunghezzaOriginale > 0) {
@@ -122,30 +104,20 @@ export function vaiAlleProposte() {
 
     calcolaProposte(lunghezzaOriginale)
       .then(data => {
-        // Imposta lo spazio di produzione in base ai dati ricevuti o utilizza il valore di default 5mm
         const spazioProduzione = data.spazioProduzione || 5;
-        
-        // Verifica se la lunghezza originale coincide con una delle proposte
         const coincideConProposta1 = lunghezzaOriginale === data.proposte.proposta1;
         const coincideConProposta2 = lunghezzaOriginale === data.proposte.proposta2;
         const coincideConProposte = coincideConProposta1 || coincideConProposta2;
-        
-        // Calcola lo spazio buio (lunghezza originale - proposta per difetto)
-        // La proposta per difetto è sempre proposta1 (la più piccola)
         const spazioBuio = lunghezzaOriginale - data.proposte.proposta1;
-        
-        // Crea l'avviso dello spazio buio, ma non lo mostra ancora
+
         if (spazioBuio > 0) {
-          // Crea l'elemento di avviso ma non lo mostra ancora
           let warningElement = $(`<p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="display: none; font-size: 1rem; color:#e83f34 !important">
             <strong>ATTENZIONE:</strong> se si sceglie questa misura si verificherà uno spazio buio nel profilo di ${spazioBuio}mm
           </p>`);
-          
-          // Inserisci l'avviso all'interno del div della lunghezza selezionata
+
           $('.alert.alert-success.mt-4').append(warningElement);
         }
-        
-        // Determina quante colonne mostrare (2 o 3)
+
         const numeroCols = coincideConProposte ? 6 : 4;
         
         let proposteHTML = `
@@ -171,8 +143,7 @@ export function vaiAlleProposte() {
                 </div>
               </div>
             </div>`;
-        
-        // Aggiungi la terza opzione solo se la lunghezza originale è diversa dalle proposte
+
         if (!coincideConProposte) {
           proposteHTML += `
             <div class="col-md-${numeroCols} mb-2">
@@ -191,9 +162,7 @@ export function vaiAlleProposte() {
         $('#step6-proposte-container').html(proposteHTML);
 
         $('.btn-seleziona-proposta').on('click', function() {
-          // Rimuove la classe "active" da tutti i bottoni
           $('.btn-seleziona-proposta').removeClass('active');
-          // Aggiunge classe "active" solo al bottone cliccato
           $(this).addClass('active');
           
           const proposta = $(this).data('proposta');
@@ -201,20 +170,14 @@ export function vaiAlleProposte() {
           
           configurazione.lunghezzaRichiesta = valore;
           $('#step6-lunghezza-finale').text(valore);
-          
-          // Nascondi sempre l'avviso dello spazio buio prima
           $('#spazio-buio-warning').hide();
-          
-          // Mostra l'avviso dello spazio buio solo se è selezionata la lunghezza originale
-          // e se questa è maggiore della proposta1 (quindi c'è uno spazio buio)
+
           if (proposta === 'originale' && spazioBuio > 0) {
             $('#spazio-buio-warning').show();
           }
-
           $('#btn-continua-step6').prop('disabled', false);
         });
-        
-        // Se c'è corrispondenza con una delle proposte, seleziona automaticamente quella proposta
+
         if (coincideConProposta1) {
           $('.btn-seleziona-proposta[data-proposta="1"]').addClass('active').trigger('click');
         } else if (coincideConProposta2) {
@@ -228,7 +191,6 @@ export function vaiAlleProposte() {
             <p>Non è stato possibile calcolare le proposte di lunghezza. Verrà utilizzata la lunghezza originale.</p>
           </div>
         `);
-        // In caso di errore, abilita comunque il pulsante continua
         $('#btn-continua-step6').prop('disabled', false);
       });
   } else {

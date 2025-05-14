@@ -22,8 +22,7 @@
       </div>
       <div class="col-md-3"></div>
     </header>
-    
-    <!-- Barra di progresso con 5 step -->
+
     <div class="step-progress mb-4">
       <div class="step-item active" id="progress-step1">
         <div class="step-number">1</div>
@@ -303,11 +302,9 @@
         <h3 class="mb-3">Personalizzazione lunghezza</h3>
         
         <div id="istruzioni-misurazione" class="mb-4">
-          <!-- Qui verranno inserite le istruzioni specifiche per ogni forma -->
         </div>
         
         <div id="misurazione-container">
-          <!-- Qui verranno inseriti i campi di misurazione in base alla forma selezionata -->
           <div class="form-group mb-4 lunghezza-personalizzata-container">
             <label for="lunghezza-personalizzata">Lunghezza richiesta (mm):</label>
             <input type="number" class="form-control" id="lunghezza-personalizzata" placeholder="Inserisci la lunghezza in millimetri" min="100">
@@ -316,8 +313,6 @@
             </div>
           </div>
         </div>
-        
-        <!-- L'avviso di non assemblaggio verrà inserito qui dinamicamente quando necessario -->
         
         <div id="proposte-container" class="alert alert-info" style="display: none;">
           <h5>Proposte di lunghezza standard</h5>
@@ -452,8 +447,7 @@
           </div>
         </div>
       </div>
-      
-      <!-- Sottomenu per Special Strip, inizialmente nascosto -->
+
       <div class="container mb-5" id="special-strip-container" style="display: none;">
         <h3 class="mb-3">Tipo di Special Strip</h3>
         <div class="row" id="special-strip-options">
@@ -593,8 +587,7 @@
         </div>
       </div>
     </div>
-    
-    <!-- Sezione strip LED con potenza e modello integrati -->
+
     <div class="step-section" id="step3-temperatura-potenza">
       <div class="row">
         <div class="col-12">
@@ -615,18 +608,15 @@
       <div class="container mb-5">
         <h3 class="mb-3">Potenza strip LED</h3>
         <div class="row" id="potenza-container">
-          <!-- Qui verranno caricate dinamicamente le opzioni di potenza -->
         </div>
       </div>
-      
-      <!-- Sezione per la selezione del modello strip LED -->
+
       <div class="container mb-5" id="strip-led-model-section" style="display: none;">
         <h3 class="mb-3">Modello strip LED</h3>
         <div class="alert alert-info mb-3">
           <p>Seleziona il modello specifico di strip LED compatibile con i parametri selezionati.</p>
         </div>
         <div class="row" id="strip-led-compatibili-container">
-          <!-- Qui verranno caricati dinamicamente i modelli di strip LED -->
         </div>
       </div>
       
@@ -823,7 +813,6 @@
       </div>
     </div>
 
-    <!-- Step proposte di lunghezza standard -->
     <div class="step-section" id="step6-proposte">
       <div class="row">
         <div class="col-12">
@@ -888,7 +877,6 @@
       </div>
     </div>
 
-    <!-- Step riepilogo configurazione -->
     <div class="step-section" id="step7-riepilogo">
       <div class="row">
         <div class="col-12">
@@ -916,84 +904,61 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
-<!-- Script per eliminare pulsanti duplicati -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Funzione per scrollare all'inizio della pagina
     function scrollToTop() {
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
     }
-    
-    // Aggiungi il listener a tutti i pulsanti di navigazione
+
     const allButtons = document.querySelectorAll('button[id^="btn-"]');
     allButtons.forEach(function(button) {
       button.addEventListener('click', function() {
-        // Piccolo ritardo per permettere l'esecuzione di altri codici
         setTimeout(scrollToTop, 50);
       });
     });
-    
-    // Controlla i cambiamenti di visibilità delle sezioni
+
     setInterval(function() {
       const visibleSection = document.querySelector('.step-section[style*="display: block"]');
       if (visibleSection && !visibleSection.hasAttribute('data-scrolled')) {
         scrollToTop();
         visibleSection.setAttribute('data-scrolled', 'true');
-        
-        // Rimuovi l'attributo dagli altri elementi
+
         document.querySelectorAll('.step-section:not([style*="display: block"])').forEach(function(section) {
           section.removeAttribute('data-scrolled');
         });
       }
     }, 300);
-    
-    // Estendi jQuery per includere lo scroll nelle funzioni di transizione
+
     if (typeof jQuery !== 'undefined') {
       const $ = jQuery;
-      
-      // Salva il riferimento al metodo originale
       const originalFadeOut = $.fn.fadeOut;
-      
-      // Sovrascrivi il metodo fadeOut per includere lo scroll
+
       $.fn.fadeOut = function(speed, callback) {
-        // Se speed è una funzione, considerala come callback
         if (typeof speed === 'function') {
           callback = speed;
           speed = null;
         }
-        
-        // Esegui lo scroll all'inizio
         scrollToTop();
-        
-        // Chiama il metodo originale
         return originalFadeOut.apply(this, arguments);
       };
     }
 
-    // Funzione per rimuovere pulsanti duplicati
     function fixDuplicateButtons() {
-      // Cerca tutte le sezioni visibili
       const visibleSections = document.querySelectorAll('.step-section[style*="display: block"]');
-      
-      // Per ogni sezione visibile
       visibleSections.forEach(function(section) {
-        // Conta i bottoni di navigazione
         const navigationButtons = section.querySelectorAll('.row .btn-secondary, .row .btn-primary');
         const buttonRows = section.querySelectorAll('.row:has(.btn-secondary), .row:has(.btn-primary)');
         
         if (buttonRows.length > 1) {
-          // Mantieni solo la prima riga di bottoni
           for (let i = 1; i < buttonRows.length; i++) {
             buttonRows[i].style.display = 'none';
           }
         }
       });
     }
-    
-    // Esegui la funzione ogni 500ms
     setInterval(fixDuplicateButtons, 500);
   });
 </script>

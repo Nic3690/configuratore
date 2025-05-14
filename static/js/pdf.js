@@ -1,14 +1,7 @@
 import { calcolaCodiceProdottoCompleto } from './codici_prodotto.js'
 
-/**
- * Genera e scarica un PDF con i dati della configurazione
- * @param {string} codiceProdotto - Codice prodotto finale
- * @param {object} configurazione - Oggetto configurazione
- */
 export function generaPDF(codiceProdotto, configurazione) {
-	// Verifica se le librerie necessarie sono già caricate
 	if (typeof jspdf === 'undefined') {
-	  // Carica prima le librerie necessarie
 	  const script1 = document.createElement('script');
 	  script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
 	  script1.onload = function() {
@@ -21,34 +14,24 @@ export function generaPDF(codiceProdotto, configurazione) {
 	  };
 	  document.head.appendChild(script1);
 	} else {
-	  // Se le librerie sono già caricate, genera direttamente il PDF
 	  generaPDFContenuto(codiceProdotto, configurazione);
 	}
   }
-  
-  /**
-   * Funzione interna per generare il contenuto del PDF
-   * @private
-   */
+
   function generaPDFContenuto(codiceProdotto, configurazione) {
 	try {
 	  const tuttiCodici = calcolaCodiceProdottoCompleto();
-	  // Crea il documento PDF
 	  const { jsPDF } = window.jspdf;
 	  const doc = new jsPDF({
 		orientation: 'portrait',
 		unit: 'mm',
 		format: 'a4'
 	  });
-	  
-	  // Stile del documento
+
 	  doc.setFont('helvetica', 'bold');
 	  doc.setFontSize(20);
-	  
-	  // Intestazione
 	  doc.text('Riepilogo della configurazione', 105, 20, { align: 'center' });
-	  
-	  // Logo REDO (se disponibile)
+
 	  try {
 		const logoImg = new Image();
 		logoImg.src = '/static/img/logo-redo-nero.png';
@@ -56,17 +39,14 @@ export function generaPDF(codiceProdotto, configurazione) {
 	  } catch (e) {
 		console.warn('Logo non disponibile');
 	  }
-	  
-	  // Codice prodotto
+
 	  doc.setFontSize(14);
 	  doc.text(`Codice prodotto: ${codiceProdotto}`, 15, 35);
-	  
-	  // Data attuale
+
 	  const dataOggi = new Date().toLocaleDateString('it-IT');
 	  doc.setFontSize(10);
 	  doc.text(`Data: ${dataOggi}`, 195, 20, { align: 'right' });
-	  
-	  // Mappa per tradurre i valori interni in nomi visualizzabili
+
 	  const mappaNomi = {
 		// Categorie
 		'nanoprofili': 'Nanoprofili',
@@ -117,40 +97,31 @@ export function generaPDF(codiceProdotto, configurazione) {
 		'LATERALE_SX': 'Laterale sinistra',
 		'RETRO': 'Retro'
 	  };
-	  
-	  // Funzione per ottenere il nome visualizzabile
+
 	  const getNomeVisualizzabile = (codice) => {
 		return mappaNomi[codice] || codice;
 	  };
-	  
-	  // Prepara i dati per la tabella
+
 	  const datiTabella = [];
-	  
-	  // Categoria
+
 	  if (configurazione.categoriaSelezionata) {
 		datiTabella.push(['Categoria', getNomeVisualizzabile(configurazione.categoriaSelezionata)]);
 	  }
-	  
-	  // Modello
+
 	  datiTabella.push(['Modello', (configurazione.nomeModello || codiceProdotto) + 
 	  (tuttiCodici && tuttiCodici.profilo ? ' - ' + tuttiCodici.profilo : '')]);
-	  
-	  // Tipologia
+
 	  if (configurazione.tipologiaSelezionata) {
 		datiTabella.push(['Tipologia', getNomeVisualizzabile(configurazione.tipologiaSelezionata)]);
 	  }
-	  
-	  // Lunghezza richiesta
+
 	  if (configurazione.lunghezzaRichiesta) {
 		datiTabella.push(['Lunghezza richiesta', `${configurazione.lunghezzaRichiesta}mm`]);
 	  }
-	  
-	  // Se c'è una strip LED
+
 	  if (configurazione.stripLedSelezionata && configurazione.stripLedSelezionata !== 'NO_STRIP' && configurazione.includeStripLed !== false) {
-		// Nome strip LED
 		datiTabella.push(['Strip LED', (configurazione.nomeCommercialeStripLed || configurazione.stripLedSelezionata) + 
-		(tuttiCodici && tuttiCodici.stripLed ? ' - ' + tuttiCodici.stripLed : '')]);		
-		// Tipologia strip
+		(tuttiCodici && tuttiCodici.stripLed ? ' - ' + tuttiCodici.stripLed : '')]);
 		if (configurazione.tipologiaStripSelezionata) {
 		  let tipologiaText = configurazione.tipologiaStripSelezionata;
 		  if (configurazione.tipologiaStripSelezionata === 'COB') {
@@ -160,77 +131,63 @@ export function generaPDF(codiceProdotto, configurazione) {
 		  }
 		  datiTabella.push(['Tipologia Strip', tipologiaText]);
 		}
-		
-		// Potenza strip
+
 		if (configurazione.potenzaSelezionata) {
 		  datiTabella.push(['Potenza', configurazione.potenzaSelezionata]);
 		}
 	  } else {
 		datiTabella.push(['Strip LED', 'Senza Strip LED']);
 	  }
-	  
-	  // Alimentazione - MODIFICATO PER STRIP 220V
+
 	  if (configurazione.tensioneSelezionato === '220V') {
-		// Per strip 220V, mostriamo un'etichetta speciale
 		datiTabella.push(['Alimentazione', 'Strip 220V (no alimentatore)']);
 	  } else if (configurazione.alimentazioneSelezionata) {
 		datiTabella.push(['Alimentazione', getNomeVisualizzabile(configurazione.alimentazioneSelezionata), tuttiCodici.alimentatore]);
 	  }
-	  
-	  // Alimentatore - MODIFICATO PER STRIP 220V
+
 	  if (configurazione.tipologiaAlimentatoreSelezionata && 
 		  configurazione.alimentazioneSelezionata !== 'SENZA_ALIMENTATORE' &&
 		  configurazione.tensioneSelezionato !== '220V') {
 		datiTabella.push(['Alimentatore', configurazione.tipologiaAlimentatoreSelezionata, tuttiCodici.alimentatore]);
 	  }
-	  
-	  // Potenza consigliata - MODIFICATO PER STRIP 220V
+
 	  if (configurazione.potenzaConsigliataAlimentatore && 
 		  configurazione.tensioneSelezionato !== '220V') {
 		datiTabella.push(['Potenza consigliata', `${configurazione.potenzaConsigliataAlimentatore}W`]);
 	  }
-	  
-	  // Dimmer
+
 	  if (configurazione.dimmerSelezionato) {
 		if (configurazione.tensioneSelezionato === '220V' && configurazione.dimmerSelezionato === 'DIMMER_A_PULSANTE_SEMPLICE') {
-		// Per strip 220V, mostriamo specificatamente il modello CTR130
 		  datiTabella.push(['Dimmer', 'CTR130 - Dimmerabile TRIAC tramite pulsante e sistema TUYA']);
 		} else {
 		  datiTabella.push(['Dimmer', getNomeVisualizzabile(configurazione.dimmerSelezionato).replace(/_/g, ' '), tuttiCodici.dimmer]);
 		}
 	  }
-	  
-	  // Alimentazione cavo
+
 	  if (configurazione.tipoAlimentazioneCavo) {
 		datiTabella.push(['Alimentazione cavo', getNomeVisualizzabile(configurazione.tipoAlimentazioneCavo)]);
 	  }
-	  
-	  // Lunghezza cavo ingresso
+
 	  if (configurazione.lunghezzaCavoIngresso) {
 		datiTabella.push(['Lunghezza cavo ingresso', `${configurazione.lunghezzaCavoIngresso}mm`]);
 	  }
-	  
-	  // Lunghezza cavo uscita (solo se alimentazione doppia)
+
 	  if (configurazione.tipoAlimentazioneCavo === 'ALIMENTAZIONE_DOPPIA' && configurazione.lunghezzaCavoUscita) {
 		datiTabella.push(['Lunghezza cavo uscita', `${configurazione.lunghezzaCavoUscita}mm`]);
 	  }
-	  
-	  // Uscita cavo
+
 	  if (configurazione.uscitaCavoSelezionata) {
 		datiTabella.push(['Uscita cavo', getNomeVisualizzabile(configurazione.uscitaCavoSelezionata)]);
 	  }
-	  
-	  // Forma di taglio
+
 	  if (configurazione.formaDiTaglioSelezionata) {
 		datiTabella.push(['Forma di taglio', getNomeVisualizzabile(configurazione.formaDiTaglioSelezionata)]);
 	  }
-	  
-	  // Finitura
+
 	  if (configurazione.finituraSelezionata) {
 		datiTabella.push(['Finitura', getNomeVisualizzabile(configurazione.finituraSelezionata)]);
 	  }
-	  
-	  // Se è una forma complessa, aggiungi le lunghezze multiple
+
 	  if (configurazione.lunghezzeMultiple && Object.keys(configurazione.lunghezzeMultiple).length > 0) {
 		Object.entries(configurazione.lunghezzeMultiple).forEach(([lato, valore]) => {
 		  if (!valore) return;
@@ -249,20 +206,18 @@ export function generaPDF(codiceProdotto, configurazione) {
 		  datiTabella.push([etichetta, `${valore}mm`]);
 		});
 	  }
-	  
-	  // Potenza totale
+
 	  if (configurazione.potenzaTotale) {
 		datiTabella.push(['Potenza totale', `${configurazione.potenzaTotale}W`]);
 	  }
-	  
-	  // Genera tabella con jspdf-autotable
+
 	  doc.autoTable({
 		startY: 45,
 		head: [['Parametro', 'Valore']],
 		body: datiTabella,
 		theme: 'grid',
 		headStyles: { 
-		  fillColor: [232, 63, 52], // Rosso come nell'interfaccia utente
+		  fillColor: [232, 63, 52],
 		  textColor: [255, 255, 255],
 		  fontSize: 12,
 		  fontStyle: 'bold',
@@ -284,18 +239,14 @@ export function generaPDF(codiceProdotto, configurazione) {
 		},
 		margin: { top: 45, right: 15, bottom: 15, left: 15 }
 	  });
-	  
-	  // Nota finale
+
 	  const finalY = doc.lastAutoTable.finalY + 10;
 	  doc.setFontSize(10);
 	  doc.setFont('helvetica', 'normal');
 	  doc.text('Nota: Lo spazio necessario per tappi e saldatura è di 5mm.', 15, finalY);
-	  
-	  // Informazioni aziendali
 	  doc.setFontSize(8);
 	  doc.text('REDO Srl - Configuratore Profili LED', 105, 285, { align: 'center' });
-	  
-	  // Scarica il PDF
+
 	  const filename = `configurazione_${codiceProdotto}_${Date.now()}.pdf`;
 	  doc.save(filename);
 	  

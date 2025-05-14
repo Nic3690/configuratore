@@ -6,19 +6,17 @@ import { vaiAllaTemperaturaEPotenza } from './step3.js';
 export function initStep2Listeners() {
   $('#btn-continua-step2').on('click', function(e) {
     e.preventDefault();
-    
     if (configurazione.profiloSelezionato && configurazione.tipologiaSelezionata) {
       vaiAllaPersonalizzazione();
     } else {
       let messaggi = [];
       if (!configurazione.profiloSelezionato) messaggi.push("un profilo");
       if (!configurazione.tipologiaSelezionata) messaggi.push("una tipologia");
-      
+
       alert("Seleziona " + messaggi.join(", ") + " prima di continuare");
     }
   });
-  
-  // Torna dalla personalizzazione al modello
+
   $('#btn-torna-step2-modello').on('click', function(e) {
     e.preventDefault();
     
@@ -26,19 +24,16 @@ export function initStep2Listeners() {
       $("#step2-modello").fadeIn(300);
     });
   });
-  
-  // Continua dalla personalizzazione alle opzioni strip
+
   $('#btn-continua-personalizzazione').on('click', function(e) {
     e.preventDefault();
     
     if (!checkPersonalizzazioneComplete()) {
       return;
     }
-    
     vaiAlleOpzioniStripLed();
   });
-  
-  // Torna dalle opzioni strip alla personalizzazione
+
   $('#btn-torna-step2-personalizzazione').on('click', function(e) {
     e.preventDefault();
     
@@ -46,8 +41,7 @@ export function initStep2Listeners() {
       $("#step2-personalizzazione").fadeIn(300);
     });
   });
-  
-  // Torna dai parametri alla tipologia strip
+
   $('#btn-torna-step2-parametri').on('click', function(e) {
     e.preventDefault();
     
@@ -55,13 +49,11 @@ export function initStep2Listeners() {
       $("#step2-tipologia-strip").fadeIn(300);
     });
   });
-  
-  // Continua dai parametri alla potenza
+
   $('#btn-continua-parametri').on('click', function(e) {
     e.preventDefault();
     
     if (configurazione.tensioneSelezionato && configurazione.ipSelezionato && configurazione.temperaturaSelezionata) {
-      // MODIFICATO: Vai direttamente alla selezione della potenza invece della selezione strip
       vaiAllaTemperaturaEPotenza();
     } else {
       let messaggi = [];
@@ -72,8 +64,7 @@ export function initStep2Listeners() {
       alert("Seleziona " + messaggi.join(", ") + " prima di continuare");
     }
   });
-  
-  // Torna dalla tipologia strip alle opzioni strip
+
   $('#btn-torna-step2-option-strip').on('click', function(e) {
     e.preventDefault();
     
@@ -81,8 +72,7 @@ export function initStep2Listeners() {
       $("#step2-option-strip").fadeIn(300);
     });
   });
-  
-  // Continua dalla tipologia strip ai parametri
+
   $('#btn-continua-tipologia-strip').on('click', function(e) {
     e.preventDefault();
     
@@ -90,8 +80,7 @@ export function initStep2Listeners() {
       alert("Seleziona una tipologia di strip LED prima di continuare");
       return;
     }
-    
-    // Se è selezionata SPECIAL ma non è stato selezionato un tipo specifico
+
     if (configurazione.tipologiaStripSelezionata === 'SPECIAL' && !configurazione.specialStripSelezionata) {
       alert("Seleziona un tipo di special strip prima di continuare");
       return;
@@ -99,8 +88,7 @@ export function initStep2Listeners() {
     
     vaiAiParametriStripLed();
   });
-  
-  // Scelta strip sì/no
+
   $(document).on('click', '.strip-option-card', function() {
     $('.strip-option-card').removeClass('selected');
     $(this).addClass('selected');
@@ -120,13 +108,9 @@ $('#btn-continua-step2-option').on('click', function(e) {
   }
   
   if (configurazione.includeStripLed) {
-    // L'utente ha scelto di includere una strip LED, continua con il flusso normale
     vaiAllaTipologiaStrip();
   } else {
-    // L'utente ha scelto di non includere una strip LED
     configurazione.stripLedSelezionata = 'NO_STRIP';
-    
-    // Impostiamo i valori necessari per saltare gli step intermedi
     configurazione.alimentazioneSelezionata = 'SENZA_ALIMENTATORE';
     configurazione.tipologiaAlimentatoreSelezionata = null;
     configurazione.dimmerSelezionato = 'NESSUN_DIMMER';
@@ -134,21 +118,17 @@ $('#btn-continua-step2-option').on('click', function(e) {
     configurazione.lunghezzaCavoIngresso = 0;
     configurazione.lunghezzaCavoUscita = 0;
     configurazione.uscitaCavoSelezionata = 'DRITTA';
-    
-    // Aggiorna la barra di avanzamento all'ultimo step
+
     updateProgressBar(6);
     
     $("#step2-option-strip").fadeOut(300, function() {
-      // Vai direttamente al riepilogo invece che all'alimentazione
       finalizzaConfigurazione();
     });
   }
 });
 }
 
-// Funzione per andare alla selezione della tipologia strip
 export function vaiAllaTipologiaStrip() {
-  // Reset delle selezioni
   configurazione.tipologiaStripSelezionata = null;
   configurazione.specialStripSelezionata = null;
 
@@ -163,37 +143,28 @@ export function vaiAllaTipologiaStrip() {
   
   $("#step2-option-strip").fadeOut(300, function() {
     $("#step2-tipologia-strip").fadeIn(300);
-    // Analizziamo e mostriamo solo le tipologie compatibili
     analizzaEMostraTipologieCompatibili();
   });
 }
 
-// Nuova funzione per analizzare e mostrare solo le tipologie compatibili
 function analizzaEMostraTipologieCompatibili() {
-  // Nascondi tutte le tipologie inizialmente
   $('.tipologia-strip-card').parent().hide();
-  
-  // Mostra un loader mentre carichiamo i dati
   $('#tipologia-strip-container').prepend(`
     <div id="tipologia-loading" class="text-center">
       <div class="spinner-border" role="status"></div>
       <p class="mt-3">Analisi tipologie compatibili...</p>
     </div>
   `);
-  
-  // Ottieni le strip compatibili dal backend
+
   $.ajax({
     url: `/get_profili/${configurazione.categoriaSelezionata}`,
     method: 'GET',
     success: function(data) {
-      // Rimuovi il loader
       $('#tipologia-loading').remove();
-      
-      // Trova il profilo selezionato
+
       const profiloSelezionato = data.find(p => p.id === configurazione.profiloSelezionato);
       
       if (!profiloSelezionato || !profiloSelezionato.stripLedCompatibili || profiloSelezionato.stripLedCompatibili.length === 0) {
-        // Nessuna strip compatibile trovata, mostra un messaggio
         $('#tipologia-strip-container').html(`
           <div class="alert alert-warning">
             <p>Nessuna strip LED compatibile trovata per questo profilo.</p>
@@ -201,8 +172,7 @@ function analizzaEMostraTipologieCompatibili() {
         `);
         return;
       }
-      
-      // Controlla quali tipologie sono compatibili
+
       const hasCOB = profiloSelezionato.stripLedCompatibili.some(id => id.includes('COB'));
       const hasSMD = profiloSelezionato.stripLedCompatibili.some(id => id.includes('SMD'));
       const hasSpecial = profiloSelezionato.stripLedCompatibili.some(id => 
@@ -212,8 +182,7 @@ function analizzaEMostraTipologieCompatibili() {
         id.includes('RUNNING') || 
         id.includes('XSNAKE') || 
         id.includes('XMAGIS'));
-      
-      // Mostra solo le tipologie compatibili
+
       if (hasCOB) {
         $('.tipologia-strip-card[data-tipologia-strip="COB"]').parent().show();
       }
@@ -225,8 +194,7 @@ function analizzaEMostraTipologieCompatibili() {
       if (hasSpecial) {
         $('.tipologia-strip-card[data-tipologia-strip="SPECIAL"]').parent().show();
       }
-      
-      // Se c'è solo una tipologia compatibile, selezionala automaticamente
+
       const tipologieVisibili = $('.tipologia-strip-card').parent(':visible').length;
       
       if (tipologieVisibili === 0) {
@@ -236,27 +204,20 @@ function analizzaEMostraTipologieCompatibili() {
           </div>
         `);
       } else if (tipologieVisibili === 1) {
-        // Seleziona automaticamente l'unica tipologia disponibile
         const $unica = $('.tipologia-strip-card').parent(':visible').find('.tipologia-strip-card');
         $unica.addClass('selected');
         configurazione.tipologiaStripSelezionata = $unica.data('tipologia-strip');
-        
-        // Se è "SPECIAL", mostra il container special-strip
+
         if (configurazione.tipologiaStripSelezionata === 'SPECIAL') {
           $('#special-strip-container').fadeIn(300);
-          // Filtriamo anche i tipi di special strip compatibili
           filtraSpecialStripCompatibili(profiloSelezionato.stripLedCompatibili);
         } else {
-          // Altrimenti, abilitiamo direttamente il pulsante continua
           $('#btn-continua-tipologia-strip').prop('disabled', false);
         }
       }
-      
-      // Reimposta i listener per le card
       prepareTipologiaStripListeners();
     },
     error: function(error) {
-      // Rimuovi il loader e mostra un errore
       $('#tipologia-loading').remove();
       console.error("Errore nel caricamento delle strip compatibili:", error);
       $('#tipologia-strip-container').html(`
@@ -268,12 +229,9 @@ function analizzaEMostraTipologieCompatibili() {
   });
 }
 
-// Nuova funzione per filtrare i tipi di special strip compatibili
 function filtraSpecialStripCompatibili(stripCompatibili) {
-  // Nascondi tutte le special strip inizialmente
   $('.special-strip-card').parent().hide();
-  
-  // Mappa delle special strip ai rispettivi ID o nomi commerciali
+
   const specialStripMap = {
     'XFLEX': ['XFLEX', 'FLEX'],
     'RUNNING': ['RUNNING'],
@@ -281,8 +239,7 @@ function filtraSpecialStripCompatibili(stripCompatibili) {
     'XSNAKE': ['XSNAKE', 'XSNAKE', 'SNAKE'],
     'XMAGIS': ['XMAGIS', 'MAGIS']
   };
-  
-  // Verifica quali special strip sono compatibili
+
   for (const [specialType, keywords] of Object.entries(specialStripMap)) {
     const isCompatible = stripCompatibili.some(stripId => 
       keywords.some(keyword => stripId.toUpperCase().includes(keyword))
@@ -292,8 +249,7 @@ function filtraSpecialStripCompatibili(stripCompatibili) {
       $(`.special-strip-card[data-special-strip="${specialType}"]`).parent().show();
     }
   }
-  
-  // Se c'è solo una special strip compatibile, selezionala automaticamente
+
   const specialVisibili = $('.special-strip-card').parent(':visible').length;
   
   if (specialVisibili === 1) {
@@ -302,14 +258,12 @@ function filtraSpecialStripCompatibili(stripCompatibili) {
     configurazione.specialStripSelezionata = $unica.data('special-strip');
     $('#btn-continua-tipologia-strip').prop('disabled', false);
   } else if (specialVisibili === 0) {
-    // Nessuna special strip compatibile trovata, mostra un messaggio
     $('#special-strip-container').html(`
       <h3 class="mb-3">Tipo di Special Strip</h3>
       <div class="alert alert-warning">
         <p>Nessuna special strip compatibile trovata per questo profilo.</p>
       </div>
     `);
-    // Rimuovi la selezione di SPECIAL come tipologia
     $('.tipologia-strip-card').removeClass('selected');
     configurazione.tipologiaStripSelezionata = null;
     $('#btn-continua-tipologia-strip').prop('disabled', true);
@@ -323,20 +277,16 @@ export function prepareTipologiaStripListeners() {
     
     const tipologiaStrip = $(this).data('tipologia-strip');
     configurazione.tipologiaStripSelezionata = tipologiaStrip;
-    
-    // Resetta la selezione special strip se l'utente cambia tipologia
+
     if (tipologiaStrip !== 'SPECIAL') {
       configurazione.specialStripSelezionata = null;
       $('#special-strip-container').hide();
-      
-      // Abilita subito il pulsante continua se non è special strip
+
       $('#btn-continua-tipologia-strip').prop('disabled', false);
     } else {
-      // Mostra il sottomenu per special strip
       $('#special-strip-container').fadeIn(300);
       $('#btn-continua-tipologia-strip').prop('disabled', true);
-      
-      // Filtra le special strip compatibili quando si seleziona SPECIAL
+
       $.ajax({
         url: `/get_profili/${configurazione.categoriaSelezionata}`,
         method: 'GET',
@@ -370,8 +320,7 @@ export function vaiAllaPersonalizzazione() {
     $("#step2-personalizzazione").fadeIn(300);
     
     preparePersonalizzazioneListeners();
-    
-    // Se c'è già una lunghezza selezionata per profilo intero, mostrala
+
     if (configurazione.tipologiaSelezionata === 'profilo_intero' && configurazione.lunghezzaRichiesta) {
       $('#lunghezza-info-container').remove();
       
@@ -391,11 +340,9 @@ export function vaiAllaPersonalizzazione() {
 }
 
 export function preparePersonalizzazioneListeners() {
-  // Carica le finiture disponibili per il profilo selezionato
   caricaFinitureDisponibili(configurazione.profiloSelezionato);
 
   if (configurazione.categoriaSelezionata === 'esterni' || configurazione.categoriaSelezionata === 'wall_washer_ext') {
-    // Nascondi tutte le forme di taglio eccetto "dritto semplice"
     $('.forma-taglio-card').parent().hide();
     $('.forma-taglio-card[data-forma="DRITTO_SEMPLICE"]').parent().show();
     $('.forma-taglio-card[data-forma="DRITTO_SEMPLICE"]').addClass('selected');
@@ -429,34 +376,28 @@ export function preparePersonalizzazioneListeners() {
       checkPersonalizzazioneCompletion();
     });
   }
-  
-  // Imposta i listener per le card delle finiture
+
   $('.finitura-card').on('click', function() {
     $('.finitura-card').removeClass('selected');
     $(this).addClass('selected');
     
     configurazione.finituraSelezionata = $(this).data('finitura');
-    
-    // Controlla se la personalizzazione è completa dopo la selezione
+
     checkPersonalizzazioneCompletion();
   });
 
-  // Listener per il campo di lunghezza personalizzata
   $('#lunghezza-personalizzata').on('input', function() {
     configurazione.lunghezzaRichiesta = parseInt($(this).val(), 10) || null;
     checkPersonalizzazioneCompletion();
   });
-  
-  // Per profilo intero, imposta automaticamente la forma di taglio a DRITTO_SEMPLICE
+
   if (configurazione.tipologiaSelezionata === 'profilo_intero') {
     configurazione.formaDiTaglioSelezionata = 'DRITTO_SEMPLICE';
-    
-    // Se c'è una lunghezza massima per il profilo, usala come lunghezza richiesta
+
     if (configurazione.lunghezzaMassimaProfilo) {
       configurazione.lunghezzaRichiesta = configurazione.lunghezzaMassimaProfilo;
     }
   } else {
-    // Per taglio su misura, aggiungi listener per le forme di taglio
     $('.forma-taglio-card').on('click', function() {
       $('.forma-taglio-card').removeClass('selected');
       $(this).addClass('selected');
@@ -467,18 +408,13 @@ export function preparePersonalizzazioneListeners() {
       checkPersonalizzazioneCompletion();
     });
   }
-  
-  // Gestisci la visibilità delle sezioni
+
   toggleFormaTaglioSection();
   togglePersonalizzazioneLunghezza();
-  
-  // Avvia un controllo iniziale per abilitare/disabilitare il pulsante continua
   checkPersonalizzazioneCompletion();
 }
 
-// Nuova funzione per gestire la visibilità della sezione forma di taglio
 function toggleFormaTaglioSection() {
-  // Otteniamo la sezione di forma di taglio
   let formaTaglioContainer = null;
   $('.container.mb-5').each(function() {
     const heading = $(this).find('h3.mb-3').text();
@@ -493,25 +429,19 @@ function toggleFormaTaglioSection() {
   }
   
   if (configurazione.tipologiaSelezionata === 'profilo_intero') {
-    // Nascondi la sezione di forma di taglio
     formaTaglioContainer.hide();
-    
-    // Impostiamo automaticamente la forma "Dritto semplice" quando è profilo intero
+
     configurazione.formaDiTaglioSelezionata = 'DRITTO_SEMPLICE';
-    
-    // Se avevamo un listener per l'evento click sulla forma, aggiorniamo manualmente
+
     $('.forma-taglio-card[data-forma="DRITTO_SEMPLICE"]').addClass('selected');
   } else {
-    // Per taglio su misura, mostra la sezione di forma di taglio
     formaTaglioContainer.show();
   }
 }
 
 function togglePersonalizzazioneLunghezza() {
-  // Rimuoviamo prima eventuali sezioni informative create in precedenza
   $('#lunghezza-info-container').remove();
-  
-  // Otteniamo la sezione di personalizzazione lunghezza
+
   let personalizzazioneLunghezzaContainer = null;
   $('.container.mb-5').each(function() {
     const heading = $(this).find('h3.mb-3').text();
@@ -526,16 +456,10 @@ function togglePersonalizzazioneLunghezza() {
   }
   
   if (configurazione.tipologiaSelezionata === 'profilo_intero') {
-    // Nasconde la sezione di personalizzazione lunghezza
     personalizzazioneLunghezzaContainer.hide();
-    
-    // Determina la lunghezza massima da utilizzare
+
     const lunghezzaMassima = configurazione.lunghezzaRichiesta || configurazione.lunghezzaMassimaProfilo || 3000;
-    
-    // Converti da mm a m per la visualizzazione
     const lunghezzaMetri = lunghezzaMassima / 1000;
-    
-    // Aggiungi un messaggio informativo
     const infoMessage = `
       <div class="container mb-5" id="lunghezza-info-container">
         <h3 class="mb-3">Lunghezza profilo</h3>
@@ -544,28 +468,21 @@ function togglePersonalizzazioneLunghezza() {
         </div>
       </div>
     `;
-    
-    // Inserisci il messaggio dopo la sezione della finitura
+
     $('#finitura-container').closest('.container').after(infoMessage);
-    
-    // Assicurati che la lunghezza sia impostata correttamente
+
     if (!configurazione.lunghezzaRichiesta && lunghezzaMassima) {
       configurazione.lunghezzaRichiesta = lunghezzaMassima;
       configurazione.lunghezzaProfiloIntero = lunghezzaMassima;
       configurazione.lunghezzaSelezionata = lunghezzaMassima;
     }
-    
-    // Forza un controllo del completamento dopo aver impostato la lunghezza
     setTimeout(checkPersonalizzazioneCompletion, 100);
   } else {
-    // Per taglio su misura, mostra la sezione di personalizzazione lunghezza
     personalizzazioneLunghezzaContainer.show();
   }
 }
 
-// Modifica della funzione updateIstruzioniMisurazione in static/js/steps/step2.js
 export function updateIstruzioniMisurazione(forma) {
-  // Se è profilo intero, non fare nulla con la visualizzazione delle istruzioni di misurazione
   if (configurazione.tipologiaSelezionata === 'profilo_intero') {
     return;
   }
@@ -602,10 +519,6 @@ export function updateIstruzioniMisurazione(forma) {
         configurazione.lunghezzaRichiesta = parseInt($(this).val(), 10) || null;
         checkPersonalizzazioneCompletion();
       });
-      
-      // RIMOSSO: Non calcoliamo più le proposte qui
-      // RIMOSSO: Non mostriamo più il container delle proposte
-      
       $('#non-assemblato-warning').hide();
       break;
       
@@ -631,8 +544,6 @@ export function updateIstruzioniMisurazione(forma) {
           </div>
         </div>
       `);
-      
-      // Mostra l'avviso di non assemblaggio
       mostraNonAssemblatoWarning();
       break;
       
@@ -658,8 +569,6 @@ export function updateIstruzioniMisurazione(forma) {
           </div>
         </div>
       `);
-      
-      // Mostra l'avviso di non assemblaggio
       mostraNonAssemblatoWarning();
       break;
       
@@ -690,8 +599,6 @@ export function updateIstruzioniMisurazione(forma) {
           </div>
         </div>
       `);
-      
-      // Mostra l'avviso di non assemblaggio
       mostraNonAssemblatoWarning();
       break;
       
@@ -717,28 +624,23 @@ export function updateIstruzioniMisurazione(forma) {
           </div>
         </div>
       `);
-      
-      // Mostra l'avviso di non assemblaggio
       mostraNonAssemblatoWarning();
       break;
       
     default:
       istruzioniContainer.html(`<p>Seleziona una forma di taglio per visualizzare le istruzioni.</p>`);
   }
-  
-  // Aggiunge event listener per i campi di lunghezza multipla
+
   $('.campo-lunghezza-multipla').on('input', function() {
     const lato = $(this).data('lato');
     const valore = parseInt($(this).val(), 10) || null;
-    
-    // Aggiorna l'oggetto lunghezzeMultiple nella configurazione
+
     if (!configurazione.lunghezzeMultiple) {
       configurazione.lunghezzeMultiple = {};
     }
     
     configurazione.lunghezzeMultiple[lato] = valore;
-    
-    // Per retrocompatibilità, utilizziamo la somma delle lunghezze come lunghezzaRichiesta
+
     let sommaLunghezze = 0;
     let tuttiValoriPresenti = true;
     
@@ -760,20 +662,15 @@ export function updateIstruzioniMisurazione(forma) {
   });
 }
 
-// Funzione per mostrare l'avviso di non assemblaggio
 function mostraNonAssemblatoWarning() {
-  // Se l'avviso non esiste ancora, lo creiamo
   if ($('#non-assemblato-warning').length === 0) {
     const warningHtml = `
       <div id="non-assemblato-warning" class="assembly-warning mt-3 mb-4">
         <strong>IMPORTANTE:</strong> I profili verranno consegnati non assemblati tra di loro e la strip verrà consegnata non installata.
       </div>
     `;
-    
-    // Aggiungiamo l'avviso dopo il container di misurazione
     $('#misurazione-container').after(warningHtml);
   } else {
-    // Altrimenti lo mostriamo
     $('#non-assemblato-warning').show();
   }
 }
@@ -784,8 +681,6 @@ export function vaiAlleOpzioniStripLed() {
   
   $("#step2-personalizzazione").fadeOut(300, function() {
     $("#step2-option-strip").fadeIn(300);
-    
-    // Reset dello stato delle card e del pulsante "Continua"
     $('.strip-option-card').removeClass('selected');
     $('#btn-continua-step2-option').prop('disabled', true);
     configurazione.includeStripLed = undefined;
@@ -795,14 +690,12 @@ export function vaiAlleOpzioniStripLed() {
 export function vaiAiParametriStripLed() {
   $('#profilo-nome-step2-parametri').text(configurazione.nomeModello);
   $('#tipologia-nome-step2-parametri').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
-  
-  // Aggiungiamo le informazioni sulla tipologia strip selezionata
+
   let tipologiaStripText = configurazione.tipologiaStripSelezionata;
   if (configurazione.tipologiaStripSelezionata === 'SPECIAL' && configurazione.specialStripSelezionata) {
     tipologiaStripText += ` - ${configurazione.specialStripSelezionata}`;
   }
-  
-  // Se non esiste già, aggiungiamo un badge per la tipologia strip
+
   if ($('#tipologia-strip-nome-step2-parametri').length === 0) {
     $('.selection-badges').append(`
       <span class="badge bg-warning selection-badge">Tipologia Strip: <span id="tipologia-strip-nome-step2-parametri">${tipologiaStripText}</span></span>
@@ -813,14 +706,11 @@ export function vaiAiParametriStripLed() {
   
   $("#step2-tipologia-strip").fadeOut(300, function() { 
     $("#step2-parametri").fadeIn(300);
-    
-    // MODIFICATO: Aggiorna la barra di progresso a 3 (invece di 2)
     updateProgressBar(3);
     caricaOpzioniParametriFiltrate();
   });
 }
 
-// Nuova funzione per caricare i parametri filtrati in base alla tipologia strip
 export function caricaOpzioniParametriFiltrate() {
   $('#tensione-options').empty().html('<div class="spinner-border" role="status"></div><p>Caricamento opzioni tensione...</p>');
   $('#ip-options').empty();
@@ -831,8 +721,6 @@ export function caricaOpzioniParametriFiltrate() {
   configurazione.temperaturaSelezionata = null;
   
   $('#btn-continua-parametri').prop('disabled', true);
-
-    // Carica tutte le tensioni disponibili per il profilo
     $.ajax({
       url: `/get_opzioni_tensione/${configurazione.profiloSelezionato}/${configurazione.tipologiaStripSelezionata}`,
       method: 'GET',
@@ -850,7 +738,6 @@ export function caricaOpzioniParametriFiltrate() {
     });
 }
 
-// Funzione helper per visualizzare le opzioni tensione
 function renderizzaOpzioniTensione(tensioni) {
   $('#tensione-options').empty();
   
@@ -876,24 +763,20 @@ function renderizzaOpzioniTensione(tensioni) {
       </div>
     `);
   });
-  
-  // Auto-selezione se c'è una sola opzione di tensione
+
   if (tensioni.length === 1) {
-    // Piccolo ritardo per assicurarsi che il DOM sia aggiornato
     setTimeout(function() {
       const $unicaTensione = $('.tensione-card');
       
       if ($unicaTensione.length > 0) {
         $unicaTensione.addClass('selected');
         configurazione.tensioneSelezionato = tensioni[0];
-        
-        // Carica automaticamente le opzioni IP per questa tensione
+
         caricaOpzioniIP(configurazione.profiloSelezionato, configurazione.tensioneSelezionato);
       }
     }, 50);
   }
-  
-  // Aggiungi gli event listener per il click
+
   $('.tensione-card').on('click', function() {
     $('.tensione-card').removeClass('selected');
     $(this).addClass('selected');
@@ -914,21 +797,18 @@ function checkPersonalizzazioneComplete() {
     alert("Seleziona una finitura prima di continuare");
     return false;
   }
-  
-  // Se la tipologia è profilo intero, non controlliamo la lunghezza
+
   if (configurazione.tipologiaSelezionata === 'profilo_intero') {
     return true;
   }
   
   if (configurazione.tipologiaSelezionata === 'taglio_misura') {
-    // Per il taglio dritto semplice, controlliamo solo lunghezzaRichiesta
     if (configurazione.formaDiTaglioSelezionata === 'DRITTO_SEMPLICE') {
       if (!configurazione.lunghezzaRichiesta) {
         alert("Inserisci una lunghezza prima di continuare");
         return false;
       }
-    } 
-    // Per le altre forme, controlliamo che tutte le lunghezze multiple siano inserite
+    }
     else if (configurazione.lunghezzeMultiple) {
       const forma = configurazione.formaDiTaglioSelezionata;
       const numLatiRichiesti = {
@@ -937,8 +817,7 @@ function checkPersonalizzazioneComplete() {
         'FORMA_C': 3,
         'RETTANGOLO_QUADRATO': 2
       }[forma] || 0;
-      
-      // Conta quanti lati hanno un valore valido
+
       const latiValidi = Object.values(configurazione.lunghezzeMultiple)
         .filter(val => val && val > 0).length;
       
@@ -954,36 +833,25 @@ function checkPersonalizzazioneComplete() {
   return true;
 }
 
-// Funzione per forzare lo sblocco del pulsante continua per i profili interi
 export function forceBtnProfiloIntero() {
   if (configurazione.tipologiaSelezionata === 'profilo_intero') {
-    // Imposta tutti i valori necessari
     if (!configurazione.formaDiTaglioSelezionata) {
       configurazione.formaDiTaglioSelezionata = 'DRITTO_SEMPLICE';
     }
-    
-    // Se non c'è una lunghezza impostata, usa la lunghezza massima del profilo
+
     if (!configurazione.lunghezzaRichiesta && configurazione.lunghezzaMassimaProfilo) {
       configurazione.lunghezzaRichiesta = configurazione.lunghezzaMassimaProfilo;
     } else if (!configurazione.lunghezzaRichiesta) {
-      // Default a 3000mm se non c'è una lunghezza massima definita
       configurazione.lunghezzaRichiesta = 3000;
     }
-    
-    // Abilita direttamente il pulsante
     $('#btn-continua-personalizzazione').prop('disabled', false);
-    
     return true;
   }
   return false;
 }
 
-// Aggiungi questa riga alla fine del caricamento della pagina o in document.ready
 $(document).ready(function() {
-  // Aggiungi un listener per sbloccare automaticamente il pulsante quando si è in profilo intero
-  // e si seleziona una finitura
   $('#step2-personalizzazione').on('click', '.finitura-card', function() {
-    // Attendi un attimo per dare tempo agli altri handler di eseguire
     setTimeout(function() {
       if (configurazione.tipologiaSelezionata === 'profilo_intero' && configurazione.finituraSelezionata) {
         $('#btn-continua-personalizzazione').prop('disabled', false);

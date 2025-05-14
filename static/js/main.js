@@ -17,7 +17,7 @@ $(document).ready(function() {
   initStep1Listeners();
   initStep2Listeners();
   initStep3Listeners();
-  initPotenzaListener(); // Aggiungiamo il nuovo listener per la potenza che gestisce anche la selezione modello
+  initPotenzaListener();
   initStep4Listeners();
   initStep5Listeners();
   initStep6Listeners();

@@ -1,13 +1,6 @@
 import { configurazione } from './config.js';
 
-/**
- * Calcola il codice prodotto per il profilo selezionato
- * @returns {string} - Codice prodotto del profilo
- */
 export function calcolaCodiceProfilo() {
-  // TODO: Implementare la logica per calcolare il codice del profilo
-  // Basato su: configurazione.profiloSelezionato, configurazione.tipologiaSelezionata, configurazione.finituraSelezionata
-
   if (!configurazione.profiloSelezionato) return '';
   const isSabProfile = [
     "PRF016_200SET",
@@ -42,23 +35,12 @@ export function calcolaCodiceProfilo() {
   }
   return codiceProfilo;
 }
-  
-  /**
-   * Calcola il codice prodotto per la strip LED selezionata
-   * @param {string} tipologia - Tipologia di strip (COB, SMD, SPECIAL, etc.)
-   * @param {string} tensione - Tensione (24V, 48V, 220V)
-   * @param {string} ip - Grado IP (IP20, IP44, IP65, IP66, IP67)
-   * @param {string} temperatura - Temperatura colore (3000K, 4000K, RGB, etc.)
-   * @param {string} potenza - Potenza selezionata (12W/m, 14W/m, etc.)
-   * @param {string} modello - Modello specifico di strip
-   * @returns {string} - Codice prodotto della strip LED
-   */
+
   export function calcolaCodiceStripLed(tipologia, tensione, ip, temperatura, potenza, modello) {
     
     if (!configurazione.profiloSelezionato || !configurazione.tensioneSelezionato
       || !configurazione.ipSelezionato || !configurazione.temperaturaColoreSelezionata
       || !configurazione.tipologiaStripSelezionata || !configurazione.potenzaSelezionata) return '';
-    // Prepara i parametri per la chiamata API
     const profiloId = configurazione.profiloSelezionato;
     const tensioneParam = configurazione.tensioneSelezionato;
     const ipParam = configurazione.ipSelezionato;
@@ -168,17 +150,12 @@ export function calcolaCodiceProfilo() {
     console.log(codiceCompleto);
     return codiceCompleto;
 }
-  
-/**
- * Calcola il codice prodotto per l'alimentatore selezionato
- * @returns {string} - Codice prodotto dell'alimentatore
- */
+
 export function calcolaCodiceAlimentatore() {
   if (!configurazione.tipologiaAlimentatoreSelezionata || !configurazione.alimentazioneSelezionata) {
     return '';
   }
 
-  // Ottieni i dettagli degli alimentatori dal CONFIG_DATA
   let dettagliAlimentatori = null;
   
   $.ajax({
@@ -205,17 +182,12 @@ export function calcolaCodiceAlimentatore() {
   return codice || '';
 }
   
-/**
- * Calcola il codice prodotto per il dimmer selezionato
- * @returns {string} - Codice prodotto del dimmer
- */
+
 export function calcolaCodiceDimmer() {
-  // Se non c'è un dimmer selezionato o è "NESSUN_DIMMER"
   if (!configurazione.dimmerSelezionato || configurazione.dimmerSelezionato === 'NESSUN_DIMMER') {
     return '';
   }
 
-  // Mappa dei codici dei dimmer dal configuratore
   const codiciDimmer = {
     "DIMMER_TOUCH_SU_PROFILO_PRFTSW01": "PRFTSW01",
     "DIMMER_TOUCH_SU_PROFILO_PRFTDIMM01": "PRFTDIMM01",
@@ -234,16 +206,10 @@ export function calcolaCodiceDimmer() {
     "DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA": "CTR050IT"
   };
 
-  // Restituisci il codice corrispondente
   return ' - ' + codiciDimmer[configurazione.dimmerSelezionato] || '';
 }
-  
-  /**
-   * Calcola il codice prodotto completo basato su tutta la configurazione
-   * @returns {object} - Oggetto con tutti i codici prodotto
-   */
+
   export function calcolaCodiceProdottoCompleto() {
-	// TODO: Implementare la logica per combinare tutti i codici
 
 	const codici = {
 	  profilo: calcolaCodiceProfilo(),
@@ -258,7 +224,5 @@ export function calcolaCodiceDimmer() {
 	  alimentatore: calcolaCodiceAlimentatore(),
 	  dimmer: calcolaCodiceDimmer()
 	};
-	
-	// TODO: Combinare i codici in un formato finale
 	return codici;
   }

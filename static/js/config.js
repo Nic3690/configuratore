@@ -107,7 +107,6 @@ const configurazione = {
 	'XMAGIS': 'XMAGIS'
   };
 
-  // Aggiorna l'oggetto della mappatura dimmer nel file config.js
 const mappaDimmerVisualizzazione = {
 	"NESSUN_DIMMER": "Nessun dimmer",
 	"DIMMER_TOUCH_SU_PROFILO_PRFTSW01": "Dimmer touch su profilo - On/Off",
@@ -126,18 +125,14 @@ const mappaDimmerVisualizzazione = {
 	"DIMMERABILE_TRIAC_PULSANTE_TUYA_220V": "Dimmerabile TRIAC pulsante + TUYA 220V",
 	"DIMMER_PWM_DA_SCATOLA_CON_PULSANTE_NA": "Dimmer PWM da scatola con pulsante N.A."
   };
-  
-  // Aggiungi anche una funzione helper per ottenere il codice del dimmer dal suo id
+
   function getDimmerCode(dimmerId) {
 	if (!dimmerId) return "";
-	
-	// Estrai il codice dal nome del dimmer se è un dimmer touch
 	if (dimmerId.includes("PRFTSW01")) return "PRFTSW01";
 	if (dimmerId.includes("PRFTDIMM01")) return "PRFTDIMM01";
 	if (dimmerId.includes("PRFIRSW01")) return "PRFIRSW01";
 	if (dimmerId.includes("PRFIRDIMM01")) return "PRFIRDIMM01";
-	
-	// Altri dimmer
+
 	const dimmerCodes = {
 	  "DIMMER_PWM_CON_TELECOMANDO_RGB_RGBW": "CTR104",
 	  "DIMMER_PWM_CON_TELECOMANDO_MONOCOLORE": "CTR114",
@@ -154,8 +149,7 @@ const mappaDimmerVisualizzazione = {
 	
 	return dimmerCodes[dimmerId] || "";
   }
-  
-  // Modificare l'export alla fine del file per includere la nuova mappatura e funzione
+
   export {
 	configurazione,
 	mappaCategorieVisualizzazione,

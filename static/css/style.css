@@ -14,12 +14,10 @@ h1, h2, h3, h4 {
   padding-bottom: 0px !important;
 }
 
-/* Nascondi la sezione uscita cavo */
 .container.mb-5:has(> h3:contains("Uscita Cavo")) {
   display: none !important;
 }
 
-/* Alternativa per browser che non supportano il selettore :has */
 #uscita-cavo-container {
   display: none !important;
 }
@@ -135,7 +133,6 @@ h1, h2, h3, h4 {
 }
 
 /* Hotspot e mappa interattiva */
-
 .hotspot-container {
   position: relative;
   margin: 0 auto;
@@ -171,7 +168,7 @@ h1, h2, h3, h4 {
   transition: all 0.3s ease;
 }
 
-/* Area di attivazione (invisibile ma cliccabile) */
+/* Area di attivazione */
 .hotspot-area {
   position: absolute;
   top: 50%;
@@ -186,7 +183,7 @@ h1, h2, h3, h4 {
   opacity: 1;
 }
 
-/* Contenitore delle luci SVG - unificato per tutte le mappe */
+/* Contenitore delle luci SVG */
 .svg-lights-container {
   position: absolute;
   top: 0;
@@ -196,7 +193,6 @@ h1, h2, h3, h4 {
   z-index: 5;
 }
 
-/* Stile base unificato per tutte le luci SVG */
 .svg-light {
   position: absolute;
   opacity: 0;
@@ -204,7 +200,7 @@ h1, h2, h3, h4 {
   pointer-events: none;
 }
 
-/* Dimensioni specifiche per gli hotspot della prima mappa */
+/* Dimensioni hotspot prima mappa */
 .hotspot[data-categoria="nanoprofili"] .hotspot-area { width: 220px; height: 270px; }
 .hotspot[data-categoria="incasso"] .hotspot-area { width: 150px; height: 150px; }
 .hotspot[data-categoria="sospensione"] .hotspot-area { width: 200px; height: 110px; }
@@ -233,19 +229,6 @@ h1, h2, h3, h4 {
 .hotspot[data-categoria="esterni"]:hover ~ .svg-lights-container .svg-light.esterni,
 .hotspot[data-categoria="wall_washer_ext"]:hover ~ .svg-lights-container .svg-light.esempio2 {
   opacity: 1;
-}
-
-/* Responsive per hotspot */
-@media (max-width: 768px) {
-  .hotspot-dot {
-    width: 16px;
-    height: 16px;
-  }
-  
-  .hotspot-label {
-    font-size: 12px;
-    top: -35px;
-  }
 }
 
 /* Card stili comuni */
@@ -423,38 +406,6 @@ h1, h2, h3, h4 {
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .step-item {
-    margin: 0 15px;
-  }
-  
-  .step-number {
-    width: 40px;
-    height: 40px;
-    font-size: 16px;
-  }
-  
-  .step-title {
-    font-size: 12px;
-  }
-  
-  .hotspot-dot {
-    width: 16px;
-    height: 16px;
-  }
-  
-  .hotspot-label {
-    font-size: 12px;
-    top: -35px;
-  }
-  
-  .btn {
-    padding: 8px 16px;
-    font-size: 14px;
-  }
 }
 
 .assembly-warning {

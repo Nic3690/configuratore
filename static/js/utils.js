@@ -1,45 +1,28 @@
 import { configurazione } from './config.js';
 
-/**
- * Aggiorna la barra di progresso in base allo step corrente effettivo
- * @param {number} step - Il numero dello step corrente
- */
 export function updateProgressBar(step) {
-  // Reset di tutti gli elementi della barra di progresso
   $('.step-item').removeClass('active completed');
-  
-  // Seleziona lo step corrente come attivo
   $(`#progress-step${step}`).addClass('active');
-  
-  // Imposta tutti gli step precedenti come completati
+
   for (let i = 1; i < step; i++) {
     $(`#progress-step${i}`).addClass('completed');
   }
   let actualStep = step;
-    // Se lo step è maggiore di 5, lo riduciamo a 5 (il massimo ora è 5 invece di 6)
     if (actualStep > 5) {
       actualStep = 5;
     }
-    
-    // Se lo step è 6 (proposte) o 7 (riepilogo), lo trasformiamo in 5 (riepilogo)
+
     if (step >= 6) {
       actualStep = 5;
     }
-    
-    // Seleziona lo step corrente come attivo
+
     $(`#progress-step${actualStep}`).addClass('active');
-    
-    // Imposta tutti gli step precedenti come completati
+
     for (let i = 1; i < actualStep; i++) {
       $(`#progress-step${i}`).addClass('completed');
     }
 }
 
-/**
- * Formatta la temperatura per la visualizzazione
- * @param {string} temperatura - Valore della temperatura
- * @returns {string} - Temperatura formattata
- */
 export function formatTemperatura(temperatura) {
   if (temperatura === 'CCT') {
     return 'Temperatura Dinamica (CCT)';
@@ -52,11 +35,6 @@ export function formatTemperatura(temperatura) {
   }
 }
 
-/**
- * Restituisce il colore per la rappresentazione della temperatura
- * @param {string} temperatura - Valore della temperatura
- * @returns {string} - Codice colore o gradiente CSS
- */
 export function getTemperaturaColor(temperatura) {
   switch(temperatura) {
     case '2700K':
@@ -90,9 +68,6 @@ export function getTemperaturaColor(temperatura) {
   }
 }
 
-/**
- * Controlla se lo step 2 è completo
- */
 export function checkStep2Completion() {
   let isComplete = true;
   
@@ -103,8 +78,7 @@ export function checkStep2Completion() {
   if (!configurazione.tipologiaSelezionata) {
     isComplete = false;
   }
-  
-  // Se è profilo intero e ci sono multiple lunghezze disponibili, verifica che ne sia stata selezionata una
+
   if (configurazione.tipologiaSelezionata === 'profilo_intero' && 
       configurazione.lunghezzeDisponibili && 
       configurazione.lunghezzeDisponibili.length > 1 && 
@@ -116,9 +90,6 @@ export function checkStep2Completion() {
   return isComplete;
 }
 
-/**
- * Controlla se la sezione parametri è completa
- */
 export function checkParametriCompletion() {
   if (configurazione.tensioneSelezionato && configurazione.ipSelezionato && configurazione.temperaturaSelezionata) {
     $('#btn-continua-parametri').prop('disabled', false);
@@ -127,9 +98,6 @@ export function checkParametriCompletion() {
   }
 }
 
-/**
- * Controlla se lo step 5 è completo
- */
 export function checkStep5Completion() {
   let isComplete = true;
   
@@ -147,9 +115,6 @@ export function checkStep5Completion() {
   return isComplete;
 }
 
-/**
- * Controlla se lo step 6 è completo
- */
 export function checkStep6Completion() {
   let isComplete = true;
   
@@ -170,20 +135,16 @@ export function checkStep6Completion() {
 
 export function checkPersonalizzazioneCompletion() {
   let isComplete = true;
-  
-  // Per il profilo intero, impostiamo automaticamente i valori necessari
+
   if (configurazione.tipologiaSelezionata === 'profilo_intero') {
-    // Imposta automaticamente la forma di taglio a DRITTO_SEMPLICE se non è già impostata
     if (!configurazione.formaDiTaglioSelezionata) {
       configurazione.formaDiTaglioSelezionata = 'DRITTO_SEMPLICE';
     }
-    
-    // Verifica solo che ci sia una finitura selezionata
+
     if (!configurazione.finituraSelezionata) {
       isComplete = false;
     }
-    
-    // IMPORTANTE: Assicura che la lunghezza sia impostata correttamente
+
     if (!configurazione.lunghezzaRichiesta) {
       if (configurazione.lunghezzaProfiloIntero) {
         configurazione.lunghezzaRichiesta = configurazione.lunghezzaProfiloIntero;
@@ -193,15 +154,13 @@ export function checkPersonalizzazioneCompletion() {
         configurazione.lunghezzaRichiesta = configurazione.lunghezzaMassimaProfilo;
       }
     }
-    
-    // Debug log per verificare la lunghezza
+
     console.log('Lunghezza dopo controllo personalizzazione:', {
       lunghezzaRichiesta: configurazione.lunghezzaRichiesta,
       lunghezzaProfiloIntero: configurazione.lunghezzaProfiloIntero,
       lunghezzaSelezionata: configurazione.lunghezzaSelezionata
     });
   } else {
-    // Per il taglio su misura, controlliamo tutto
     if (!configurazione.formaDiTaglioSelezionata) {
       isComplete = false;
     }
@@ -209,16 +168,13 @@ export function checkPersonalizzazioneCompletion() {
     if (!configurazione.finituraSelezionata) {
       isComplete = false;
     }
-    
-    // Controlli specifici per il taglio su misura
+
     if (configurazione.tipologiaSelezionata === 'taglio_misura') {
-      // Per il taglio dritto semplice, controlliamo solo lunghezzaRichiesta
       if (configurazione.formaDiTaglioSelezionata === 'DRITTO_SEMPLICE') {
         if (!configurazione.lunghezzaRichiesta) {
           isComplete = false;
         }
-      } 
-      // Per le altre forme, controlliamo che tutte le lunghezze multiple siano inserite
+      }
       else if (configurazione.lunghezzeMultiple) {
         const forma = configurazione.formaDiTaglioSelezionata;
         const numLatiRichiesti = {
@@ -227,8 +183,7 @@ export function checkPersonalizzazioneCompletion() {
           'FORMA_C': 3,
           'RETTANGOLO_QUADRATO': 2
         }[forma] || 0;
-        
-        // Conta quanti lati hanno un valore valido
+
         const latiValidi = Object.values(configurazione.lunghezzeMultiple)
           .filter(val => val && val > 0).length;
         
@@ -240,8 +195,6 @@ export function checkPersonalizzazioneCompletion() {
       }
     }
   }
-  
-  // Abilita o disabilita il pulsante in base al risultato della validazione
   $('#btn-continua-personalizzazione').prop('disabled', !isComplete);
   return isComplete;
 }

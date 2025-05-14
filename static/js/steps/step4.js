@@ -8,10 +8,7 @@ export function initStep4Listeners() {
     e.preventDefault();
     
     $("#step4-alimentazione").fadeOut(300, function() {
-      // Ora torniamo sempre a step3-temperatura-potenza che include anche la selezione del modello strip LED
       $("#step3-temperatura-potenza").fadeIn(300);
-      
-      // Aggiorna la progress bar
       updateProgressBar(3);
     });
   });
@@ -20,7 +17,6 @@ export function initStep4Listeners() {
     e.preventDefault();
     
     if (!checkStep4Completion()) {
-      // Verifica quali campi mancano
       let messaggi = [];
       
       if (!configurazione.alimentazioneSelezionata) {
@@ -38,19 +34,15 @@ export function initStep4Listeners() {
       alert("Seleziona " + messaggi.join(", ") + " prima di continuare");
       return;
     }
-    
-    // Nascondi completamente questa sezione prima di procedere
+
     $("#step4-alimentazione").fadeOut(300, function() {
       $("#step5-controllo").fadeIn(300);
-      // Solo dopo che è completamente nascosta, vai alla sezione controllo
       vaiAlControllo();
     });
   });
 }
 
-/* Calcola la potenza dell'alimentatore consigliata */
 function calcolaPotenzaAlimentatoreConsigliata() {
-  // Se non c'è una strip LED o non c'è una potenza selezionata, nascondi la sezione
   if (configurazione.stripLedSelezionata === 'senza_strip' || 
       configurazione.stripLedSelezionata === 'NO_STRIP' || 
       !configurazione.potenzaSelezionata) {
@@ -58,14 +50,12 @@ function calcolaPotenzaAlimentatoreConsigliata() {
     return;
   }
 
-  // Estrai il valore numerico della potenza dalla stringa (es. "14W/m" -> 14)
   let potenzaPerMetro = 0;
   const potenzaMatch = configurazione.potenzaSelezionata.match(/(\d+(\.\d+)?)/);
   if (potenzaMatch && potenzaMatch[1]) {
     potenzaPerMetro = parseFloat(potenzaMatch[1]);
   }
 
-  // Calcola la lunghezza in metri
   let lunghezzaMetri = 0;
   if (configurazione.lunghezzaRichiesta) {
     lunghezzaMetri = parseFloat(configurazione.lunghezzaRichiesta) / 1000;
@@ -73,7 +63,6 @@ function calcolaPotenzaAlimentatoreConsigliata() {
     lunghezzaMetri = parseFloat(configurazione.lunghezzaSelezionata) / 1000;
   }
 
-  // Se abbiamo sia potenza che lunghezza, chiamiamo l'API
   if (potenzaPerMetro > 0 && lunghezzaMetri > 0) {
     $.ajax({
       url: '/calcola_potenza_alimentatore',
@@ -85,11 +74,9 @@ function calcolaPotenzaAlimentatoreConsigliata() {
       }),
       success: function(response) {
         if (response.success) {
-          // Aggiorna e mostra la sezione con la potenza consigliata
           $('#potenza-consigliata').text(response.potenzaConsigliata);
           $('#potenza-consigliata-section').show();
-          
-          // Memorizza la potenza consigliata nella configurazione
+
           configurazione.potenzaConsigliataAlimentatore = response.potenzaConsigliata;
         }
       },
@@ -104,20 +91,17 @@ function calcolaPotenzaAlimentatoreConsigliata() {
 }
 
 export function vaiAllAlimentazione() {
-  // Assicurati che tutte le altre sezioni siano nascoste
   $(".step-section").hide();
   $('#profilo-nome-step4').text(configurazione.nomeModello);
   $('#tipologia-nome-step4').text(mappaTipologieVisualizzazione[configurazione.tipologiaSelezionata] || configurazione.tipologiaSelezionata);
   
   if (configurazione.stripLedSelezionata !== 'senza_strip' && configurazione.stripLedSelezionata !== 'NO_STRIP') {
-    // Usa il nome commerciale se disponibile
     const nomeStripLed = configurazione.nomeCommercialeStripLed || 
                         mappaStripLedVisualizzazione[configurazione.stripLedSelezionata] || 
                         configurazione.stripLedSelezionata;
     
     $('#strip-nome-step4').text(nomeStripLed);
-    
-    // Aggiungi il badge della potenza solo se abbiamo una potenza selezionata
+
     if (configurazione.potenzaSelezionata) {
       $('#potenza-nome-step4').text(configurazione.potenzaSelezionata);
       $('#badge-potenza-step4').show();
@@ -130,11 +114,9 @@ export function vaiAllAlimentazione() {
   }
   
   updateProgressBar(4);
-  
-// Mostra la sezione di alimentazione
+
 $("#step4-alimentazione").fadeIn(300);
 
-// Per strip LED 220V, mostra un messaggio speciale e imposta SENZA_ALIMENTATORE
 if (configurazione.tensioneSelezionato === '220V') {
   $('#alimentazione-container').html(`
     <div class="alert alert-info mb-3">
@@ -159,14 +141,12 @@ if (configurazione.tensioneSelezionato === '220V') {
 }
 
 prepareAlimentazioneListeners();
-  
-  // Nascondi la sezione della potenza consigliata se non c'è strip LED o non abbiamo una potenza
+
   if (configurazione.stripLedSelezionata === 'senza_strip' || 
       configurazione.stripLedSelezionata === 'NO_STRIP' ||
       !configurazione.potenzaSelezionata) {
     $('#potenza-consigliata-section').hide();
   } else {
-    // Altrimenti calcola la potenza consigliata
     calcolaPotenzaAlimentatoreConsigliata();
   }
 }
@@ -183,17 +163,14 @@ export function prepareAlimentazioneListeners() {
   
   $('.alimentazione-card').removeClass('selected');
 
-  // Verifica se la strip LED selezionata è di tipo RGB o RGBWW
   const isRGBStrip = 
     (configurazione.stripLedSelezionata && configurazione.stripLedSelezionata.includes('RGB')) || 
     configurazione.temperaturaColoreSelezionata === 'RGB' || 
     configurazione.temperaturaColoreSelezionata === 'RGBW';
-  
-  // Prepara l'HTML in base al tipo di strip LED
+
   let alimentazioneHtml = '';
   
   if (isRGBStrip) {
-    // Per strip RGB/RGBWW, mostra solo ON-OFF e SENZA_ALIMENTATORE
     alimentazioneHtml = `
       <div class="col-md-6 mb-3">
         <div class="card option-card alimentazione-card" data-alimentazione="ON-OFF">
@@ -214,7 +191,6 @@ export function prepareAlimentazioneListeners() {
       </div>
     `;
   } else {
-    // Per tutte le altre strip, mostra tutte le opzioni
     alimentazioneHtml = `
       <div class="col-md-4 mb-3">
         <div class="card option-card alimentazione-card" data-alimentazione="ON-OFF">
@@ -244,11 +220,9 @@ export function prepareAlimentazioneListeners() {
       </div>
     `;
   }
-  
-  // Aggiorna il container delle opzioni di alimentazione
+
   $('#alimentazione-container').html(alimentazioneHtml);
 
-  // Se c'è una sola opzione di alimentazione disponibile (caso raro ma possibile)
   const opzioniAlimentazione = $('.alimentazione-card');
   if (opzioniAlimentazione.length === 1) {
     const $unicaAlimentazione = $(opzioniAlimentazione[0]);
@@ -258,7 +232,7 @@ export function prepareAlimentazioneListeners() {
     
     if (alimentazione === 'SENZA_ALIMENTATORE') {
       $('#alimentatore-section').hide();
-      $('#potenza-alimentatore-section').hide(); // Nascondi anche la sezione potenza
+      $('#potenza-alimentatore-section').hide();
       configurazione.tipologiaAlimentatoreSelezionata = null;
       configurazione.potenzaAlimentatoreSelezionata = null;
       
@@ -267,18 +241,16 @@ export function prepareAlimentazioneListeners() {
       caricaOpzioniAlimentatore(alimentazione);
       
       $('#alimentatore-section').show();
-      $('#potenza-alimentatore-section').hide(); // Nascondi la sezione potenza fino a quando non viene scelto un alimentatore
+      $('#potenza-alimentatore-section').hide();
       $('#btn-continua-step4').prop('disabled', true);
     }
   } else {
-    // Se ci sono più opzioni, non selezionare nessuna opzione di default
     configurazione.alimentazioneSelezionata = null;
     $('#alimentatore-section').hide();
     $('#potenza-alimentatore-section').hide();
     $('#btn-continua-step4').prop('disabled', true);
   }
-  
-  // Riattiva i listener per le card di alimentazione
+
   $('.alimentazione-card').on('click', function() {
     $('.alimentazione-card').removeClass('selected');
     $(this).addClass('selected');
@@ -288,7 +260,7 @@ export function prepareAlimentazioneListeners() {
     
     if (alimentazione === 'SENZA_ALIMENTATORE') {
       $('#alimentatore-section').hide();
-      $('#potenza-alimentatore-section').hide(); // Nascondi anche la sezione potenza
+      $('#potenza-alimentatore-section').hide();
       configurazione.tipologiaAlimentatoreSelezionata = null;
       configurazione.potenzaAlimentatoreSelezionata = null;
       
@@ -297,20 +269,17 @@ export function prepareAlimentazioneListeners() {
       caricaOpzioniAlimentatore(alimentazione);
       
       $('#alimentatore-section').show();
-      $('#potenza-alimentatore-section').hide(); // Nascondi la sezione potenza fino a quando non viene scelto un alimentatore
+      $('#potenza-alimentatore-section').hide();
       $('#btn-continua-step4').prop('disabled', true);
     }
   });
 
-  // Per compatibilità con le opzioni di dimmerazione, imposta quale
-  // tipo di alimentazione supporta quale tipo di dimmer
   configurazione.compatibilitaAlimentazioneDimmer = {
     'ON-OFF': ['NESSUN_DIMMER'],
     'DIMMERABILE_TRIAC': ['NESSUN_DIMMER', 'DIMMER_A_PULSANTE_SEMPLICE'],
     'SENZA_ALIMENTATORE': ['NESSUN_DIMMER']
   };
-  
-  // Aggiungi opzioni speciali se c'è una strip RGB
+
   if (configurazione.stripLedSelezionata && 
       (configurazione.stripLedSelezionata.includes('RGB') || 
        configurazione.temperaturaColoreSelezionata === 'RGB' || 
@@ -320,8 +289,7 @@ export function prepareAlimentazioneListeners() {
     configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
     configurazione.compatibilitaAlimentazioneDimmer['SENZA_ALIMENTATORE'].push('CON_TELECOMANDO', 'CENTRALINA_TUYA');
   }
-  
-  // Aggiungi TOUCH_SU_PROFILO per strip non-RGB compatibili
+
   if (configurazione.stripLedSelezionata &&
       !configurazione.stripLedSelezionata.includes('RGB') &&
       configurazione.temperaturaColoreSelezionata !== 'RGB' &&
@@ -330,8 +298,6 @@ export function prepareAlimentazioneListeners() {
     configurazione.compatibilitaAlimentazioneDimmer['ON-OFF'].push('TOUCH_SU_PROFILO');
     configurazione.compatibilitaAlimentazioneDimmer['DIMMERABILE_TRIAC'].push('TOUCH_SU_PROFILO');
   }
-  
-  // Verifica il completamento iniziale
   checkStep4Completion();
 }
 
