@@ -393,6 +393,42 @@ export function vaiAllaPersonalizzazione() {
 export function preparePersonalizzazioneListeners() {
   // Carica le finiture disponibili per il profilo selezionato
   caricaFinitureDisponibili(configurazione.profiloSelezionato);
+
+  if (configurazione.categoriaSelezionata === 'esterni' || configurazione.categoriaSelezionata === 'wall_washer_ext') {
+    // Nascondi tutte le forme di taglio eccetto "dritto semplice"
+    $('.forma-taglio-card').parent().hide();
+    $('.forma-taglio-card[data-forma="DRITTO_SEMPLICE"]').parent().show();
+    $('.forma-taglio-card[data-forma="DRITTO_SEMPLICE"]').addClass('selected');
+    configurazione.formaDiTaglioSelezionata = 'DRITTO_SEMPLICE';
+    
+    updateIstruzioniMisurazione('DRITTO_SEMPLICE');
+    
+    $('.forma-taglio-card').off('click');
+    $('#forma-taglio-note').remove();
+
+    $('#forma-taglio-container').after(`
+      <div id="forma-taglio-note" class="row">
+        <div class="col-12">
+          <div class="alert alert-warning mt-3 mb-3">
+            <strong>Nota:</strong> Per i profili di questa categoria è disponibile solo il taglio dritto semplice.
+          </div>
+        </div>
+      </div>
+    `);
+  } else {
+    $('.forma-taglio-card').parent().show();
+    $('#forma-taglio-note').remove();
+    
+    $('.forma-taglio-card').on('click', function() {
+      $('.forma-taglio-card').removeClass('selected');
+      $(this).addClass('selected');
+      
+      configurazione.formaDiTaglioSelezionata = $(this).data('forma');
+      
+      updateIstruzioniMisurazione(configurazione.formaDiTaglioSelezionata);
+      checkPersonalizzazioneCompletion();
+    });
+  }
   
   // Imposta i listener per le card delle finiture
   $('.finitura-card').on('click', function() {
