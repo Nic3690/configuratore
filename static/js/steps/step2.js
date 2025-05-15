@@ -512,6 +512,9 @@ export function updateIstruzioniMisurazione(forma) {
           <div class="form-text text-muted">
             Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
           </div>
+          <div class="form-text text-muted">
+              Nota: per i profili flessibili il taglio minimo è di 1000mm
+            </div>
         </div>
       `);
 
@@ -542,6 +545,9 @@ export function updateIstruzioniMisurazione(forma) {
           <div class="form-text text-muted">
             Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
           </div>
+          <div class="form-text text-muted">
+              Nota: per i profili flessibili il taglio minimo è di 1000mm
+            </div>
         </div>
       `);
       mostraNonAssemblatoWarning();
@@ -567,6 +573,9 @@ export function updateIstruzioniMisurazione(forma) {
           <div class="form-text text-muted">
             Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
           </div>
+          <div class="form-text text-muted">
+              Nota: per i profili flessibili il taglio minimo è di 1000mm
+            </div>
         </div>
       `);
       mostraNonAssemblatoWarning();
@@ -597,6 +606,9 @@ export function updateIstruzioniMisurazione(forma) {
           <div class="form-text text-muted">
             Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
           </div>
+          <div class="form-text text-muted">
+              Nota: per i profili flessibili il taglio minimo è di 1000mm
+            </div>
         </div>
       `);
       mostraNonAssemblatoWarning();
@@ -622,6 +634,9 @@ export function updateIstruzioniMisurazione(forma) {
           <div class="form-text text-muted">
             Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
           </div>
+          <div class="form-text text-muted">
+              Nota: per i profili flessibili il taglio minimo è di 1000mm
+            </div>
         </div>
       `);
       mostraNonAssemblatoWarning();
