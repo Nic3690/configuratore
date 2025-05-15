@@ -244,6 +244,13 @@ export function generaPDF(codiceProdotto, configurazione) {
 	  doc.setFontSize(10);
 	  doc.setFont('helvetica', 'normal');
 	  doc.text('Nota: Lo spazio necessario per tappi e saldatura è di 5mm.', 15, finalY);
+
+	  doc.setFont('helvetica', 'bold');
+	  doc.setTextColor(194, 59, 34);
+	  doc.text('IMPORTANTE: Staffe non incluse.', 15, finalY + 8);
+	  doc.setTextColor(0, 0, 0);
+	  doc.setFont('helvetica', 'normal');
+	  
 	  doc.setFontSize(8);
 	  doc.text('REDO Srl - Configuratore Profili LED', 105, 285, { align: 'center' });
 

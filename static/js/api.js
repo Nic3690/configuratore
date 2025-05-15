@@ -1362,20 +1362,23 @@ export function finalizzaConfigurazione() {
         }
         
         riepilogoHtml += `
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              
-              <div class="text-center mt-4">
-                <div class="alert alert-info">
-                  <strong>Note:</strong> Lo spazio necessario per tappi e saldatura è di ${riepilogo.spazioProduzione || 5}mm.
-                </div>
-                <button class="btn btn-success btn-lg me-2" id="btn-salva-configurazione">Salva configurazione</button>
-                <button class="btn btn-primary btn-lg" id="btn-preventivo">Richiedi preventivo</button>
-              </div>
+                </tbody>
+              </table>
             </div>
           </div>
+          
+          <div class="text-center mt-4">
+            <div class="alert alert-info">
+              <strong>Note:</strong> Lo spazio necessario per tappi e saldatura è di ${riepilogo.spazioProduzione || 5}mm.
+            </div>
+            <div class="alert alert-warning mt-3">
+              <strong>Importante:</strong> Staffe non incluse.
+            </div>
+            <button class="btn btn-success btn-lg me-2" id="btn-salva-configurazione">Salva configurazione</button>
+            <button class="btn btn-primary btn-lg" id="btn-preventivo">Richiedi preventivo</button>
+          </div>
+        </div>
+        </div>
         `;
         
         $('#riepilogo-container').html(riepilogoHtml);
