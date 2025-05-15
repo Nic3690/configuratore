@@ -717,7 +717,7 @@
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 2000,
-      "lunghezzeDisponibili": [5000],
+      "lunghezzeDisponibili": [2000],
       "stripLedCompatibili": ["STRIP_24V_IP66_XFLEX"]
     },
     {
@@ -729,7 +729,7 @@
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 2000,
-      "lunghezzeDisponibili": [20000, 5000],
+      "lunghezzeDisponibili": [2000],
       "stripLedCompatibili": ["STRIP_24V_IP66_XMAGIS_13X12", "STRIP_24V_IP66_XMAGIS_13X12_RGB",
         "STRIP_24V_IP66_XMAGIS_13X12_RGBW", "STRIP_24V_IP66_XMAGIS_13X12_CCT"
       ]
@@ -757,7 +757,7 @@
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 2000,
-      "lunghezzeDisponibili": [20000, 5000],
+      "lunghezzeDisponibili": [2000],
       "stripLedCompatibili": ["STRIP_24V_IP66_XMAGIS_12X17", "STRIP_24V_IP66_XMAGIS_12X17_RGB",
         "STRIP_24V_IP66_XMAGIS_12X17_RGBW", "STRIP_24V_IP66_XMAGIS_12X17_CCT"
       ]
@@ -785,7 +785,7 @@
       "tipologie": ["taglio_misura", "profilo_intero"],
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 2000,
-      "lunghezzeDisponibili": [20000],
+      "lunghezzeDisponibili": [2000],
       "stripLedCompatibili": ["STRIP_24V_IP66_XSNAKE_6X12"]
     },
     {
