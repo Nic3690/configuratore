@@ -730,7 +730,7 @@
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 2000,
       "lunghezzeDisponibili": [2000],
-      "stripLedCompatibili": ["STRIP_24V_IP66_XMAGIS_13X12", "STRIP_24V_IP66_XMAGIS_13X12_RGB",
+      "stripLedCompatibili": ["STRIP_24V_IP66_XMAGIS_13X12",
         "STRIP_24V_IP66_XMAGIS_13X12_RGBW", "STRIP_24V_IP66_XMAGIS_13X12_CCT"
       ]
     },
@@ -744,7 +744,7 @@
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 1000,
       "lunghezzeDisponibili": [1000],
-      "stripLedCompatibili": ["STRIP_24V_IP66_XMAGIS_13X12", "STRIP_24V_IP66_XMAGIS_13X12_RGB",
+      "stripLedCompatibili": ["STRIP_24V_IP66_XMAGIS_13X12",
         "STRIP_24V_IP66_XMAGIS_13X12_RGBW", "STRIP_24V_IP66_XMAGIS_13X12_CCT"
       ]
     },
@@ -758,7 +758,7 @@
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 2000,
       "lunghezzeDisponibili": [2000],
-      "stripLedCompatibili": ["STRIP_24V_IP66_XMAGIS_12X17", "STRIP_24V_IP66_XMAGIS_12X17_RGB",
+      "stripLedCompatibili": ["STRIP_24V_IP66_XMAGIS_12X17",
         "STRIP_24V_IP66_XMAGIS_12X17_RGBW", "STRIP_24V_IP66_XMAGIS_12X17_CCT"
       ]
     },
@@ -772,7 +772,7 @@
       "finitureDisponibili": ["ALLUMINIO"],
       "lunghezzaMassima": 1000,
       "lunghezzeDisponibili": [1000],
-      "stripLedCompatibili": ["STRIP_24V_IP66_XMAGIS_12X17", "STRIP_24V_IP66_XMAGIS_12X17_RGB",
+      "stripLedCompatibili": ["STRIP_24V_IP66_XMAGIS_12X17",
         "STRIP_24V_IP66_XMAGIS_12X17_RGBW", "STRIP_24V_IP66_XMAGIS_12X17_CCT"
       ]
     },
