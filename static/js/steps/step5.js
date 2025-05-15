@@ -172,6 +172,18 @@ function caricaDimmerCompatibili() {
           });
         }
 
+        const isExternalProfile = configurazione.categoriaSelezionata === 'esterni' || configurazione.categoriaSelezionata === 'wall_washer_ext';
+        
+        if (isExternalProfile) {
+          opzioniDimmer = opzioniDimmer.filter(dimmer => 
+            !dimmer.includes('DIMMER_TOUCH_SU_PROFILO_') && 
+            !dimmer.includes('PRFTSW') && 
+            !dimmer.includes('PRFTDIMM') && 
+            !dimmer.includes('PRFIRSW') && 
+            !dimmer.includes('PRFIRDIMM')
+          );
+        }
+
         opzioniDimmer = opzioniDimmer.filter(dimmer => {
           const potenzaMassima = potenzeMassimeDimmer[dimmer] || 0;
           return potenzaMassima >= potenzaTotale;
