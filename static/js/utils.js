@@ -199,7 +199,5 @@ export function checkPersonalizzazioneCompletion() {
     }
   }
 
-  if (configurazione.lunghezzaRichiesta % 1000 != 0 && configurazione.profiloSelezionato.includes('SK')) isComplete = false;
-  $('#btn-continua-personalizzazione').prop('disabled', !isComplete);
   return isComplete;
 }

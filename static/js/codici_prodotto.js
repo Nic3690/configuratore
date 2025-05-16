@@ -16,6 +16,8 @@ export function calcolaCodiceProfilo() {
     "FWPF", "MG13X12PF", "MG12X17PF", "SNK6X12PF", "SNK10X10PF", "SNK12X20PF"
   ].includes(configurazione.profiloSelezionato)
 
+  const isAl = (configurazione.profiloSelezionato.includes("PRFIT") || configurazione.profiloSelezionato.includes("PRF120")) && !configurazione.profiloSelezionato.includes("PRFIT321");
+
   let codiceProfilo;
 
   if (isSpecialProfile) 
@@ -26,12 +28,13 @@ export function calcolaCodiceProfilo() {
     let colorCode;
     if (configurazione.finituraSelezionata == "NERO") colorCode = 'BK';
     else if (configurazione.finituraSelezionata == "BIANCO") colorCode = 'WH';
-    else if (configurazione.finituraSelezionata == "ALLUMINIO") colorCode = 'AL';
+    else if (configurazione.finituraSelezionata == "ALLUMINIO" && isAl) colorCode = 'AL';
 
     if (isOpqProfile) colorCode = "M" + colorCode;
     else if (isSabProfile) colorCode = "S" + colorCode;
 
-    codiceProfilo = configurazione.profiloSelezionato.replace(/_/g, '/') + ' ' + colorCode;
+    if (colorCode) codiceProfilo = configurazione.profiloSelezionato.replace(/_/g, '/') + ' ' + colorCode;
+    else codiceProfilo = configurazione.profiloSelezionato.replace(/_/g, '/');
   }
   return codiceProfilo;
 }
@@ -140,8 +143,8 @@ export function calcolaCodiceProfilo() {
     codiceCompleto = codiceCompleto + suffissoTemp;
 
     if (configurazione.potenzaSelezionata.includes('CRI90')) codiceCompleto = codiceCompleto + 'CRI90';
-    if (configurazione.ipSelezionato == 'IP65' && !codiceCompleto.includes('65')) codiceCompleto = codiceCompleto + '65';
-    if (configurazione.ipSelezionato == 'IP67' && !codiceCompleto.includes('67')) codiceCompleto = codiceCompleto + '67';
+    if (configurazione.ipSelezionato == 'IP65' && configurazione.codiceProdottoCompleto.includes('XTP') && !codiceCompleto.includes('65')) codiceCompleto = codiceCompleto + '65';
+    if (configurazione.ipSelezionato == 'IP67' && !codiceCompleto.includes('67') && !configurazione.codiceProdottoCompleto.includes('MG') && !configurazione.codiceProdottoCompleto.includes('SNK')) codiceCompleto = codiceCompleto + '67';
     if (configurazione.nomeCommercialeStripLed.includes('FROST')) codiceCompleto = codiceCompleto + 'FR';
     if (configurazione.nomeCommercialeStripLed.includes('CLEAR')) codiceCompleto = codiceCompleto + 'CL';
     if (configurazione.tensioneSelezionato == '48V') codiceCompleto = codiceCompleto + '48';
