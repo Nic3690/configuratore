@@ -223,6 +223,10 @@ function caricaDimmerCompatibili() {
             "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB",
             "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW"
           ],
+          "DALI": [
+            "DIMMER_PWM_CON_PULSANTE_24V_MONOCOLORE",
+            "DIMMER_PWM_CON_PULSANTE_48V_MONOCOLORE"
+          ],
           "NESSUN_DIMMER": [
             "NESSUN_DIMMER"
           ]
@@ -252,6 +256,7 @@ function caricaDimmerCompatibili() {
           "CON_TELECOMANDO": "/static/img/dimmer/con_telecomando.jpg",
           "CON_PULSANTE": "/static/img/dimmer/dimmer_pulsante.jpg", 
           "SISTEMA_TUYA": "/static/img/dimmer/centralina_tuya.jpg",
+          "DALI": "/static/img/dimmer/dimmer_pulsante_48v.jpg",
           "NESSUN_DIMMER": "/static/img/placeholder_logo.jpg"
         };
 
@@ -260,6 +265,7 @@ function caricaDimmerCompatibili() {
           "CON_TELECOMANDO": "Con telecomando",
           "CON_PULSANTE": "Con pulsante",
           "SISTEMA_TUYA": "Sistema Tuya",
+          "DALI": "Dali",
           "NESSUN_DIMMER": "Nessun dimmer"
         };
 
