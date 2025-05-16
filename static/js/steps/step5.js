@@ -66,7 +66,7 @@ function caricaDimmerCompatibili() {
     const dimmerHtml = `
       <h3 class="mb-3">Dimmer</h3>
       <div class="alert alert-info mb-3">
-        <strong>Nota:</strong> Per strip LED 220V è disponibile solo il dimmer CTR130 (dimmerabile TRIAC tramite pulsante e sistema TUYA).
+        <strong>Nota:</strong> Per strip LED 220V sono disponibili le seguenti opzioni di dimmer.
       </div>
       <div class="row">
         <div class="col-md-4 mb-3 dimmer-column">
@@ -79,16 +79,19 @@ function caricaDimmerCompatibili() {
             </div>
           </div>
         </div>
+        
+        <div class="col-md-4 mb-3 dimmer-column">
+          <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
+            <div class="card-body text-center d-flex flex-column justify-content-center" style="min-height: 180px;">
+              <h5 class="card-title">Nessun dimmer</h5>
+              <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
+            </div>
+          </div>
+        </div>
       </div>
     `;
     
     $('#dimmer-container').html(dimmerHtml);
-    if (potenzaTotale <= 200) {
-      $('.dimmer-card').addClass('selected');
-      configurazione.dimmerSelezionato = "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V";
-      configurazione.dimmerCodice = "CTR130";
-    }
-    
     bindDimmerCardListeners();
     checkStep5Completion();
     return;
@@ -186,7 +189,8 @@ function caricaDimmerCompatibili() {
 
         if (configurazione.alimentazioneSelezionata === "DIMMERABILE_TRIAC") {
           opzioniDimmer = opzioniDimmer.filter(dimmer =>
-            dimmer.includes("DIMMERABILE_TRIAC_PULSANTE_TUYA_220V")
+            dimmer.includes("DIMMERABILE_TRIAC_PULSANTE_TUYA_220V") ||
+            dimmer.includes("NESSUN_DIMMER")
           );
         }
 
@@ -611,26 +615,72 @@ export function vaiAlControllo() {
   
   updateProgressBar(5);
 
-  if (configurazione.tensioneSelezionato === '220V') {
-    $("#step3-temperatura-potenza").fadeOut(300, function() {
-      $("#step5-controllo").fadeIn(300);
-      prepareControlloListeners();
-    });
-  } else {
-    $("#step4-alimentazione").fadeOut(300, function() {
-      $("#step5-controllo").fadeIn(300);
-      prepareControlloListeners();
-      
-      if (configurazione.alimentazioneSelezionata === 'SENZA_ALIMENTATORE') {
-        configurazione.dimmerSelezionato = "NESSUN_DIMMER";
-        configurazione.dimmerCodice = "";
+  $("#step3-temperatura-potenza, #step4-alimentazione").fadeOut(300, function() {
+    $("#step5-controllo").fadeIn(300, function() {
+      // Configurazione differente per strip LED 220V
+      if (configurazione.tensioneSelezionato === '220V') {
+        // Imposta automaticamente i valori di configurazione per cavi
+        configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_UNICA";
+        configurazione.lunghezzaCavoIngresso = 0;
+        configurazione.lunghezzaCavoUscita = 0;
+        configurazione.uscitaCavoSelezionata = "DRITTA";
         
-        $('#dimmer-container').parent().hide();
+        // Nascondi le sezioni relative ai cavi
+        $('div.container.mb-5:has(h3:contains("Alimentazione Cavo"))').hide();
+        $('div.container.mb-5:has(h3:contains("Lunghezza Cavo"))').hide();
+        $('div.container.mb-5:has(h3:contains("Uscita Cavo"))').hide();
+        
+        // Visualizza solo la sezione dimmer e carica le opzioni specifiche
+        const potenzaTotale = calcolaPotenzaTotaleStrip();
+        
+        const dimmerHtml = `
+          <h3 class="mb-3">Dimmer</h3>
+          <div class="alert alert-info mb-3">
+            <strong>Nota:</strong> Per strip LED 220V sono disponibili le seguenti opzioni di dimmer.
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3 dimmer-column">
+              <div class="card option-card dimmer-card" data-dimmer="DIMMERABILE_TRIAC_PULSANTE_TUYA_220V" data-codice="CTR130" data-potenza-max="200">
+                <img src="/static/img/dimmer/dimmer_pulsante.jpg" class="card-img-top" alt="CTR130" style="height: 180px; object-fit: cover;" onerror="this.src='/static/img/placeholder_logo.jpg'; this.style.height='180px'">
+                <div class="card-body text-center">
+                  <h5 class="card-title">CTR130 - Dimmer a pulsante</h5>
+                  <p class="card-text small text-muted">Dimmerabile TRIAC tramite pulsante e compatibile con sistema TUYA</p>
+                  ${potenzaTotale > 200 ? '<p class="card-text small text-danger">Attenzione: Potenza richiesta superiore al limite massimo!</p>' : ''}
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6 mb-3 dimmer-column">
+              <div class="card option-card dimmer-card" data-dimmer="NESSUN_DIMMER">
+                <div class="card-body text-center d-flex flex-column justify-content-center" style="min-height: 180px;">
+                  <h5 class="card-title">Nessun dimmer</h5>
+                  <p class="card-text small text-muted">Installazione senza controllo di luminosità</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        $('#dimmer-container').html(dimmerHtml);
+        bindDimmerCardListeners();
       } else {
-        $('#dimmer-container').parent().show();
+        // Comportamento standard per strip non 220V
+        prepareControlloListeners();
+        
+        if (configurazione.alimentazioneSelezionata === 'SENZA_ALIMENTATORE') {
+          configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+          configurazione.dimmerCodice = "";
+          
+          $('#dimmer-container').parent().hide();
+        } else {
+          $('#dimmer-container').parent().show();
+          caricaDimmerCompatibili();
+        }
       }
+      
+      checkStep5Completion();
     });
-  }
+  });
 }
 
 export function prepareControlloListeners() {
@@ -640,6 +690,31 @@ export function prepareControlloListeners() {
   
   $('#dimmer-warning').hide();
   $('#lunghezza-cavo-uscita-container').hide();
+
+  if (configurazione.tensioneSelezionato === '220V') {
+    // Imposta automaticamente i valori di configurazione
+    configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_UNICA";
+    configurazione.lunghezzaCavoIngresso = 0;
+    configurazione.lunghezzaCavoUscita = 0;
+    
+    // Nascondi le sezioni di configurazione cavo
+    $('div.container.mb-5:has(h3:contains("Alimentazione Cavo"))').hide();
+    $('div.container.mb-5:has(h3:contains("Lunghezza Cavo"))').hide();
+    $('div.container.mb-5:has(h3:contains("Uscita Cavo"))').hide();
+  } else {
+    // Mostra le sezioni per le strip non 220V
+    $('div.container.mb-5:has(h3:contains("Alimentazione Cavo"))').show();
+    $('div.container.mb-5:has(h3:contains("Lunghezza Cavo"))').show();
+    $('div.container.mb-5:has(h3:contains("Uscita Cavo"))').show();
+    
+    configurazione.tipoAlimentazioneCavo = null;
+    $('#lunghezza-cavo-ingresso').val(0);
+    $('#lunghezza-cavo-uscita').val(0);
+    configurazione.lunghezzaCavoIngresso = 0;
+    configurazione.lunghezzaCavoUscita = 0;
+    
+    $('.alimentazione-cavo-card, .uscita-cavo-card').removeClass('selected');
+  }
 
   $('div.container.mb-5:has(h3:contains("Uscita Cavo"))').hide();
   

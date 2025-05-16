@@ -101,14 +101,23 @@ export function checkParametriCompletion() {
 export function checkStep5Completion() {
   let isComplete = true;
   
-  if (configurazione.alimentazioneSelezionata === 'SENZA_ALIMENTATORE') {
-    configurazione.dimmerSelezionato = "NESSUN_DIMMER";
-  } else if (!configurazione.dimmerSelezionato) {
-    isComplete = false;
-  }
-  
-  if (!configurazione.tipoAlimentazioneCavo) {
-    isComplete = false;
+  // Per strip 220V, il tipoAlimentazioneCavo è già impostato automaticamente
+  if (configurazione.tensioneSelezionato === '220V') {
+    isComplete = !!configurazione.dimmerSelezionato; // Verifica solo se il dimmer è selezionato
+  } else {
+    if (configurazione.alimentazioneSelezionata === 'SENZA_ALIMENTATORE') {
+      configurazione.dimmerSelezionato = "NESSUN_DIMMER";
+    } else if (!configurazione.dimmerSelezionato) {
+      isComplete = false;
+    }
+    
+    if (!configurazione.tipoAlimentazioneCavo) {
+      isComplete = false;
+    }
+    
+    if (!configurazione.uscitaCavoSelezionata) {
+      isComplete = false;
+    }
   }
   
   $('#btn-continua-step5').prop('disabled', !isComplete);
