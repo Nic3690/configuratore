@@ -176,7 +176,7 @@ export function generaPDF(codiceProdotto, configurazione) {
 		datiTabella.push(['Lunghezza cavo uscita', `${configurazione.lunghezzaCavoUscita}mm`]);
 	  }
 
-	  if (configurazione.uscitaCavoSelezionata) {
+	  if (configurazione.uscitaCavoSelezionata && configurazione.categoriaSelezionata != "esterni" && configurazione.categoriaSelezionata != "wall_washer_ext") {
 		datiTabella.push(['Uscita cavo', getNomeVisualizzabile(configurazione.uscitaCavoSelezionata)]);
 	  }
 
@@ -243,11 +243,11 @@ export function generaPDF(codiceProdotto, configurazione) {
 	  const finalY = doc.lastAutoTable.finalY + 10;
 	  doc.setFontSize(10);
 	  doc.setFont('helvetica', 'normal');
-	  doc.text('Nota: Lo spazio necessario per tappi e saldatura è di 5mm.', 15, finalY);
+	  doc.text('ATTENZIONE: la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.', 15, finalY);
 
 	  doc.setFont('helvetica', 'bold');
 	  doc.setTextColor(194, 59, 34);
-	  doc.text('IMPORTANTE: Staffe non incluse.', 15, finalY + 8);
+	  doc.text('ATTENZIONE: eventuali staffe aggiuntive non incluse.', 15, finalY + 8);
 	  doc.setTextColor(0, 0, 0);
 	  doc.setFont('helvetica', 'normal');
 	  

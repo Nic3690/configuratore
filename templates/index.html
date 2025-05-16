@@ -308,12 +308,7 @@
           <div class="form-group mb-4 lunghezza-personalizzata-container">
             <label for="lunghezza-personalizzata">Lunghezza richiesta (mm):</label>
             <input type="number" class="form-control" id="lunghezza-personalizzata" placeholder="Inserisci la lunghezza in millimetri" min="100">
-            <div class="form-text text-muted">
-              Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
-            </div>
-            <div class="form-text text-muted">
-              Nota: per i profili flessibili il taglio minimo è di 1000mm
-            </div>
+            <p class="alert-dialog mt-4">ATTENZIONE: la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
           </div>
         </div>
         
@@ -729,6 +724,7 @@
             <p class="mt-3">Caricamento opzioni dimmer compatibili...</p>
           </div>
         </div>
+        <p class="alert-dialog">ATTENZIONE: tutti i nostri dimmer sono in IP20.</p>
       </div>
       
       <div class="container mb-5">
@@ -869,6 +865,7 @@
         
         <div class="alert alert-success mt-4">
           <strong>Lunghezza selezionata:</strong> <span id="step6-lunghezza-finale">0</span> mm
+          <p class="alert-dialog mt-4">ATTENZIONE: la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
         </div>
       </div>
       

@@ -1323,12 +1323,14 @@ export function finalizzaConfigurazione() {
             else if (uscitaCavoText === 'LATERALE_SX') uscitaCavoText = 'Laterale sinistra';
             else if (uscitaCavoText === 'RETRO') uscitaCavoText = 'Retro';
             
-            riepilogoHtml += `
-                    <tr>
-                      <th scope="row">Uscita cavo</th>
-                      <td>${uscitaCavoText}</td>
-                    </tr>
-            `;
+            if (configurazione.categoriaSelezionata != "esterni" && configurazione.categoriaSelezionata != "wall_washer_ext") {
+              riepilogoHtml += `
+                      <tr>
+                        <th scope="row">Uscita cavo</th>
+                        <td>${uscitaCavoText}</td>
+                      </tr>
+              `;
+            }
           }
         }
 
@@ -1369,10 +1371,10 @@ export function finalizzaConfigurazione() {
           
           <div class="text-center mt-4">
             <div class="alert alert-info">
-              <strong>Note:</strong> Lo spazio necessario per tappi e saldatura è di ${riepilogo.spazioProduzione || 5}mm.
+            <p class="alert-dialog"><strong>ATTENZIONE:</strong> la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
             </div>
             <div class="alert alert-warning mt-3">
-              <strong>Importante:</strong> Staffe non incluse.
+              <strong>Attenzione:</strong> eventuali staffe aggiuntive non incluse.
             </div>
             <button class="btn btn-success btn-lg me-2" id="btn-salva-configurazione">Salva configurazione</button>
             <button class="btn btn-primary btn-lg" id="btn-preventivo">Richiedi preventivo</button>

@@ -348,6 +348,7 @@ export function vaiAllaPersonalizzazione() {
           <div class="alert alert-info">
             <p>Hai selezionato un profilo intero con una lunghezza di ${lunghezzaMetri}mm.</p>
           </div>
+          <p class="alert-dialog">ATTENZIONE: la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
         </div>
       `;
       
@@ -483,6 +484,7 @@ function togglePersonalizzazioneLunghezza() {
         <div class="alert alert-info">
           <p>Hai selezionato un profilo intero che ha una lunghezza di ${lunghezzaMetri}m (${lunghezzaMassima}mm).</p>
         </div>
+        <p class="alert-dialog">ATTENZIONE: la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
       </div>
     `;
 
@@ -526,12 +528,7 @@ export function updateIstruzioniMisurazione(forma) {
           <label for="lunghezza-personalizzata">Lunghezza richiesta (mm):</label>
           <input type="number" class="form-control" id="lunghezza-personalizzata" 
                  placeholder="Inserisci la lunghezza in millimetri" min="100">
-          <div class="form-text text-muted">
-            Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
-          </div>
-          <div class="form-text text-muted">
-              Nota: per i profili flessibili il taglio minimo è di 1000mm
-            </div>
+          <p class="alert-dialog">ATTENZIONE: la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
         </div>
       `);
 
@@ -559,12 +556,7 @@ export function updateIstruzioniMisurazione(forma) {
           <label for="lunghezza-lato2">Lunghezza lato verticale (mm):</label>
           <input type="number" class="form-control campo-lunghezza-multipla" id="lunghezza-lato2" 
                  data-lato="lato2" placeholder="Lato verticale" min="100">
-          <div class="form-text text-muted">
-            Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
-          </div>
-          <div class="form-text text-muted">
-              Nota: per i profili flessibili il taglio minimo è di 1000mm
-            </div>
+          <p class="alert-dialog">ATTENZIONE: la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
         </div>
       `);
       mostraNonAssemblatoWarning();
@@ -587,12 +579,7 @@ export function updateIstruzioniMisurazione(forma) {
           <label for="lunghezza-lato2">Lunghezza lato verticale (mm):</label>
           <input type="number" class="form-control campo-lunghezza-multipla" id="lunghezza-lato2" 
                  data-lato="lato2" placeholder="Lato verticale" min="100">
-          <div class="form-text text-muted">
-            Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
-          </div>
-          <div class="form-text text-muted">
-              Nota: per i profili flessibili il taglio minimo è di 1000mm
-            </div>
+          <p class="alert-dialog">ATTENZIONE: la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
         </div>
       `);
       mostraNonAssemblatoWarning();
@@ -620,12 +607,7 @@ export function updateIstruzioniMisurazione(forma) {
           <label for="lunghezza-lato3">Lunghezza lato orizzontale inferiore (mm):</label>
           <input type="number" class="form-control campo-lunghezza-multipla" id="lunghezza-lato3" 
                  data-lato="lato3" placeholder="Lato orizzontale inferiore" min="100">
-          <div class="form-text text-muted">
-            Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
-          </div>
-          <div class="form-text text-muted">
-              Nota: per i profili flessibili il taglio minimo è di 1000mm
-            </div>
+          <p class="alert-dialog">ATTENZIONE: la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
         </div>
       `);
       mostraNonAssemblatoWarning();
@@ -648,12 +630,7 @@ export function updateIstruzioniMisurazione(forma) {
           <label for="lunghezza-lato2">Larghezza (mm):</label>
           <input type="number" class="form-control campo-lunghezza-multipla" id="lunghezza-lato2" 
                  data-lato="lato2" placeholder="Larghezza" min="100">
-          <div class="form-text text-muted">
-            Nota: verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.
-          </div>
-          <div class="form-text text-muted">
-              Nota: per i profili flessibili il taglio minimo è di 1000mm
-            </div>
+          <p class="alert-dialog">ATTENZIONE: la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
         </div>
       `);
       mostraNonAssemblatoWarning();
