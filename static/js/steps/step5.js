@@ -192,6 +192,10 @@ function caricaDimmerCompatibili() {
             dimmer.includes("DIMMERABILE_TRIAC_PULSANTE_TUYA_220V") ||
             dimmer.includes("NESSUN_DIMMER")
           );
+        } else if (configurazione.alimentazioneSelezionata === "ON-OFF") {
+          opzioniDimmer = opzioniDimmer.filter(dimmer =>
+            !dimmer.includes("DIMMERABILE_TRIAC_PULSANTE_TUYA_220V")
+          );
         }
 
         opzioniDimmer = opzioniDimmer.filter(dimmer => {
@@ -221,7 +225,8 @@ function caricaDimmerCompatibili() {
             "DIMMERABILE_PWM_CON_SISTEMA_TUYA_MONOCOLORE",
             "DIMMERABILE_PWM_CON_SISTEMA_TUYA_TUNABLE_WHITE",
             "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGB",
-            "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW"
+            "DIMMERABILE_PWM_CON_SISTEMA_TUYA_RGBW",
+            "DIMMERABILE_TRIAC_PULSANTE_TUYA_220V"
           ],
           "DALI": [
             "DIMMER_PWM_CON_PULSANTE_24V_MONOCOLORE",
@@ -698,17 +703,14 @@ export function prepareControlloListeners() {
   $('#lunghezza-cavo-uscita-container').hide();
 
   if (configurazione.tensioneSelezionato === '220V') {
-    // Imposta automaticamente i valori di configurazione
     configurazione.tipoAlimentazioneCavo = "ALIMENTAZIONE_UNICA";
     configurazione.lunghezzaCavoIngresso = 0;
     configurazione.lunghezzaCavoUscita = 0;
-    
-    // Nascondi le sezioni di configurazione cavo
+
     $('div.container.mb-5:has(h3:contains("Alimentazione Cavo"))').hide();
     $('div.container.mb-5:has(h3:contains("Lunghezza Cavo"))').hide();
     $('div.container.mb-5:has(h3:contains("Uscita Cavo"))').hide();
   } else {
-    // Mostra le sezioni per le strip non 220V
     $('div.container.mb-5:has(h3:contains("Alimentazione Cavo"))').show();
     $('div.container.mb-5:has(h3:contains("Lunghezza Cavo"))').show();
     $('div.container.mb-5:has(h3:contains("Uscita Cavo"))').show();
