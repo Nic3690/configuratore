@@ -10,6 +10,27 @@ import { initStep7Listeners } from './steps/step7.js';
 import { caricaProfili } from './api.js';
 
 $(document).ready(function() {
+  $('<style>')
+    .text(`
+      .alert-dialog {
+        display: none;
+      }
+      
+      body.categoria-esterni .alert-dialog,
+      body.categoria-wall_washer_ext .alert-dialog {
+        display: block;
+      }
+    `)
+    .appendTo('head');
+
+  function updateAlertDialogsVisibility(categoria) {
+    $('body').removeClass('categoria-esterni categoria-wall_washer_ext');
+    if (categoria === 'esterni' || categoria === 'wall_washer_ext') {
+      $('body').addClass(`categoria-${categoria}`);
+    }
+  }
+
+  window.updateAlertDialogsVisibility = updateAlertDialogsVisibility;
 
   $(".step-section").hide();
   $("#step1-tipologia").show();
@@ -59,6 +80,8 @@ $(document).ready(function() {
     lastActivatedLight = categoria;
 
     configurazione.categoriaSelezionata = categoria;
+
+    updateAlertDialogsVisibility(categoria);
     
     $('.categoria-selezionata').text(`Categoria: ${mappaCategorieVisualizzazione[categoria] || categoria}`);
     
@@ -77,5 +100,9 @@ $(document).ready(function() {
         activateLight(lastActivatedLight);
       }
     }, 400);
+  });
+
+  $('a[href="javascript:location.reload(true)"]').on('click', function() {
+    updateAlertDialogsVisibility(null);
   });
 });
