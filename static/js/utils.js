@@ -198,6 +198,6 @@ export function checkPersonalizzazioneCompletion() {
       }
     }
   }
-
+  $('#btn-continua-personalizzazione').prop('disabled', !isComplete);
   return isComplete;
 }
