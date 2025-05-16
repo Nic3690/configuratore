@@ -173,15 +173,32 @@ function analizzaEMostraTipologieCompatibili() {
         return;
       }
 
-      const hasCOB = profiloSelezionato.stripLedCompatibili.some(id => id.includes('COB'));
-      const hasSMD = profiloSelezionato.stripLedCompatibili.some(id => id.includes('SMD'));
-      const hasSpecial = profiloSelezionato.stripLedCompatibili.some(id => 
+      let hasCOB = profiloSelezionato.stripLedCompatibili.some(id => id.includes('COB'));
+      if (configurazione.lunghezzaRichiesta >= 10000)
+      {
+        hasCOB = profiloSelezionato.stripLedCompatibili.some(id => id.includes('220V'));
+      }
+
+      let hasSMD = profiloSelezionato.stripLedCompatibili.some(id => id.includes('SMD'));
+      
+      let hasSpecial = profiloSelezionato.stripLedCompatibili.some(id => 
         !id.includes('COB') && !id.includes('SMD') || 
         id.includes('ZIGZAG') || 
         id.includes('XFLEX') || 
         id.includes('RUNNING') || 
         id.includes('XSNAKE') || 
         id.includes('XMAGIS'));
+        
+      if (configurazione.lunghezzaRichiesta >= 10000)
+      {
+        hasSMD = profiloSelezionato.stripLedCompatibili.some(id => id.includes('48V'));
+        hasSpecial = profiloSelezionato.stripLedCompatibili.some(id => id.includes('48V'));
+      }
+      if (configurazione.lunghezzaRichiesta >= 30000)
+      {
+        hasSMD = false;
+        hasSpecial = false;
+      }
 
       if (hasCOB) {
         $('.tipologia-strip-card[data-tipologia-strip="COB"]').parent().show();
@@ -741,7 +758,15 @@ export function caricaOpzioniParametriFiltrate() {
       method: 'GET',
       success: function(data) {
         if (data.success && data.voltaggi) {
-          renderizzaOpzioniTensione(data.voltaggi);
+          let tensioniDisponibili = data.voltaggi;
+
+          if (configurazione.lunghezzaRichiesta > 10000) {
+            tensioniDisponibili = tensioniDisponibili.filter(tensione => tensione !== '24V');
+          }
+          if (configurazione.lunghezzaRichiesta > 30000) {
+            tensioniDisponibili = tensioniDisponibili.filter(tensione => tensione !== '48V');
+          }
+          renderizzaOpzioniTensione(tensioniDisponibili);
         } else {
           $('#tensione-options').html('<p class="text-danger">Errore nel caricamento delle opzioni tensione.</p>');
         }
