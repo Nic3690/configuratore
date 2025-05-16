@@ -184,6 +184,12 @@ function caricaDimmerCompatibili() {
           );
         }
 
+        if (configurazione.alimentazioneSelezionata === "DIMMERABILE_TRIAC") {
+          opzioniDimmer = opzioniDimmer.filter(dimmer =>
+            dimmer.includes("DIMMERABILE_TRIAC_PULSANTE_TUYA_220V")
+          );
+        }
+
         opzioniDimmer = opzioniDimmer.filter(dimmer => {
           const potenzaMassima = potenzeMassimeDimmer[dimmer] || 0;
           return potenzaMassima >= potenzaTotale;
