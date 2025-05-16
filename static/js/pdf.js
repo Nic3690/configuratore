@@ -243,7 +243,10 @@ export function generaPDF(codiceProdotto, configurazione) {
 	  const finalY = doc.lastAutoTable.finalY + 10;
 	  doc.setFontSize(10);
 	  doc.setFont('helvetica', 'normal');
+
+	  if (configurazione.categoriaSelezionata === 'esterni' || configurazione.categoriaSelezionata === 'wall_washer_ext') {
 	  doc.text('ATTENZIONE: la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.', 15, finalY);
+	  }
 
 	  doc.setFont('helvetica', 'bold');
 	  doc.setTextColor(194, 59, 34);

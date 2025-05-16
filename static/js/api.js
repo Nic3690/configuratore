@@ -1205,12 +1205,12 @@ export function finalizzaConfigurazione() {
             }
             
             riepilogoHtml += `
-            <tr>
-            <th scope="row">Tipologia Strip</th>
-            <td>${tipologiaStripText}</td>
-            </tr>
+                      <tr>
+                        <th scope="row">Tipologia Strip</th>
+                        <td>${tipologiaStripText}</td>
+                      </tr>
             `;
-            }
+          }
           
           if (riepilogo.potenzaSelezionata) {
             riepilogoHtml += `
@@ -1243,18 +1243,18 @@ export function finalizzaConfigurazione() {
           
           if (riepilogo.alimentazioneSelezionata !== 'SENZA_ALIMENTATORE' && riepilogo.tipologiaAlimentatoreSelezionata) {
             riepilogoHtml += `
-                        <tr>
-                          <th scope="row">Alimentatore</th>
-                          <td>${riepilogo.tipologiaAlimentatoreSelezionata} - ${tuttiCodici.alimentatore} </td>
-                        </tr>
+                      <tr>
+                        <th scope="row">Alimentatore</th>
+                        <td>${riepilogo.tipologiaAlimentatoreSelezionata} - ${tuttiCodici.alimentatore} </td>
+                      </tr>
             `;
             
             if (riepilogo.potenzaConsigliataAlimentatore) {
               riepilogoHtml += `
-                        <tr>
-                          <th scope="row">Potenza consigliata</th>
-                          <td>${riepilogo.potenzaConsigliataAlimentatore}W</td>
-                        </tr>
+                      <tr>
+                        <th scope="row">Potenza consigliata</th>
+                        <td>${riepilogo.potenzaConsigliataAlimentatore}W</td>
+                      </tr>
               `;
             }
           }
@@ -1266,6 +1266,7 @@ export function finalizzaConfigurazione() {
                 </div>
                 <div class="col-md-6">
                   <table class="table table-striped">
+                    <tbody>
         `;
 
         if (riepilogo.dimmerSelezionato) {
@@ -1369,10 +1370,16 @@ export function finalizzaConfigurazione() {
             </div>
           </div>
           
-          <div class="text-center mt-4">
+          <div class="text-center mt-4">`;
+
+        if (riepilogo.categoriaSelezionata === 'esterni' || riepilogo.categoriaSelezionata === 'wall_washer_ext') {
+          riepilogoHtml += `
             <div class="alert alert-info">
-            <p class="alert-dialog"><strong>ATTENZIONE:</strong> la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
-            </div>
+              <p><strong>ATTENZIONE:</strong> la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
+            </div>`;
+        }
+        
+        riepilogoHtml += `
             <div class="alert alert-warning mt-3">
               <strong>Attenzione:</strong> eventuali staffe aggiuntive non incluse.
             </div>
