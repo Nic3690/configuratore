@@ -441,3 +441,9 @@ h1, h2, h3, h4 {
 .strip-led-compatibile-card.selected .card-img-strip-detail {
   border-top: 1px solid rgba(232, 63, 52, 0.3);
 }
+
+/* Badge per proposte */
+
+.badge.bg-warning {
+  background-color: #e83f34 !important;
+}

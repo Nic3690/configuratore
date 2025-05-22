@@ -707,7 +707,7 @@ export function vaiAiParametriStripLed() {
 
   if ($('#tipologia-strip-nome-step2-parametri').length === 0) {
     $('.selection-badges').append(`
-      <span class="badge bg-warning selection-badge">Tipologia Strip: <span id="tipologia-strip-nome-step2-parametri">${tipologiaStripText}</span></span>
+      <span class="badge bg-primary selection-badge">Tipologia Strip: <span id="tipologia-strip-nome-step2-parametri">${tipologiaStripText}</span></span>
     `);
   } else {
     $('#tipologia-strip-nome-step2-parametri').text(tipologiaStripText);

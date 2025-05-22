@@ -321,19 +321,17 @@ function renderProposteCombinazioni(data) {
     <div class="row mt-3">
   `;
 
-  // Mostra le combinazioni
   data.combinazioni.forEach((combinazione, index) => {
     let cardClass = 'btn-outline-primary';
     let badgeClass = 'bg-success';
     let badgeText = 'Ottimale';
     
     if (combinazione.ha_spazio_buio) {
-      cardClass = 'btn-outline-warning';
+      cardClass = 'btn-outline-primary';
       badgeClass = 'bg-warning';
       badgeText = 'Spazio buio';
     }
 
-    // Escapiamo correttamente il JSON per evitare problemi con le virgolette
     const combinazioneJson = JSON.stringify(combinazione).replace(/"/g, '&quot;');
     
     proposteHTML += `
