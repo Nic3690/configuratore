@@ -1381,7 +1381,7 @@ export function finalizzaConfigurazione() {
         else {
           riepilogoHtml += `
             <div class="alert alert-info">
-              <p><strong>NOTA:</strong> Verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.</p>
+              <p mb-0><strong>NOTA:</strong> Verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.</p>
             </div>`;
         }
         

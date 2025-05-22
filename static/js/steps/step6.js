@@ -54,26 +54,19 @@ export function initStep6Listeners() {
     } else {
       combinazione = combinazioneData;
     }
-    
-    console.log('Combinazione parsata:', combinazione);
-    console.log('Lunghezze combinazione:', combinazione.lunghezze);
-    
-    // Aggiorna le lunghezze multiple nella configurazione
+
     configurazione.lunghezzeMultiple = Object.assign({}, combinazione.lunghezze);
     configurazione.lunghezzaRichiesta = combinazione.lunghezza_totale;
-    
-    console.log('Configurazione aggiornata:');
-    console.log('- lunghezzeMultiple:', configurazione.lunghezzeMultiple);
-    console.log('- lunghezzaRichiesta:', configurazione.lunghezzaRichiesta);
-    
+
     $('#step6-lunghezza-finale').text(combinazione.lunghezza_totale);
-    
-    // Mostra/nascondi warning per spazio buio
+  
     $('#spazio-buio-warning').remove();
     if (combinazione.ha_spazio_buio) {
+      let spazioTotale = combinazione.spazio_buio_totale || 0;
+      if (configurazione.formaDiTaglioSelezionata == "RETTANGOLO_QUADRATO") spazioTotale *= 2;
       $('.alert.alert-success.mt-4').append(`
-        <p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="font-size: 1rem; color:#e83f34 !important">
-          <strong>ATTENZIONE:</strong> Questa combinazione avrà degli spazi bui in alcuni lati
+        <p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="font-size: 1rem; color:#ff0000 !important">
+          <strong>ATTENZIONE:</strong> Questa combinazione avrà uno spazio buio totale di ${spazioTotale}mm distribuito sui vari lati
         </p>
       `);
     }
@@ -301,11 +294,10 @@ function renderProposteCombinazioni(data) {
     <p>Il sistema ha calcolato diverse combinazioni ottimali per i tuoi lati. Seleziona la combinazione che preferisci:</p>
   `;
 
-  // Mostra prima un riepilogo dei lati originali
   proposteHTML += `
     <div class="alert alert-info mb-4">
       <h6>Misure originali inserite:</h6>
-      <ul class="mb-0">
+      <ul class="mb-3">
   `;
   
   Object.entries(configurazione.lunghezzeMultiple).forEach(([lato, valore]) => {
@@ -328,8 +320,10 @@ function renderProposteCombinazioni(data) {
     
     if (combinazione.ha_spazio_buio) {
       cardClass = 'btn-outline-primary';
-      badgeClass = 'bg-warning';
-      badgeText = 'Spazio buio';
+      badgeClass = 'bg-warning text-white';
+      let spazioTotale = combinazione.spazio_buio_totale || 0;
+      if (configurazione.formaDiTaglioSelezionata == "RETTANGOLO_QUADRATO") spazioTotale *= 2;
+      badgeText = `${spazioTotale}mm spazio buio`;
     }
 
     const combinazioneJson = JSON.stringify(combinazione).replace(/"/g, '&quot;');
@@ -349,9 +343,9 @@ function renderProposteCombinazioni(data) {
       const etichetta = etichette[lato] || `Lato ${lato.replace('lato', '')}`;
       const originale = configurazione.lunghezzeMultiple[lato];
       const isModificato = valore !== originale;
-      
+
       proposteHTML += `
-        <div>${etichetta}: ${valore}mm ${isModificato ? `<small class="text-muted">(era ${originale}mm)</small>` : ''}</div>
+        <div>${etichetta}: ${valore}mm</div>
       `;
     });
     

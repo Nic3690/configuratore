@@ -544,6 +544,28 @@ def calcola_lunghezze():
         
         return proposta1, proposta2
 
+    # Funzione helper per calcolare lo spazio buio di un singolo lato
+    def calcola_spazio_buio_lato(valore_originale, proposta1, proposta2):
+        # Se il valore originale coincide con una delle proposte, non c'è spazio buio
+        if valore_originale == proposta1 or valore_originale == proposta2:
+            return 0
+        
+        # Se il valore originale è tra proposta1 e proposta2
+        if proposta1 < valore_originale < proposta2:
+            # Lo spazio buio è la differenza tra il valore originale e proposta1
+            return valore_originale - proposta1
+        
+        # Se il valore originale è minore di proposta1
+        if valore_originale < proposta1:
+            return 0
+        
+        # Se il valore originale è maggiore di proposta2
+        if valore_originale > proposta2:
+            # Lo spazio buio è la differenza tra il valore originale e proposta2
+            return valore_originale - proposta2
+        
+        return 0
+
     # Se è una forma complessa con lati multipli
     if forma_taglio != 'DRITTO_SEMPLICE' and lunghezze_multiple:
         # Calcola le proposte per ogni lato
@@ -588,46 +610,50 @@ def calcola_lunghezze():
             combo_dict = {}
             combo_label_parts = []
             lunghezza_totale = 0
-            ha_spazio_buio = False
+            spazio_buio_totale = 0
             
             for i, (tipo, valore) in enumerate(combinazione):
                 lato = lati_ordinati[i]
                 combo_dict[lato] = valore
                 lunghezza_totale += valore
                 
-                # Controlla se questo lato ha spazio buio
-                if tipo == 'originale' and valore < proposte_per_lato[lato]['proposta2']:
-                    ha_spazio_buio = True
+                # Calcola lo spazio buio per questo lato
+                props = proposte_per_lato[lato]
+                spazio_buio_lato = calcola_spazio_buio_lato(
+                    props['originale'], 
+                    props['proposta1'], 
+                    props['proposta2']
+                ) if tipo == 'originale' else 0
                 
-                # Crea etichetta per questo lato
+                spazio_buio_totale += spazio_buio_lato
+
                 if tipo == 'originale':
                     combo_label_parts.append(f"Orig.")
                 elif tipo == 'proposta1':
                     combo_label_parts.append(f"Prop.1")
-                else:  # proposta2
+                else:
                     combo_label_parts.append(f"Prop.2")
             
             combinazioni.append({
                 'lunghezze': combo_dict,
                 'lunghezza_totale': lunghezza_totale,
                 'label': " + ".join(combo_label_parts),
-                'ha_spazio_buio': ha_spazio_buio,
+                'ha_spazio_buio': spazio_buio_totale > 0,
+                'spazio_buio_totale': spazio_buio_totale,
                 'dettaglio': combinazione
             })
-        
-        # Ordina le combinazioni: prima quelle senza spazio buio, poi per lunghezza totale
-        combinazioni.sort(key=lambda x: (x['ha_spazio_buio'], x['lunghezza_totale']))
+
+        combinazioni.sort(key=lambda x: (x['ha_spazio_buio'], x['spazio_buio_totale'], x['lunghezza_totale']))
         
         return jsonify({
             'success': True,
             'tipo': 'combinazioni',
             'spazioProduzione': spazio_produzione,
             'proposte_per_lato': proposte_per_lato,
-            'combinazioni': combinazioni[:10]
+            'combinazioni': combinazioni[:27]
         })
     
     else:
-        # Comportamento originale per forme dritte
         if dim_richiesta > 0:
             proposta1, proposta2 = calcola_proposte_singole(dim_richiesta)
         else:
@@ -643,6 +669,7 @@ def calcola_lunghezze():
                 'proposta2': proposta2
             }
         })
+
 
 @app.route('/finalizza_configurazione', methods=['POST'])
 def finalizza_configurazione():
