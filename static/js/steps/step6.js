@@ -40,14 +40,31 @@ export function initStep6Listeners() {
 
   // Gestione combinazioni per forme complesse  
   $(document).on('click', '.btn-seleziona-combinazione', function() {
+    console.log('Click su combinazione rilevato!');
+    
     $('.btn-seleziona-combinazione').removeClass('active');
     $(this).addClass('active');
     
-    const combinazione = JSON.parse($(this).data('combinazione'));
+    const combinazioneData = $(this).data('combinazione');
+    console.log('Dati raw combinazione:', combinazioneData);
+    
+    let combinazione;
+    if (typeof combinazioneData === 'string') {
+      combinazione = JSON.parse(combinazioneData);
+    } else {
+      combinazione = combinazioneData;
+    }
+    
+    console.log('Combinazione parsata:', combinazione);
+    console.log('Lunghezze combinazione:', combinazione.lunghezze);
     
     // Aggiorna le lunghezze multiple nella configurazione
-    configurazione.lunghezzeMultiple = combinazione.lunghezze;
+    configurazione.lunghezzeMultiple = Object.assign({}, combinazione.lunghezze);
     configurazione.lunghezzaRichiesta = combinazione.lunghezza_totale;
+    
+    console.log('Configurazione aggiornata:');
+    console.log('- lunghezzeMultiple:', configurazione.lunghezzeMultiple);
+    console.log('- lunghezzaRichiesta:', configurazione.lunghezzaRichiesta);
     
     $('#step6-lunghezza-finale').text(combinazione.lunghezza_totale);
     
@@ -241,31 +258,22 @@ function renderProposteSemplici(data, lunghezzaOriginale) {
   
   $('#step6-proposte-container').html(proposteHTML);
 
-  $('.btn-seleziona-proposta').on('click', function() {
-    $('.btn-seleziona-proposta').removeClass('active');
-    $(this).addClass('active');
-    
-    const proposta = $(this).data('proposta');
-    const valore = parseInt($(this).data('valore'), 10);
-    
-    configurazione.lunghezzaRichiesta = valore;
-    $('#step6-lunghezza-finale').text(valore);
-    $('#spazio-buio-warning').hide();
-
-    if (proposta === 'originale' && spazioBuio > 0) {
-      $('#spazio-buio-warning').show();
-    }
-    $('#btn-continua-step6').prop('disabled', false);
-  });
-
   if (coincideConProposta1) {
-    $('.btn-seleziona-proposta[data-proposta="1"]').addClass('active').trigger('click');
+    $('.btn-seleziona-proposta[data-proposta="1"]').addClass('active');
+    configurazione.lunghezzaRichiesta = data.proposte.proposta1;
+    $('#step6-lunghezza-finale').text(data.proposte.proposta1);
+    $('#btn-continua-step6').prop('disabled', false);
   } else if (coincideConProposta2) {
-    $('.btn-seleziona-proposta[data-proposta="2"]').addClass('active').trigger('click');
+    $('.btn-seleziona-proposta[data-proposta="2"]').addClass('active');
+    configurazione.lunghezzaRichiesta = data.proposte.proposta2;
+    $('#step6-lunghezza-finale').text(data.proposte.proposta2);
+    $('#btn-continua-step6').prop('disabled', false);
   }
 }
 
 function renderProposteCombinazioni(data) {
+  console.log('Rendering combinazioni:', data.combinazioni);
+  
   const etichetteLati = {
     'FORMA_L_DX': {
       'lato1': 'Lato orizzontale',
@@ -325,6 +333,9 @@ function renderProposteCombinazioni(data) {
       badgeText = 'Spazio buio';
     }
 
+    // Escapiamo correttamente il JSON per evitare problemi con le virgolette
+    const combinazioneJson = JSON.stringify(combinazione).replace(/"/g, '&quot;');
+    
     proposteHTML += `
       <div class="col-md-6 col-lg-4 mb-3">
         <div class="card">
@@ -350,7 +361,7 @@ function renderProposteCombinazioni(data) {
             </div>
             <p class="card-text small"><strong>Totale: ${combinazione.lunghezza_totale}mm</strong></p>
             <button class="btn ${cardClass} btn-seleziona-combinazione" 
-                    data-combinazione='${JSON.stringify(combinazione)}'>
+                    data-combinazione="${combinazioneJson}">
               Seleziona
             </button>
           </div>
@@ -362,36 +373,9 @@ function renderProposteCombinazioni(data) {
   proposteHTML += `</div>`;
   
   $('#step6-proposte-container').html(proposteHTML);
-
-  $('.btn-seleziona-combinazione').on('click', function() {
-    $('.btn-seleziona-combinazione').removeClass('active');
-    $(this).addClass('active');
-    
-    const combinazione = JSON.parse($(this).data('combinazione'));
-    
-    // Aggiorna le lunghezze multiple nella configurazione
-    configurazione.lunghezzeMultiple = combinazione.lunghezze;
-    configurazione.lunghezzaRichiesta = combinazione.lunghezza_totale;
-    
-    $('#step6-lunghezza-finale').text(combinazione.lunghezza_totale);
-    
-    // Mostra/nascondi warning per spazio buio
-    $('#spazio-buio-warning').remove();
-    if (combinazione.ha_spazio_buio) {
-      $('.alert.alert-success.mt-4').append(`
-        <p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="font-size: 1rem; color:#e83f34 !important">
-          <strong>ATTENZIONE:</strong> Questa combinazione avrà degli spazi bui in alcuni lati
-        </p>
-      `);
-    }
-    
-    $('#btn-continua-step6').prop('disabled', false);
-  });
-
-  // Seleziona automaticamente la prima combinazione (quella ottimale)
-  if (data.combinazioni.length > 0) {
-    setTimeout(() => {
-      $('.btn-seleziona-combinazione').first().click();
-    }, 100);
-  }
+  
+  console.log('HTML generato per combinazioni. Pulsante continua:', $('#btn-continua-step6').prop('disabled'));
+  
+  // NON fare nessuna selezione automatica - lascia che sia l'utente a scegliere
+  // Il pulsante rimane disabilitato finché l'utente non fa una scelta
 }

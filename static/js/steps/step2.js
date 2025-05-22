@@ -435,7 +435,7 @@ export function preparePersonalizzazioneListeners() {
 function toggleFormaTaglioSection() {
   let formaTaglioContainer = null;
   $('.container.mb-5').each(function() {
-    const heading = $(this).find('h3.mb-3').text();
+    const heading = $(this).find('h3.mb-1').text();
     if (heading === 'Forma di taglio') {
       formaTaglioContainer = $(this);
     }
