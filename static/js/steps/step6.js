@@ -17,7 +17,11 @@ export function initStep6Listeners() {
     finalizzaConfigurazione();
   });
 
-  $('.btn-seleziona-proposta').on('click', function() {
+  // Gestione proposte semplici (forme dritte)
+  $(document).on('click', '.btn-seleziona-proposta', function() {
+    $('.btn-seleziona-proposta').removeClass('active');
+    $(this).addClass('active');
+    
     const proposta = $(this).data('proposta');
     const valore = parseInt($(this).data('valore'), 10);
     
@@ -27,31 +31,76 @@ export function initStep6Listeners() {
     } else if (proposta === 2) {
       configurazione.lunghezzaRichiesta = valore;
       $('#step6-lunghezza-finale').text(valore);
+    } else if (proposta === 'originale') {
+      configurazione.lunghezzaRichiesta = valore;
+      $('#step6-lunghezza-finale').text(valore);
     }
+    $('#btn-continua-step6').prop('disabled', false);
+  });
+
+  // Gestione combinazioni per forme complesse  
+  $(document).on('click', '.btn-seleziona-combinazione', function() {
+    $('.btn-seleziona-combinazione').removeClass('active');
+    $(this).addClass('active');
+    
+    const combinazione = JSON.parse($(this).data('combinazione'));
+    
+    // Aggiorna le lunghezze multiple nella configurazione
+    configurazione.lunghezzeMultiple = combinazione.lunghezze;
+    configurazione.lunghezzaRichiesta = combinazione.lunghezza_totale;
+    
+    $('#step6-lunghezza-finale').text(combinazione.lunghezza_totale);
+    
+    // Mostra/nascondi warning per spazio buio
+    $('#spazio-buio-warning').remove();
+    if (combinazione.ha_spazio_buio) {
+      $('.alert.alert-success.mt-4').append(`
+        <p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="font-size: 1rem; color:#e83f34 !important">
+          <strong>ATTENZIONE:</strong> Questa combinazione avrà degli spazi bui in alcuni lati
+        </p>
+      `);
+    }
+    
     $('#btn-continua-step6').prop('disabled', false);
   });
 }
 
 function calcolaProposte(lunghezzaRichiesta) {
   return new Promise((resolve, reject) => {
+    const requestData = {
+      lunghezzaRichiesta: lunghezzaRichiesta,
+      stripLedSelezionata: configurazione.stripLedSelezionata,
+      potenzaSelezionata: configurazione.potenzaSelezionata,
+      formaDiTaglioSelezionata: configurazione.formaDiTaglioSelezionata
+    };
+
+    // Aggiungi lunghezze multiple se non è dritto semplice
+    if (configurazione.formaDiTaglioSelezionata !== 'DRITTO_SEMPLICE' && configurazione.lunghezzeMultiple) {
+      requestData.lunghezzeMultiple = configurazione.lunghezzeMultiple;
+    }
+
     $.ajax({
       url: '/calcola_lunghezze',
       method: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify({
-        lunghezzaRichiesta: lunghezzaRichiesta,
-        stripLedSelezionata: configurazione.stripLedSelezionata,
-        potenzaSelezionata: configurazione.potenzaSelezionata
-      }),
+      data: JSON.stringify(requestData),
       success: function(data) {
         if (!data.success) {
           reject("Errore nel calcolo delle proposte");
           return;
         }
         
-        configurazione.proposta1 = data.proposte.proposta1;
-        configurazione.proposta2 = data.proposte.proposta2;
         configurazione.spazioProduzione = data.spazioProduzione || 5;
+        
+        if (data.tipo === 'semplice') {
+          // Comportamento originale
+          configurazione.proposta1 = data.proposte.proposta1;
+          configurazione.proposta2 = data.proposte.proposta2;
+        } else {
+          // Nuove combinazioni per forme complesse
+          configurazione.propostePerLato = data.proposte_per_lato;
+          configurazione.combinazioni = data.combinazioni;
+        }
         
         resolve(data);
       },
@@ -104,84 +153,10 @@ export function vaiAlleProposte() {
 
     calcolaProposte(lunghezzaOriginale)
       .then(data => {
-        const spazioProduzione = data.spazioProduzione || 5;
-        const coincideConProposta1 = lunghezzaOriginale === data.proposte.proposta1;
-        const coincideConProposta2 = lunghezzaOriginale === data.proposte.proposta2;
-        const coincideConProposte = coincideConProposta1 || coincideConProposta2;
-        const spazioBuio = lunghezzaOriginale - data.proposte.proposta1;
-
-        if (spazioBuio > 0) {
-          let warningElement = $(`<p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="display: none; font-size: 1rem; color:#e83f34 !important">
-            <strong>ATTENZIONE:</strong> se si sceglie questa misura si verificherà uno spazio buio nel profilo di ${spazioBuio}mm
-          </p>`);
-
-          $('.alert.alert-success.mt-4').append(warningElement);
-        }
-
-        const numeroCols = coincideConProposte ? 6 : 4;
-        
-        let proposteHTML = `
-          <h5>Proposte di lunghezza standard</h5>
-          <p>Il sistema ha calcolato delle proposte di lunghezza standard più adatte per la tua installazione.</p>
-          <div class="row mt-3">
-            <div class="col-md-${numeroCols} mb-2">
-              <div class="card">
-                <div class="card-body text-center">
-                  <h5 class="card-title">Proposta 1</h5>
-                  <p class="card-text"><span id="step6-proposta1-valore">${data.proposte.proposta1}mm</span></p>
-                  <button class="btn btn-outline-primary btn-seleziona-proposta" data-proposta="1" data-valore="${data.proposte.proposta1}">Seleziona</button>
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-${numeroCols} mb-2">
-              <div class="card">
-                <div class="card-body text-center">
-                  <h5 class="card-title">Proposta 2</h5>
-                  <p class="card-text"><span id="step6-proposta2-valore">${data.proposte.proposta2}mm</span></p>
-                  <button class="btn btn-outline-primary btn-seleziona-proposta" data-proposta="2" data-valore="${data.proposte.proposta2}">Seleziona</button>
-                </div>
-              </div>
-            </div>`;
-
-        if (!coincideConProposte) {
-          proposteHTML += `
-            <div class="col-md-${numeroCols} mb-2">
-              <div class="card">
-                <div class="card-body text-center">
-                  <h5 class="card-title">Lunghezza Originale</h5>
-                  <p class="card-text"><span id="step6-lunghezza-originale">${lunghezzaOriginale}mm</span></p>
-                  <button class="btn btn-outline-danger btn-seleziona-proposta" data-proposta="originale" data-valore="${lunghezzaOriginale}">Seleziona</button>
-                </div>
-              </div>
-            </div>`;
-        }
-        
-        proposteHTML += `</div>`;
-        
-        $('#step6-proposte-container').html(proposteHTML);
-
-        $('.btn-seleziona-proposta').on('click', function() {
-          $('.btn-seleziona-proposta').removeClass('active');
-          $(this).addClass('active');
-          
-          const proposta = $(this).data('proposta');
-          const valore = parseInt($(this).data('valore'), 10);
-          
-          configurazione.lunghezzaRichiesta = valore;
-          $('#step6-lunghezza-finale').text(valore);
-          $('#spazio-buio-warning').hide();
-
-          if (proposta === 'originale' && spazioBuio > 0) {
-            $('#spazio-buio-warning').show();
-          }
-          $('#btn-continua-step6').prop('disabled', false);
-        });
-
-        if (coincideConProposta1) {
-          $('.btn-seleziona-proposta[data-proposta="1"]').addClass('active').trigger('click');
-        } else if (coincideConProposta2) {
-          $('.btn-seleziona-proposta[data-proposta="2"]').addClass('active').trigger('click');
+        if (data.tipo === 'semplice') {
+          renderProposteSemplici(data, lunghezzaOriginale);
+        } else {
+          renderProposteCombinazioni(data);
         }
       })
       .catch(error => {
@@ -206,4 +181,217 @@ export function vaiAlleProposte() {
 
   $(".step-section").hide();
   $("#step6-proposte").fadeIn(300);
+}
+
+function renderProposteSemplici(data, lunghezzaOriginale) {
+  const spazioProduzione = data.spazioProduzione || 5;
+  const coincideConProposta1 = lunghezzaOriginale === data.proposte.proposta1;
+  const coincideConProposta2 = lunghezzaOriginale === data.proposte.proposta2;
+  const coincideConProposte = coincideConProposta1 || coincideConProposta2;
+  const spazioBuio = lunghezzaOriginale - data.proposte.proposta1;
+
+  if (spazioBuio > 0) {
+    let warningElement = $(`<p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="display: none; font-size: 1rem; color:#e83f34 !important">
+      <strong>ATTENZIONE:</strong> se si sceglie questa misura si verificherà uno spazio buio nel profilo di ${spazioBuio}mm
+    </p>`);
+
+    $('.alert.alert-success.mt-4').append(warningElement);
+  }
+
+  const numeroCols = coincideConProposte ? 6 : 4;
+  
+  let proposteHTML = `
+    <h5>Proposte di lunghezza standard</h5>
+    <p>Il sistema ha calcolato delle proposte di lunghezza standard più adatte per la tua installazione.</p>
+    <div class="row mt-3">
+      <div class="col-md-${numeroCols} mb-2">
+        <div class="card">
+          <div class="card-body text-center">
+            <h5 class="card-title">Proposta 1</h5>
+            <p class="card-text"><span id="step6-proposta1-valore">${data.proposte.proposta1}mm</span></p>
+            <button class="btn btn-outline-primary btn-seleziona-proposta" data-proposta="1" data-valore="${data.proposte.proposta1}">Seleziona</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-${numeroCols} mb-2">
+        <div class="card">
+          <div class="card-body text-center">
+            <h5 class="card-title">Proposta 2</h5>
+            <p class="card-text"><span id="step6-proposta2-valore">${data.proposte.proposta2}mm</span></p>
+            <button class="btn btn-outline-primary btn-seleziona-proposta" data-proposta="2" data-valore="${data.proposte.proposta2}">Seleziona</button>
+          </div>
+        </div>
+      </div>`;
+
+  if (!coincideConProposte) {
+    proposteHTML += `
+      <div class="col-md-${numeroCols} mb-2">
+        <div class="card">
+          <div class="card-body text-center">
+            <h5 class="card-title">Lunghezza Originale</h5>
+            <p class="card-text"><span id="step6-lunghezza-originale">${lunghezzaOriginale}mm</span></p>
+            <button class="btn btn-outline-danger btn-seleziona-proposta" data-proposta="originale" data-valore="${lunghezzaOriginale}">Seleziona</button>
+          </div>
+        </div>
+      </div>`;
+  }
+  
+  proposteHTML += `</div>`;
+  
+  $('#step6-proposte-container').html(proposteHTML);
+
+  $('.btn-seleziona-proposta').on('click', function() {
+    $('.btn-seleziona-proposta').removeClass('active');
+    $(this).addClass('active');
+    
+    const proposta = $(this).data('proposta');
+    const valore = parseInt($(this).data('valore'), 10);
+    
+    configurazione.lunghezzaRichiesta = valore;
+    $('#step6-lunghezza-finale').text(valore);
+    $('#spazio-buio-warning').hide();
+
+    if (proposta === 'originale' && spazioBuio > 0) {
+      $('#spazio-buio-warning').show();
+    }
+    $('#btn-continua-step6').prop('disabled', false);
+  });
+
+  if (coincideConProposta1) {
+    $('.btn-seleziona-proposta[data-proposta="1"]').addClass('active').trigger('click');
+  } else if (coincideConProposta2) {
+    $('.btn-seleziona-proposta[data-proposta="2"]').addClass('active').trigger('click');
+  }
+}
+
+function renderProposteCombinazioni(data) {
+  const etichetteLati = {
+    'FORMA_L_DX': {
+      'lato1': 'Lato orizzontale',
+      'lato2': 'Lato verticale'
+    },
+    'FORMA_L_SX': {
+      'lato1': 'Lato orizzontale',
+      'lato2': 'Lato verticale'
+    },
+    'FORMA_C': {
+      'lato1': 'Lato orizzontale superiore',
+      'lato2': 'Lato verticale',
+      'lato3': 'Lato orizzontale inferiore'
+    },
+    'RETTANGOLO_QUADRATO': {
+      'lato1': 'Lunghezza',
+      'lato2': 'Larghezza'
+    }
+  };
+
+  const etichette = etichetteLati[configurazione.formaDiTaglioSelezionata] || {};
+  
+  let proposteHTML = `
+    <h5>Proposte di combinazioni per forma complessa</h5>
+    <p>Il sistema ha calcolato diverse combinazioni ottimali per i tuoi lati. Seleziona la combinazione che preferisci:</p>
+  `;
+
+  // Mostra prima un riepilogo dei lati originali
+  proposteHTML += `
+    <div class="alert alert-info mb-4">
+      <h6>Misure originali inserite:</h6>
+      <ul class="mb-0">
+  `;
+  
+  Object.entries(configurazione.lunghezzeMultiple).forEach(([lato, valore]) => {
+    if (valore) {
+      const etichetta = etichette[lato] || `Lato ${lato.replace('lato', '')}`;
+      proposteHTML += `<li>${etichetta}: ${valore}mm</li>`;
+    }
+  });
+  
+  proposteHTML += `
+      </ul>
+    </div>
+    <div class="row mt-3">
+  `;
+
+  // Mostra le combinazioni
+  data.combinazioni.forEach((combinazione, index) => {
+    let cardClass = 'btn-outline-primary';
+    let badgeClass = 'bg-success';
+    let badgeText = 'Ottimale';
+    
+    if (combinazione.ha_spazio_buio) {
+      cardClass = 'btn-outline-warning';
+      badgeClass = 'bg-warning';
+      badgeText = 'Spazio buio';
+    }
+
+    proposteHTML += `
+      <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card">
+          <div class="card-body text-center">
+            <h6 class="card-title">
+              Combinazione ${index + 1}
+              <span class="badge ${badgeClass} ms-2">${badgeText}</span>
+            </h6>
+            <div class="small text-start mb-2">
+    `;
+    
+    Object.entries(combinazione.lunghezze).forEach(([lato, valore]) => {
+      const etichetta = etichette[lato] || `Lato ${lato.replace('lato', '')}`;
+      const originale = configurazione.lunghezzeMultiple[lato];
+      const isModificato = valore !== originale;
+      
+      proposteHTML += `
+        <div>${etichetta}: ${valore}mm ${isModificato ? `<small class="text-muted">(era ${originale}mm)</small>` : ''}</div>
+      `;
+    });
+    
+    proposteHTML += `
+            </div>
+            <p class="card-text small"><strong>Totale: ${combinazione.lunghezza_totale}mm</strong></p>
+            <button class="btn ${cardClass} btn-seleziona-combinazione" 
+                    data-combinazione='${JSON.stringify(combinazione)}'>
+              Seleziona
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  proposteHTML += `</div>`;
+  
+  $('#step6-proposte-container').html(proposteHTML);
+
+  $('.btn-seleziona-combinazione').on('click', function() {
+    $('.btn-seleziona-combinazione').removeClass('active');
+    $(this).addClass('active');
+    
+    const combinazione = JSON.parse($(this).data('combinazione'));
+    
+    // Aggiorna le lunghezze multiple nella configurazione
+    configurazione.lunghezzeMultiple = combinazione.lunghezze;
+    configurazione.lunghezzaRichiesta = combinazione.lunghezza_totale;
+    
+    $('#step6-lunghezza-finale').text(combinazione.lunghezza_totale);
+    
+    // Mostra/nascondi warning per spazio buio
+    $('#spazio-buio-warning').remove();
+    if (combinazione.ha_spazio_buio) {
+      $('.alert.alert-success.mt-4').append(`
+        <p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="font-size: 1rem; color:#e83f34 !important">
+          <strong>ATTENZIONE:</strong> Questa combinazione avrà degli spazi bui in alcuni lati
+        </p>
+      `);
+    }
+    
+    $('#btn-continua-step6').prop('disabled', false);
+  });
+
+  // Seleziona automaticamente la prima combinazione (quella ottimale)
+  if (data.combinazioni.length > 0) {
+    setTimeout(() => {
+      $('.btn-seleziona-combinazione').first().click();
+    }, 100);
+  }
 }

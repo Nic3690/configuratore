@@ -501,9 +501,13 @@ def calcola_lunghezze():
     dim_richiesta = data.get('lunghezzaRichiesta', 0)
     strip_id = data.get('stripLedSelezionata')
     potenza_selezionata = data.get('potenzaSelezionata')
+    lunghezze_multiple = data.get('lunghezzeMultiple', {})
+    forma_taglio = data.get('formaDiTaglioSelezionata', 'DRITTO_SEMPLICE')
+    
     taglio_minimo = 1
     spazio_produzione = CONFIG_DATA.get('spazioProduzione', 5)
 
+    # Calcola il taglio minimo dalla strip LED se disponibile
     if strip_id and strip_id != 'NO_STRIP' and potenza_selezionata:
         strip_info = CONFIG_DATA.get('stripLed', {}).get(strip_id, {})
         potenze_disponibili = strip_info.get('potenzeDisponibili', [])
@@ -526,24 +530,119 @@ def calcola_lunghezze():
                 except ValueError:
                     print(f"Errore nel parsing del valore del taglio minimo: {taglio_minimo_str}")
 
-    if dim_richiesta > 0:
-        proposta1 = int(dim_richiesta // taglio_minimo * taglio_minimo)
-        proposta2 = int(((dim_richiesta + taglio_minimo - 0.01) // taglio_minimo) * taglio_minimo)
+    # Funzione helper per calcolare proposte per una singola lunghezza
+    def calcola_proposte_singole(lunghezza):
+        if lunghezza > 0:
+            proposta1 = int(lunghezza // taglio_minimo * taglio_minimo)
+            proposta2 = int(((lunghezza + taglio_minimo - 0.01) // taglio_minimo) * taglio_minimo)
 
-        if proposta2 <= proposta1:
-            proposta2 = int(proposta1 + taglio_minimo)
-    else:
-        proposta1 = 0
-        proposta2 = 0
+            if proposta2 <= proposta1:
+                proposta2 = int(proposta1 + taglio_minimo)
+        else:
+            proposta1 = 0
+            proposta2 = 0
+        
+        return proposta1, proposta2
+
+    # Se è una forma complessa con lati multipli
+    if forma_taglio != 'DRITTO_SEMPLICE' and lunghezze_multiple:
+        # Calcola le proposte per ogni lato
+        proposte_per_lato = {}
+        
+        for lato, lunghezza in lunghezze_multiple.items():
+            if lunghezza and lunghezza > 0:
+                prop1, prop2 = calcola_proposte_singole(lunghezza)
+                proposte_per_lato[lato] = {
+                    'originale': lunghezza,
+                    'proposta1': prop1,
+                    'proposta2': prop2
+                }
+        
+        # Genera tutte le combinazioni possibili
+        import itertools
+        
+        lati_ordinati = sorted(proposte_per_lato.keys())
+        combinazioni = []
+        
+        # Per ogni lato, crea una lista delle opzioni disponibili
+        opzioni_per_lato = []
+        for lato in lati_ordinati:
+            opzioni = []
+            props = proposte_per_lato[lato]
+            
+            # Aggiungi proposta1 se diversa dall'originale
+            if props['proposta1'] != props['originale']:
+                opzioni.append(('proposta1', props['proposta1']))
+            
+            # Aggiungi proposta2 se diversa dall'originale e da proposta1
+            if props['proposta2'] != props['originale'] and props['proposta2'] != props['proposta1']:
+                opzioni.append(('proposta2', props['proposta2']))
+            
+            # Aggiungi sempre l'originale
+            opzioni.append(('originale', props['originale']))
+            
+            opzioni_per_lato.append(opzioni)
+        
+        # Genera tutte le combinazioni
+        for combinazione in itertools.product(*opzioni_per_lato):
+            combo_dict = {}
+            combo_label_parts = []
+            lunghezza_totale = 0
+            ha_spazio_buio = False
+            
+            for i, (tipo, valore) in enumerate(combinazione):
+                lato = lati_ordinati[i]
+                combo_dict[lato] = valore
+                lunghezza_totale += valore
+                
+                # Controlla se questo lato ha spazio buio
+                if tipo == 'originale' and valore < proposte_per_lato[lato]['proposta2']:
+                    ha_spazio_buio = True
+                
+                # Crea etichetta per questo lato
+                if tipo == 'originale':
+                    combo_label_parts.append(f"Orig.")
+                elif tipo == 'proposta1':
+                    combo_label_parts.append(f"Prop.1")
+                else:  # proposta2
+                    combo_label_parts.append(f"Prop.2")
+            
+            combinazioni.append({
+                'lunghezze': combo_dict,
+                'lunghezza_totale': lunghezza_totale,
+                'label': " + ".join(combo_label_parts),
+                'ha_spazio_buio': ha_spazio_buio,
+                'dettaglio': combinazione
+            })
+        
+        # Ordina le combinazioni: prima quelle senza spazio buio, poi per lunghezza totale
+        combinazioni.sort(key=lambda x: (x['ha_spazio_buio'], x['lunghezza_totale']))
+        
+        return jsonify({
+            'success': True,
+            'tipo': 'combinazioni',
+            'spazioProduzione': spazio_produzione,
+            'proposte_per_lato': proposte_per_lato,
+            'combinazioni': combinazioni[:10]
+        })
     
-    return jsonify({
-        'success': True,
-        'spazioProduzione': spazio_produzione,
-        'proposte': {
-            'proposta1': proposta1,
-            'proposta2': proposta2
-        }
-    })
+    else:
+        # Comportamento originale per forme dritte
+        if dim_richiesta > 0:
+            proposta1, proposta2 = calcola_proposte_singole(dim_richiesta)
+        else:
+            proposta1 = 0
+            proposta2 = 0
+        
+        return jsonify({
+            'success': True,
+            'tipo': 'semplice',
+            'spazioProduzione': spazio_produzione,
+            'proposte': {
+                'proposta1': proposta1,
+                'proposta2': proposta2
+            }
+        })
 
 @app.route('/finalizza_configurazione', methods=['POST'])
 def finalizza_configurazione():
