@@ -1375,7 +1375,13 @@ export function finalizzaConfigurazione() {
         if (riepilogo.categoriaSelezionata === 'esterni' || riepilogo.categoriaSelezionata === 'wall_washer_ext') {
           riepilogoHtml += `
             <div class="alert alert-info">
-              <p><strong>ATTENZIONE:</strong> la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
+              <p class="mb-0"><strong>ATTENZIONE:</strong> la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
+            </div>`;
+        }
+        else {
+          riepilogoHtml += `
+            <div class="alert alert-info">
+              <p><strong>NOTA:</strong> Verrà aggiunto automaticamente uno spazio di 5mm per i tappi e la saldatura.</p>
             </div>`;
         }
         
