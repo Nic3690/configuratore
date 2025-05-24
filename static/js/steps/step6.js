@@ -17,7 +17,7 @@ export function initStep6Listeners() {
     finalizzaConfigurazione();
   });
 
-  // Gestione proposte semplici (forme dritte)
+  // Gestione proposte semplici (forme dritte) - DA AGGIUNGERE/SOSTITUIRE in initStep6Listeners()
   $(document).on('click', '.btn-seleziona-proposta', function() {
     $('.btn-seleziona-proposta').removeClass('active');
     $(this).addClass('active');
@@ -25,16 +25,28 @@ export function initStep6Listeners() {
     const proposta = $(this).data('proposta');
     const valore = parseInt($(this).data('valore'), 10);
     
-    if (proposta === 1) {
-      configurazione.lunghezzaRichiesta = valore;
-      $('#step6-lunghezza-finale').text(valore);
-    } else if (proposta === 2) {
-      configurazione.lunghezzaRichiesta = valore;
-      $('#step6-lunghezza-finale').text(valore);
-    } else if (proposta === 'originale') {
-      configurazione.lunghezzaRichiesta = valore;
-      $('#step6-lunghezza-finale').text(valore);
+    // Aggiorna la configurazione
+    configurazione.lunghezzaRichiesta = valore;
+    $('#step6-lunghezza-finale').text(valore);
+    
+    // Rimuovi eventuali warning precedenti
+    $('#spazio-buio-warning').remove();
+    
+    // Controlla se questa proposta ha spazio buio
+    if (proposta === 'originale') {
+      // Per la lunghezza originale, calcola lo spazio buio
+      const proposta1 = configurazione.proposta1;
+      const spazioBuio = valore - proposta1;
+      
+      if (spazioBuio > 0) {
+        $('.alert.alert-success.mt-4').append(`
+          <p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="font-size: 1rem; color:#ff0000 !important">
+            <strong>ATTENZIONE:</strong> Questa combinazione avrà uno spazio buio totale di ${spazioBuio}mm
+          </p>
+        `);
+      }
     }
+    
     $('#btn-continua-step6').prop('disabled', false);
   });
 
@@ -200,6 +212,85 @@ function renderProposteSemplici(data, lunghezzaOriginale) {
   const coincideConProposte = coincideConProposta1 || coincideConProposta2;
   const spazioBuio = lunghezzaOriginale - data.proposte.proposta1;
 
+  // Preparazione delle proposte con il nuovo formato unificato
+  const proposte = [];
+  
+  // Proposta 1
+  proposte.push({
+    id: 'proposta1',
+    titolo: 'Combinazione 1',
+    valore: data.proposte.proposta1,
+    badge: { classe: 'bg-success', testo: 'Ottimale' },
+    hasSpaziBuio: false,
+    spaziBuioTotale: 0
+  });
+  
+  // Proposta 2
+  proposte.push({
+    id: 'proposta2', 
+    titolo: 'Combinazione 2',
+    valore: data.proposte.proposta2,
+    badge: { classe: 'bg-success', testo: 'Ottimale' },
+    hasSpaziBuio: false,
+    spaziBuioTotale: 0
+  });
+  
+  // Lunghezza originale (se diversa dalle proposte)
+  if (!coincideConProposte && spazioBuio > 0) {
+    proposte.push({
+      id: 'originale',
+      titolo: 'Combinazione 3',
+      valore: lunghezzaOriginale,
+      badge: { classe: 'bg-warning text-white', testo: `${spazioBuio}mm spazio buio` },
+      hasSpaziBuio: true,
+      spaziBuioTotale: spazioBuio
+    });
+  } else if (!coincideConProposte) {
+    proposte.push({
+      id: 'originale',
+      titolo: 'Combinazione 3', 
+      valore: lunghezzaOriginale,
+      badge: { classe: 'bg-success', testo: 'Ottimale' },
+      hasSpaziBuio: false,
+      spaziBuioTotale: 0
+    });
+  }
+
+  let proposteHTML = `
+    <h5>Proposte di lunghezza standard</h5>
+    <p>Il sistema ha calcolato delle proposte di lunghezza standard più adatte per la tua installazione.</p>
+    <div class="row mt-3">
+  `;
+
+  proposte.forEach((proposta, index) => {
+    proposteHTML += `
+      <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card">
+          <div class="card-body text-center">
+            <h6 class="card-title">
+              ${proposta.titolo}
+              <span class="badge ${proposta.badge.classe} ms-2">${proposta.badge.testo}</span>
+            </h6>
+            <div class="small text-start mb-2">
+              <div>Lunghezza: ${proposta.valore}mm</div>
+            </div>
+            <p class="card-text small"><strong>Totale: ${proposta.valore}mm</strong></p>
+            <button class="btn ${proposta.hasSpaziBuio ? 'btn-outline-primary' : 'btn-outline-primary'} btn-seleziona-proposta" 
+                    data-proposta="${proposta.id}" 
+                    data-valore="${proposta.valore}">
+              Seleziona
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  proposteHTML += `</div>`;
+  
+  $('#step6-proposte-container').html(proposteHTML);
+
+  // Gestione dello spazio buio nella sezione alert
   if (spazioBuio > 0) {
     let warningElement = $(`<p id="spazio-buio-warning" class="text-danger mb-0 mt-2" style="display: none; font-size: 1rem; color:#e83f34 !important">
       <strong>ATTENZIONE:</strong> se si sceglie questa misura si verificherà uno spazio buio nel profilo di ${spazioBuio}mm
@@ -208,59 +299,21 @@ function renderProposteSemplici(data, lunghezzaOriginale) {
     $('.alert.alert-success.mt-4').append(warningElement);
   }
 
-  const numeroCols = coincideConProposte ? 6 : 4;
-  
-  let proposteHTML = `
-    <h5>Proposte di lunghezza standard</h5>
-    <p>Il sistema ha calcolato delle proposte di lunghezza standard più adatte per la tua installazione.</p>
-    <div class="row mt-3">
-      <div class="col-md-${numeroCols} mb-2">
-        <div class="card">
-          <div class="card-body text-center">
-            <h5 class="card-title">Proposta 1</h5>
-            <p class="card-text"><span id="step6-proposta1-valore">${data.proposte.proposta1}mm</span></p>
-            <button class="btn btn-outline-primary btn-seleziona-proposta" data-proposta="1" data-valore="${data.proposte.proposta1}">Seleziona</button>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-md-${numeroCols} mb-2">
-        <div class="card">
-          <div class="card-body text-center">
-            <h5 class="card-title">Proposta 2</h5>
-            <p class="card-text"><span id="step6-proposta2-valore">${data.proposte.proposta2}mm</span></p>
-            <button class="btn btn-outline-primary btn-seleziona-proposta" data-proposta="2" data-valore="${data.proposte.proposta2}">Seleziona</button>
-          </div>
-        </div>
-      </div>`;
-
-  if (!coincideConProposte) {
-    proposteHTML += `
-      <div class="col-md-${numeroCols} mb-2">
-        <div class="card">
-          <div class="card-body text-center">
-            <h5 class="card-title">Lunghezza Originale</h5>
-            <p class="card-text"><span id="step6-lunghezza-originale">${lunghezzaOriginale}mm</span></p>
-            <button class="btn btn-outline-danger btn-seleziona-proposta" data-proposta="originale" data-valore="${lunghezzaOriginale}">Seleziona</button>
-          </div>
-        </div>
-      </div>`;
-  }
-  
-  proposteHTML += `</div>`;
-  
-  $('#step6-proposte-container').html(proposteHTML);
-
+  // Auto-selezione se coincide con una proposta
   if (coincideConProposta1) {
-    $('.btn-seleziona-proposta[data-proposta="1"]').addClass('active');
-    configurazione.lunghezzaRichiesta = data.proposte.proposta1;
-    $('#step6-lunghezza-finale').text(data.proposte.proposta1);
-    $('#btn-continua-step6').prop('disabled', false);
+    setTimeout(() => {
+      $('.btn-seleziona-proposta[data-proposta="proposta1"]').addClass('active');
+      configurazione.lunghezzaRichiesta = data.proposte.proposta1;
+      $('#step6-lunghezza-finale').text(data.proposte.proposta1);
+      $('#btn-continua-step6').prop('disabled', false);
+    }, 100);
   } else if (coincideConProposta2) {
-    $('.btn-seleziona-proposta[data-proposta="2"]').addClass('active');
-    configurazione.lunghezzaRichiesta = data.proposte.proposta2;
-    $('#step6-lunghezza-finale').text(data.proposte.proposta2);
-    $('#btn-continua-step6').prop('disabled', false);
+    setTimeout(() => {
+      $('.btn-seleziona-proposta[data-proposta="proposta2"]').addClass('active');
+      configurazione.lunghezzaRichiesta = data.proposte.proposta2;
+      $('#step6-lunghezza-finale').text(data.proposte.proposta2);
+      $('#btn-continua-step6').prop('disabled', false);
+    }, 100);
   }
 }
 
