@@ -178,6 +178,10 @@ function analizzaEMostraTipologieCompatibili() {
       {
         hasCOB = profiloSelezionato.stripLedCompatibili.some(id => id.includes('220V'));
       }
+      if (configurazione.lunghezzaRichiesta >= 50000)
+      {
+        hasCOB = false;
+      }
 
       let hasSMD = profiloSelezionato.stripLedCompatibili.some(id => id.includes('SMD'));
       
@@ -528,6 +532,7 @@ export function updateIstruzioniMisurazione(forma) {
           <label for="lunghezza-personalizzata">Lunghezza richiesta (mm):</label>
           <input type="number" class="form-control" id="lunghezza-personalizzata" 
                  placeholder="Inserisci la lunghezza in millimetri" min="100">
+          <p class="assembly-warning mt-2">NOTA: la lunghezza massima per strip 24V è 10mt, per le strip 48V è 30mt mentre per le stip 220v è 50mt</p>
           <p class="alert-dialog mt-4">ATTENZIONE: la lunghezza richiesta fa riferimento alla strip led esclusa di tappi e il profilo risulterà leggermente più corto.</p>
         </div>
       `);
@@ -674,7 +679,8 @@ export function updateIstruzioniMisurazione(forma) {
 function mostraNonAssemblatoWarning() {
   if ($('#non-assemblato-warning').length === 0) {
     const warningHtml = `
-      <div id="non-assemblato-warning" class="assembly-warning mt-3 mb-4">
+      <div id="non-assemblato-warning" class="assembly-warning mt-0 mb-4">
+        <p>NOTA: la lunghezza massima per strip 24V è 10mt, per le strip 48V è 30mt mentre per le stip 220v è 50mt</p>
         <strong>IMPORTANTE:</strong> I profili verranno consegnati non assemblati tra di loro e la strip verrà consegnata non installata.
       </div>
     `;
