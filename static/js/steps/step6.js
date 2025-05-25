@@ -210,7 +210,7 @@ function renderProposteSemplici(data, lunghezzaOriginale) {
   const coincideConProposta1 = lunghezzaOriginale === data.proposte.proposta1;
   const coincideConProposta2 = lunghezzaOriginale === data.proposte.proposta2;
   const coincideConProposte = coincideConProposta1 || coincideConProposta2;
-  const spazioBuio = lunghezzaOriginale - data.proposte.proposta1;
+  const spazioBuio = Math.abs(lunghezzaOriginale - data.proposte.proposta1) + 5;
 
   // Preparazione delle proposte con il nuovo formato unificato
   const proposte = [];
@@ -374,7 +374,16 @@ function renderProposteCombinazioni(data) {
     if (combinazione.ha_spazio_buio) {
       cardClass = 'btn-outline-primary';
       badgeClass = 'bg-warning text-white';
-      let spazioTotale = combinazione.spazio_buio_totale || 0;
+      let latiCambiati = 0;
+      Object.keys(combinazione.lunghezze).forEach(lato => {
+        const lunghezzaCombinazione = combinazione.lunghezze[lato];
+        const lunghezzaOriginale = configurazione.lunghezzeMultiple[lato];
+        
+        if (lunghezzaCombinazione === lunghezzaOriginale) {
+          latiCambiati++;
+        }
+      });
+      let spazioTotale = combinazione.spazio_buio_totale + (5 * latiCambiati) || 0;
       if (configurazione.formaDiTaglioSelezionata == "RETTANGOLO_QUADRATO") spazioTotale *= 2;
       badgeText = `${spazioTotale}mm spazio buio`;
     }
