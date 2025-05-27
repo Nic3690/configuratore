@@ -1389,8 +1389,8 @@ export function finalizzaConfigurazione() {
             <div class="alert alert-warning mt-3">
               <strong>Attenzione:</strong> eventuali staffe aggiuntive non incluse.
             </div>
-            <button class="btn btn-success btn-lg me-2" id="btn-salva-configurazione">Salva configurazione</button>
-            <button class="btn btn-primary btn-lg" id="btn-preventivo">Richiedi preventivo</button>
+            <button class="btn btn-success btn-lg" id="btn-salva-configurazione">Salva configurazione</button>
+            <!-- <button class="btn btn-primary btn-lg" id="btn-preventivo">Richiedi preventivo</button> -->
           </div>
         </div>
         </div>
